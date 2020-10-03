@@ -4,8 +4,6 @@ We are a group of committed youngsters striving hard to achieve the goal of zero
 
 ## Usage
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
 ```bash
 npm install 
 npm start

@@ -33,7 +33,7 @@ class HomeCenter extends Component{
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={post.user_name} style={{ width: 1000 }} 
+                    <Card title={post.user_name} style={{ width: 1000 , margin:"8px"}} 
                       actions={Actions} >
                         <p>{post.description}</p>
                     </Card>
@@ -46,7 +46,7 @@ class HomeCenter extends Component{
         )
         
         return (
-            <Content className="site-layout-background">
+            <Content style={{"margin":"auto"}}>
                 {postList}   
             </Content>
         )

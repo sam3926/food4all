@@ -2,7 +2,7 @@ import React from 'react';
 
 import 'antd/dist/antd.css';
 import '../../index.css';
-import { Layout, Menu , Button , Input } from 'antd';
+import { Layout, Menu , Button , Input, Space } from 'antd';
 import { LogoutOutlined , HomeOutlined , BellOutlined , TrophyOutlined, 
          UsergroupDeleteOutlined , BulbOutlined , UserOutlined ,
          MessageOutlined } from '@ant-design/icons';
@@ -16,12 +16,15 @@ const { Search } = Input;
 const Navbar = () => {
     return(
             <div>
-            <Header>
+            <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
             <div className="logo" />
+           
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-                  <Button type="dashed" danger>
+               
+               <Button type="dashed" danger style={{"marginRight":"16px"}}>
                     Donate Now
                   </Button>
+                  
                   <Menu.Item key="1" icon={ <HomeOutlined /> } >Home</Menu.Item>
                   <Menu.Item key="2" icon={<BulbOutlined />}>Discover</Menu.Item>
                   <Menu.Item key="3" icon={<TrophyOutlined />} >LeaderBoard</Menu.Item>

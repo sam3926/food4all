@@ -21,14 +21,12 @@ class Home extends Component {
      
     render() {
         return (
-            <div>
                 <Layout>
                     <LeftSidePanel/>
-                    <Layout style={{ padding: '0 24px 24px' }}>   
+                    <Layout style={{ marginLeft: '300px', marginTop: '64px' }}>   
                         <HomeCenter/>
                     </Layout>   
                 </Layout>
-            </div>
         )
     }
 }

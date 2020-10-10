@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 //IMPORT COMPONENTS
 import Home from "./components/Home";
 import Navbar from './components/Navbar';
+import Profile from './components/Profile';
 import { Layout, Button } from 'antd';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 
@@ -32,6 +33,7 @@ if (status === "loading") {
 
     <RouterSwitch>
         <Route  exact path='/' component={Home} />
+        <Route  path='/profile' component={Profile}/>
         {/*Put remaining routes here*/}
     </RouterSwitch>  
     <Button shape ="circle" size="large"  icon={

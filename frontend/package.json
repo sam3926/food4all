@@ -50,5 +50,9 @@
     "gulp-postcss": "^9.0.0",
     "less-plugin-npm-import": "^2.1.0",
     "redux-devtools-extension": "^2.13.8"
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "gulpfile.js",
+  "author": "",
+  "license": "ISC"
 }

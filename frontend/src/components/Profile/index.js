@@ -96,8 +96,8 @@ class Profile extends Component{
     );
 
     return (
-      <Layout className="layout">
-      <Header> 
+      <Layout className="layout" style={{marginTop:"56px"}}>
+      {/* <Header> 
       <div className="logo" />
       <Menu theme="dark" mode="horizontal" >
             <Button type="dashed" danger>
@@ -116,9 +116,9 @@ class Profile extends Component{
                     onSearch={value => console.log(value)}
                     style={{ width: 250 }}/>
           </Menu>
-        </Header>
+        </Header> */}
         <Layout>
-          <Sider width={250} theme="light" className="site-layout-background">
+          <Sider width={250} style={{padding:"20px"}}>
         <List
         itemLayout="horizontal"
         dataSource={data}
@@ -138,12 +138,12 @@ class Profile extends Component{
             )}
           />
           </Sider>
-          <Layout style={{ padding: '0 24px 24px' }}>
+          <Layout style={{ paddingLeft: '24px' }}>
           <Content
-              className="site-layout-background"
+              // className="site-layout-background"
               style={{
-                padding: 24,
-                margin: 0,
+                // padding: 24,
+                marginTop: 24,
                 minHeight: 280,
               }}
             >
@@ -175,7 +175,7 @@ class Profile extends Component{
           <Demo />
               
             </Content>
-          <Sider width={250} theme="light" className="site-layout-background">
+          <Sider width={250} style={{padding:"20px  "}}>
           <div>
           <br />
           <br />  

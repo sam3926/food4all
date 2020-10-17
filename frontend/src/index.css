@@ -12,10 +12,10 @@ code {
     monospace;
 }
 
-/* 
+
 .ant-card-head-title{
-  color:red !important;
-} */
+  color:#97033e !important;
+} 
 
 .logo {
   width: 120px;
@@ -27,4 +27,38 @@ code {
 
 .site-layout-background {
   background: #fff;
+}
+
+.ant-menu.ant-menu-dark.ant-menu-root.ant-menu-horizontal{
+  background:#97033e !important;
+}
+
+
+.ant-layout-header{
+  background:#97033e !important;
+}
+
+.ant-menu-item.ant-menu-item-selected{
+  font-size: large !important;
+}
+
+.ant-menu-item.customclasslogo {
+  font-size: larger !important;/*Overriden property*/
+  color: white !important;
+  
+  font-weight: bold;
+}
+
+/* .ant-checkbox{
+  display: block !important;
+  margin-right: 0;
+} */
+
+.ant-checkbox-group-item {
+  display: block !important;
+  margin-left: 32px !important;
+}
+
+.ant-menu.ant-menu-light.ant-menu-root.ant-menu-inline{
+  
 }

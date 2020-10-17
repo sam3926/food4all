@@ -3,7 +3,9 @@ const cors = require('cors')
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path')
+const passport = require("passport");
 
+const users = require("./routes/api/users");
 //IMPORT all routes
 
 const authRoutes = require('./routes/auth')
@@ -12,7 +14,7 @@ const authRoutes = require('./routes/auth')
 const uploadRoutes = require('./routes/upload')
 
 const app = express();
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 5000
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -31,6 +33,15 @@ app.use('/api/auth', authRoutes)
 // app.use('/api/donor', donorRoutes);
 // app.use('/api/organisation', organisationRoutes);
 app.use('/upload', uploadRoutes)
+
+// Passport middleware
+app.use(passport.initialize());
+
+// Passport config
+require("./config/passport")(passport);
+
+// Routes
+app.use("/api/users", users);
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);
@@ -56,4 +67,4 @@ mongoose.connect(MONGO_URI, {
     console.log("error with connecting to db")
 })
 
-
+//app.listen(PORT, () => console.log(`Server up and running on port ${port} !`));

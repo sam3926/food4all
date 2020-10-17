@@ -26,10 +26,10 @@ class LeftSidePanel extends Component{
                 <Menu
                 mode="inline"
                 defaultOpenKeys={['sub5']}
-                style={{ height: '100%', borderRight: 0 }}
+                style={{ height: '90%', borderRight: 0, marginTop: '26px', marginBottom: '20px'}}
                 >
                 
-                <Menu.Item key="1">
+                <Menu.Item key="1" style={{fontSize: '20px', marginBlock: '10px'}}>
                     <Space>
                     
                     <Avatar
@@ -45,39 +45,38 @@ class LeftSidePanel extends Component{
                     </Space>
                     </Menu.Item>
 
-                <SubMenu key="sub1" title="Profile Description">
+                {/* <SubMenu key="sub1" title="Profile Description">
                 <Menu.Item key="2">User profile</Menu.Item>
+                </SubMenu> */}
+                
+                <SubMenu key="sub2" title="Following" style={{fontSize: '16px'}}>
+                    <Menu.Item key="a1">Arpit</Menu.Item>
+                    <Menu.Item key="a2">Krishnendu</Menu.Item>
+                    <Menu.Item key="a3">Dinkar</Menu.Item>
+                    <Menu.Item key="a4">...view all</Menu.Item>
                 </SubMenu>
-                <div style={{"margin":"8px auto","width":"80%"}}>
+                {/* <div style={{"margin":"8px auto","width":"80%"}}>
                     <Button type="primary"  block danger>
                     Add Donation
                     </Button>
-                </div> 
-                
-                <SubMenu key="sub2" title="xx Following">
-                <Menu.Item key="2">xyz</Menu.Item>
-                <Menu.Item key="3">xyz</Menu.Item>
+                </div>  */}
+        
+                <SubMenu key="sub3" title="Recent Donations" style={{fontSize: '16px'}}>
+                <Menu.Item key="b1">xyz</Menu.Item>
+                <Menu.Item key="b2">xyz</Menu.Item>
+                <Menu.Item key="b3">...view all</Menu.Item>
                 </SubMenu>
         
-                <SubMenu key="sub3" title="Recent Donations">
-                <Menu.Item key="4">xyz</Menu.Item>
-                <Menu.Item key="5">xyz</Menu.Item>
+                <SubMenu key="sub4" title="Recent Acheivements" style={{fontSize: '16px'}}>
+                    <Menu.Item key="c1">Leaderboard Top 3!</Menu.Item>
+                    <Menu.Item key="c2">Top donor, March '20</Menu.Item>
                 </SubMenu>
         
-                <SubMenu key="sub4" title="Recent Acheivements">
-                    <Menu.Item key="6">xyz</Menu.Item>
-                    <Menu.Item key="7">xyz</Menu.Item>
-                </SubMenu>
-        
-                <SubMenu key="sub5" title="Filters">
-                {/* <div class="check" >
-                    <Checkbox defaultChecked onChange={()=>onchange}>Donations</Checkbox>
-                    <Checkbox onChange={onchange}>Events</Checkbox>
-                    <Checkbox onChange={onchange}>Posts</Checkbox>
-                </div> */}
-                <div style={{"padding":"auto"}}>
-                    <Checkbox.Group options={plainOptions} defaultValue={['Donations']}  />
-                </div>
+                <SubMenu key="sub5" title="Filters" style={{fontSize: '16px'}}>
+            
+                    <div style={{"padding":"auto"}}>
+                        <Checkbox.Group options={plainOptions} defaultValue={plainOptions}  />
+                    </div>
 
                 </SubMenu>
                 </Menu>

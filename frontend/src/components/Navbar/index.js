@@ -17,28 +17,26 @@ const Navbar = () => {
     return(
             <div>
             <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
-            <div className="logo" />
-           
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-               
-               <Button type="dashed" danger style={{"marginRight":"16px"}}>
-                    Donate Now
-                  </Button>
-                  
-                  <Menu.Item key="1" icon={ <HomeOutlined /> } ><Link to="/">Home</Link></Menu.Item>
-                  <Menu.Item key="2" icon={<BulbOutlined />}><Link to='/discover'>Discover</Link></Menu.Item>
-                  <Menu.Item key="3" icon={<TrophyOutlined />} >LeaderBoard</Menu.Item>
-                  <Menu.Item key="4" icon={<UsergroupDeleteOutlined />} >community</Menu.Item>
-                  <Menu.Item key="5" icon={<BellOutlined /> }>Notifications</Menu.Item>
-                  <Menu.Item key="6" icon={<MessageOutlined /> } >Messages</Menu.Item>
-                  <Menu.Item key="7" icon={<UserOutlined />} ><Link to="/profile">Profile</Link></Menu.Item>
-                  <Search
-                          placeholder="Search"
-                          onSearch={value => console.log(value)}
-                          style={{ width: 250 }}/>
-                  <Menu.Item key="8" icon={<LogoutOutlined />} >Logout</Menu.Item>
-                </Menu>
-              </Header>
+              <div className="logo" />
+              <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+                
+                <Button type="dashed" danger style={{"marginRight":"16px"}}>
+                        Donate Now
+                </Button>   
+                <Menu.Item key="1" icon={ <HomeOutlined /> } ><Link to="/">Home</Link></Menu.Item>
+                <Menu.Item key="2" icon={<BulbOutlined />}><Link to='/discover'>Discover</Link></Menu.Item>
+                <Menu.Item key="3" icon={<TrophyOutlined />} >LeaderBoard</Menu.Item>
+                <Menu.Item key="4" icon={<UsergroupDeleteOutlined />} >community</Menu.Item>
+                <Menu.Item key="5" icon={<BellOutlined /> }>Notifications</Menu.Item>
+                <Menu.Item key="6" icon={<MessageOutlined /> } >Messages</Menu.Item>
+                <Menu.Item key="7" icon={<UserOutlined />} ><Link to="/profile">Profile</Link></Menu.Item>
+                <Search
+                        placeholder="Search"
+                        onSearch={value => console.log(value)}
+                        style={{ width: 250 }}/>
+                <Menu.Item key="8" icon={<LogoutOutlined />} >Logout</Menu.Item>
+              </Menu>
+            </Header>
             </div>
         )
 }

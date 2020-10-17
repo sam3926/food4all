@@ -6,7 +6,9 @@ import * as serviceWorker from './serviceWorker';
 
 import { Provider } from "react-redux";
 import { BrowserRouter } from 'react-router-dom'
-import store from "./store";
+import { store, persistor } from "./store"
+
+import { PersistGate } from 'redux-persist/integration/react';
 
 import { ThemeSwitcherProvider } from "react-css-theme-switcher";
 
@@ -19,11 +21,13 @@ const themes = {
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <React.StrictMode>
-        <ThemeSwitcherProvider themeMap={themes} defaultTheme="light">
-          <App />
-        </ThemeSwitcherProvider>
-      </React.StrictMode>
+      <PersistGate persistor={persistor}>
+        <React.StrictMode>
+          <ThemeSwitcherProvider themeMap={themes} defaultTheme="light">
+            <App />
+          </ThemeSwitcherProvider>
+        </React.StrictMode>
+      </PersistGate>
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')

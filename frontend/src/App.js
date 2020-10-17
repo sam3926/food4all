@@ -6,15 +6,16 @@ import 'antd/dist/antd.css';
 import Home from "./components/Home";
 import Navbar from './components/Navbar';
 import Profile from './components/Profile';
+import Discover from './components/Discover';
 import { Layout, Button } from 'antd';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 
-import {FireTwoTone, FireFilled} from "@ant-design/icons"
+import { FireFilled } from "@ant-design/icons"
 
 const App = () => {
 
 const [isDarkMode, setIsDarkMode] = React.useState();
-const { switcher, currentTheme, status, themes } = useThemeSwitcher();
+const { switcher, status, themes } = useThemeSwitcher();
 
 const toggleTheme = (isChecked) => {
   setIsDarkMode(isChecked);
@@ -34,8 +35,10 @@ if (status === "loading") {
     <RouterSwitch>
         <Route  exact path='/' component={Home} />
         <Route  path='/profile' component={Profile}/>
+        <Route  path='/discover' component={Discover}/>
         {/*Put remaining routes here*/}
     </RouterSwitch>  
+
     <Button shape ="circle" size="large"  icon={
     // <FireTwoTone twoToneColor={isDarkMode?"yellow":"black"} 
     <FireFilled style={isDarkMode?{"color":"#F0C315"}:{"color":"#444"}}/>} style={{"position":"fixed", "right":"16px", "bottom":"16px"}} onClick={()=>toggleTheme(!isDarkMode)}></Button>

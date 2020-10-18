@@ -2,17 +2,33 @@ import { createStore, applyMiddleware, combineReducers } from "redux";
 import { composeWithDevTools as compose } from "redux-devtools-extension/developmentOnly";
 import thunk from "redux-thunk";
 
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+
+
 import homeReducer from "./components/Home/reducer";
+import navReducer from "./components/Navbar/reducer";
+import authReducer from "./components/Auth/reducer";
 //import all reducers here
 
+const persistConfig = {
+    key: 'root',
+    storage,
+}
 
-const store = createStore(
-    combineReducers({
-        homeReducer,
-        //list down all the reducers
-    }),
+const rootReducer = combineReducers({
+    homeReducer,
+    navReducer,
+    authReducer
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+
+export const store = createStore(
+    persistedReducer,
     {},
     compose(applyMiddleware(thunk))
 );
 
-export default store;
+export const persistor = persistStore(store)

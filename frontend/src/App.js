@@ -12,42 +12,80 @@ import { useThemeSwitcher } from 'react-css-theme-switcher';
 
 import { FireFilled } from "@ant-design/icons"
 
+import jwt_decode from "jwt-decode";
+import setAuthToken from "./utils/setAuthToken"
+
+import PrivateRoute from "./components/Auth/PrivateRoute"
+
+import Register from "./components/Auth/Register"
+import Login from "./components/Auth/Login"
+import Landing from "./components/Landing"
+
+import { setCurrentUser, logoutUser } from './components/Auth/action';
+import { store } from "./store"
+
+
+
+// Check for token to keep user logged in
+if (localStorage.jwtToken) {
+  // Set auth token header auth
+  const token = localStorage.jwtToken;
+  setAuthToken(token);
+  // Decode token and get user info and exp
+  const decoded = jwt_decode(token);
+  // Set user and isAuthenticated
+  store.dispatch(setCurrentUser(decoded));
+  // Check for expired token
+  const currentTime = Date.now() / 1000; // to get in milliseconds
+  if (decoded.exp < currentTime) {
+    // Logout user
+    store.dispatch(logoutUser());
+
+    // Redirect to login
+    window.location.href = "./login";
+  }
+}
+
 const App = () => {
 
-const [isDarkMode, setIsDarkMode] = React.useState();
-const { switcher, status, themes } = useThemeSwitcher();
+  const [isDarkMode, setIsDarkMode] = React.useState();
+  const { switcher, status, themes } = useThemeSwitcher();
 
-const toggleTheme = (isChecked) => {
-  setIsDarkMode(isChecked);
-  switcher({ theme: isChecked ? themes.dark : themes.light });
-};
+  const toggleTheme = (isChecked) => {
+    setIsDarkMode(isChecked);
+    switcher({ theme: isChecked ? themes.dark : themes.light });
+  };
 
-// Avoid theme change flicker
-if (status === "loading") {
-  return null;
-}
+  // Avoid theme change flicker
+  if (status === "loading") {
+    return null;
+  }
 
 
   return (
     <Layout>
-    <Navbar/>
+      <Navbar />
 
-    <RouterSwitch>
-        <Route  exact path='/' component={Home} />
-        <Route  path='/profile' component={Profile}/>
-        <Route  path='/discover' component={Discover}/>
+      <RouterSwitch>
+        <Route exact path='/' component={Landing} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={Login} />
+        <RouterSwitch>
+          <PrivateRoute exact path='/home' component={Home} />
+          <PrivateRoute exact path='/profile' component={Profile} />
+          <PrivateRoute exact path="/discover" component={Discover} />
+        </RouterSwitch>
+        {/* <Route path='/discover' component={Discover} /> */}
         {/*Put remaining routes here*/}
-    </RouterSwitch>  
+      </RouterSwitch>
 
-    <Button shape ="circle" size="large"  icon={
-    // <FireTwoTone twoToneColor={isDarkMode?"yellow":"black"} 
-    <FireFilled style={isDarkMode?{"color":"#F0C315"}:{"color":"#444"}}/>} style={{"position":"fixed", "right":"16px", "bottom":"16px"}} onClick={()=>toggleTheme(!isDarkMode)}></Button>
+      <Button shape="circle" size="large" icon={
+        // <FireTwoTone twoToneColor={isDarkMode?"yellow":"black"} 
+        <FireFilled style={isDarkMode ? { "color": "#F0C315" } : { "color": "#444" }} />} style={{ "position": "fixed", "right": "16px", "bottom": "16px" }} onClick={() => toggleTheme(!isDarkMode)}></Button>
 
     </Layout>
   )
 }
 
 export default App;
-
-
 

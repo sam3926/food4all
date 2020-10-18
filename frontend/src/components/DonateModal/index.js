@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
-import './index.css';
 import { Form, Upload, Row , Col , Input , Modal,DatePicker, Button } from 'antd';
 import { UploadOutlined, InboxOutlined , AimOutlined } from '@ant-design/icons';
 
@@ -34,49 +33,20 @@ const normFile = (e) => {
   return e && e.fileList;
 };
 
-class Modal1 extends React.Component {
-  state = {
-    loading: false,
-    visible: false,
-  };
-
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  handleOk = () => {
-    this.setState({ loading: true });
-    setTimeout(() => {
-      this.setState({ loading: false, visible: false });
-    }, 500);
-    Modal.success({
-    content: 'Donations posted',
-  });
-  };
-
-  handleCancel = () => {
-    this.setState({ visible: false });
-  };
-
+class DonateModal extends Component {
+  
   render() {
-    const { visible, loading } = this.state;
-    return (
-      <>
-        <Button type="primary" onClick={this.showModal}>
-          Open Modal with customized footer
-        </Button>
-        <Modal
-          visible={visible}
+    return(
+      <Modal
+          visible={this.props.visible}
           title="Donation Details"
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
+          onOk={this.props.handleOk}
+          onCancel={this.props.handleCancel}
           footer={[
-            <Button key="back" onClick={this.handleCancel}>
+            <Button key="back" onClick={this.props.handleCancel}>
               Return
             </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
+            <Button key="submit" type="primary" loading={this.props.loading} onClick={this.props.handleOk}>
               Submit
             </Button>,
           ]}
@@ -155,9 +125,8 @@ class Modal1 extends React.Component {
        </Form.Item>
     </Form> 
         </Modal>
-      </>
-    );
+    )
   }
 }
 
-export default Modal1;
+export default DonateModal;

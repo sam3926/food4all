@@ -4,3 +4,10 @@
         margin: 0;
         background: rgba(58, 39, 39, 0.2);
 }
+
+P.cardtext {
+        margin-left: auto;
+        margin-right: auto;
+        width: 20em;
+        font-size: large;
+    }

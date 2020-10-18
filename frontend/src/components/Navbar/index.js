@@ -70,7 +70,7 @@ class Navbar extends Component {
                 <Search
                   placeholder="Search"
                   onSearch={value => console.log(value)}
-                  style={{ width: 250 }} />
+                  style={{ width: 150 }} />
               </Menu.Item>
               <Menu.Item key="logout" icon={<LogoutOutlined />} >Logout</Menu.Item>
             </Menu>

@@ -8,13 +8,13 @@ const passport = require("passport");
 const users = require("./routes/api/users");
 //IMPORT all routes
 
-const authRoutes = require('./routes/auth')
+// const authRoutes = require('./routes/auth')
 // const donorRoutes = require('./routes/donor');
 // const organisationRoutes = require('./routes/organisation');
 const uploadRoutes = require('./routes/upload')
 
 const app = express();
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 8000
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -29,7 +29,7 @@ app.get('/api/test', (req, res) => {//TEST ROUTE
     res.json({ "yes": "no" })
 })
 
-app.use('/api/auth', authRoutes)
+// app.use('/api/auth', authRoutes)
 // app.use('/api/donor', donorRoutes);
 // app.use('/api/organisation', organisationRoutes);
 app.use('/upload', uploadRoutes)

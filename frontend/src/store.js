@@ -7,7 +7,8 @@ import storage from 'redux-persist/lib/storage'
 
 
 import homeReducer from "./components/Home/reducer";
-import navReducer from "./components/Navbar/reducer"
+import navReducer from "./components/Navbar/reducer";
+import authReducer from "./components/Auth/reducer";
 //import all reducers here
 
 const persistConfig = {
@@ -17,7 +18,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     homeReducer,
-    navReducer
+    navReducer,
+    authReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

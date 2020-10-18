@@ -6,7 +6,7 @@ module.exports = function validateRegisterInput(data) {
 
   // Convert empty fields to an empty string so we can use validator functions
   data.name = !isEmpty(data.name) ? data.name : "";
-  data.Contact = !isEmpty(data.Contact) ? data.Contact : "";
+  data.contact = !isEmpty(data.contact) ? data.contact : "";
   data.email = !isEmpty(data.email) ? data.email : "";
   data.password = !isEmpty(data.password) ? data.password : "";
   data.password2 = !isEmpty(data.password2) ? data.password2 : "";
@@ -17,8 +17,8 @@ module.exports = function validateRegisterInput(data) {
   }
 
   //Contact Number change
-  if (Validator.isEmpty(data.Contact)) {
-    errors.name = "Contact field is required";
+  if (Validator.isEmpty(data.contact)) {
+    errors.name = "contact field is required";
   }
 
   // Email checks

@@ -19,6 +19,7 @@ router.post("/register", (req, res) => {
   // Form validation
 
   const { errors, isValid } = validateRegisterInput(req.body);
+  console.log(errors)
 
   // Check validation
   if (!isValid) {
@@ -31,7 +32,7 @@ router.post("/register", (req, res) => {
     } else {
       const newUser = new User({
         name: req.body.name,
-        Contact: req.body.Contact,
+        contact: req.body.contact,
         email: req.body.email,
         password: req.body.password
       });

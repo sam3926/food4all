@@ -69,7 +69,7 @@ class HomeCenter extends Component{
         return (
             <Content style={{"margin":"auto"}}>
                 <Card style={{ width: 1000 , margin:"8px"}} hoverable={true} onClick={this.showModal} >
-                    <p class="cardtext"><b>Share something with the community</b></p>
+                    <p className="cardtext"><b>Share something with the community</b></p>
                 </Card>
                 <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    
                 {postList}   

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
+import {changeFilters} from './action'
+import { bindActionCreators } from 'redux';
 import 'antd/dist/antd.css';
 import '../../index.css';
 import { Layout, Menu , Checkbox , Avatar , Button, Space  } from 'antd';
@@ -9,11 +11,20 @@ import { UserOutlined } from '@ant-design/icons';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
+ 
 class LeftSidePanel extends Component{
     render() {
         const {userDetails,following,achievements,donations} = this.props
-        const plainOptions = ['Donations', 'Events', 'Posts'];
-
+        const plainOptions = [
+            { label: 'Donations', value: 'Donations' },
+            { label: 'Events', value: 'Events' },
+            { label: 'Posts', value: 'Posts' },
+          ];
+        const onChange = (checkedValues) =>{
+            this.props.changeFilters(checkedValues)
+            //console.log('checked = ', checkedValues);
+        }
+         
         const followerList = following.length? (
             following.map(follower =>{
                 return(
@@ -92,9 +103,10 @@ class LeftSidePanel extends Component{
         
                 <SubMenu key="sub5" title="Filters" style={{fontSize: '16px'}}>
                     <div style={{"padding":"auto"}}>
-                        <Checkbox.Group options={plainOptions}  />
+                        <Checkbox.Group options={plainOptions} onChange={onChange} />
                     </div>
                 </SubMenu>
+                <button onClick={()=>console.log(this.props)}>click me</button>
                 </Menu>
             </Sider>  
             
@@ -103,7 +115,6 @@ class LeftSidePanel extends Component{
     }
 }
 const mapStatetoProps = state => {
-
     return {
         userDetails:state.LeftSidePanelReducer.userDetails,
         following:state.LeftSidePanelReducer.following,
@@ -112,5 +123,9 @@ const mapStatetoProps = state => {
     };
     
 };
-export default connect(mapStatetoProps)(LeftSidePanel);
+const mapDispatchToProps = dispatch => ({
+    changeFilters : bindActionCreators(changeFilters, dispatch)
+})
+
+export default connect(mapStatetoProps,mapDispatchToProps)(LeftSidePanel);
 

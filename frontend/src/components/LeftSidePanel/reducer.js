@@ -1,4 +1,4 @@
-import { ACTION } from "../Home/constants";
+import { ACTION } from "./constants";
 
 const initialState = {
     userDetails: {
@@ -18,13 +18,14 @@ const initialState = {
         {title:'in top 3!',id:1},
         {title: 'Top Donor',id:2}
     ],
-    currentfilter:['Donations','Events','Posts']
+    currentfilter:[]
 }
 
 const LeftSidePanelReducer = (state = initialState, action) => {
     switch (action.type) {
-        case ACTION.GET_SOME_DATA: {
-            state = { ...state, someData: action.payload }
+        case ACTION.CHANGE_FILTERS: {
+            //console.log('hahaha')
+            return { ...state, currentfilter: action.selectedfilters }
         }
     }
     return state;

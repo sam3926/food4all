@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "./action";
 import { bindActionCreators } from "redux";
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, notification } from 'antd';
 import { MailOutlined, LockOutlined, UserOutlined, PhoneOutlined } from '@ant-design/icons';
 
 class Register extends Component {
@@ -30,9 +30,17 @@ class Register extends Component {
         }
     }
 
+    openNotificationWithIcon = (type, message) => {
+        notification[type]({
+            message: message
+        });
+    };
     onSubmit = values => {
-
-        this.props.registerUser(values, this.props.history);
+        console.log(values)
+        if (values.password != values.password2)
+            this.openNotificationWithIcon('warning', 'Passwords are not matching')
+        else
+            this.props.registerUser(values, this.props.history);
     };
 
     render() {
@@ -169,6 +177,7 @@ class Register extends Component {
                     <Form.Item
                         label="Contact"
                         name="contact"
+
                         rules={[{ required: true, message: 'Please input your contact!' }]}
                     >
                         <Input prefix={<PhoneOutlined className="site-form-item-icon" />} />

@@ -19,8 +19,8 @@ class Landing extends Component {
 
                     <p>WELCOME</p>
                     <div style={{ display: "flex" }}>
-                        <Button type="primary">LOGIN</Button>
-                        <Button>REGISTER</Button>
+                        <Button type="primary"><Link to="/login">LOGIN</Link></Button>
+                        <Button style={{ marginLeft: "8px" }}><Link to="/register">REGISTER</Link></Button>
                     </div>
 
                 </div>

@@ -63,12 +63,15 @@ class Discover extends Component{
         this.setState({ loading: false, visible: false });
       }, 1000);
       Modal.success({
-        content: "Donation Accepted"
+        content: "Donation Shared on profile"
       });
     };
   
     handleCancel = () => {
       this.setState({ visible: false });
+      Modal.success({
+        content: "You said Thank You"
+      });
     };
   
 
@@ -191,7 +194,7 @@ class Discover extends Component{
             onCancel={this.handleCancel}
             footer={[
               <Button key="back" onClick={this.handleCancel}>
-              Cancel
+              Say Thanks
               </Button>,
               <Button
               key="submit"
@@ -199,12 +202,14 @@ class Discover extends Component{
               loading={loading}
               onClick={this.handleOk}
               >
-              Accept Donation
+              Share Donation
               </Button>
               ]}
               >
               <b> Enter No of people will be fed from this donation ?</b>
-            <Input placeholder="Input Number Here" />
+              <Input placeholder="Input Number Here" />
+              <b> Rate the User</b>
+              <Input placeholder="Rate Between 1 to 5" />  
           </Modal>
 
 

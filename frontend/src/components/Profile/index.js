@@ -5,6 +5,9 @@ import { Layout, Menu, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avata
 import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined } from '@ant-design/icons';
 import ListModal from '../ListModal';
 
+import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button } from 'antd';
+import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
+
 const { Search } = Input;
 const { SubMenu } = Menu;
 
@@ -15,6 +18,8 @@ class Profile extends Component {
 
   state = {
     visible: false,
+    loadingAccept: false,
+    visibleAccept: false,
     suggestedPages: [
       {
         title: 'User 1',
@@ -51,12 +56,34 @@ class Profile extends Component {
     });
   };
 
+  showModalAccept = () => {
+    this.setState({
+      visibleAccept: true
+    });
+    //console.log(this.state.visibleAccept);
+  };
+
+  handleOkAccept = () => {
+    this.setState({ loadingAccept: true });
+    setTimeout(() => {
+      this.setState({ loadingAccept: false, visibleAccept: false });
+    }, 1000);
+    Modal.success({
+      content: "Donation Shared on profile"
+    });
+  };
+
+  handleCancelAccept = () => {
+    this.setState({ visibleAccept: false });
+  };
+
   callback = (key) => {
     console.log(key);
   }
 
   render() {
-    const { suggestedPages, visible } = this.state;
+
+    const { suggestedPages, visible, loadingAccept, visibleAccept } = this.state;
     const suffix = (
       <AudioOutlined
         style={{
@@ -242,27 +269,47 @@ class Profile extends Component {
               <Demo />
 
             </Content>
-            <Sider width={250} style={{ padding: "20px  " }}>
+            <Sider width={300} style={{ padding: "20px  " }}>
               <div>
-                <br />
-                <br />
-                <Button type="primary" >
-                  Button A
-          </Button>
-                <br />
-                <br />
-                <Button type="primary">
-                  Button B
-          </Button>
-                <br />
-                <br />
-                <Button type="primary">
-                  Button C
-          </Button>
+                <Card title="User Name" style={{ width: 250 }}
+                  actions={[
+                    <p onClick={this.showModalAccept} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
+                    <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
+                  ]}
+                >
+                  <p>Card content</p>
+                </Card>
               </div>
             </Sider>
           </Layout>
         </Layout>
+
+        <Modal
+          visible={visibleAccept}
+          title="Accept Donation"
+          onOk={this.handleOkAccept}
+          onCancel={this.handleCancelAccept}
+          footer={[
+            <Button key="back" onClick={this.handleCancelAccept}>
+              Say Thanks
+                  </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              loading={loadingAccept}
+              onClick={this.handleOkAccept}
+            >
+              Share Donation
+                  </Button>
+          ]}
+        >
+          <b> Enter No of people will be fed from this donation ?</b>
+          <Input placeholder="Input Number Here" />
+          <b> Rate the User</b>
+          <Input placeholder="Rate Between 1 to 5" />
+        </Modal>
+
+
       </Layout>
     )
   };

@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import ListModal from '../ListModal';
 
-import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown } from 'antd';
+import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider } from 'antd';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
@@ -113,7 +113,7 @@ class Profile extends Component {
     );
 
     const Demo = () => (
-      <Tabs defaultActiveKey="1" >
+      <Tabs size="large" defaultActiveKey="1" >
         <TabPane tab="Donations" key="1">
           <Timeline mode="alternate">
             <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
@@ -211,11 +211,11 @@ class Profile extends Component {
               )}
             />
           </Sider>
-          <Layout style={{ paddingLeft: '24px' }}>
+          <Layout >
             <Content
               // className="site-layout-background"
               style={{
-                // padding: 24,
+                padding: 24,
                 marginTop: 24,
                 minHeight: 280,
               }}
@@ -264,7 +264,7 @@ class Profile extends Component {
               <div>
                 <p style={{ fontWeight: 600 }}>User has fed 324 No. of people since last month.</p>
               </div>
-
+              <Divider style={{ "background": "rgba(151,3,62, 0.2)" }} />
               <Demo />
 
             </Content>

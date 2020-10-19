@@ -72,9 +72,6 @@ class Profile extends Component {
 
   handleCancelAccept = () => {
     this.setState({ visibleAccept: false });
-    Modal.success({
-      content: "You said Thank You"
-    });
   };
 
   callback = (key) => {

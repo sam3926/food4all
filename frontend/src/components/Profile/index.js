@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM, { render } from 'react-dom';
 import 'antd/dist/antd.css';
-import { Layout, Menu, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button } from 'antd';
-import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Menu, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown } from 'antd';
+import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 const { SubMenu } = Menu;
@@ -43,6 +43,27 @@ class Profile extends Component {
         }}
       />
     );
+
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+            1st menu item
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+            2nd menu item
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+            3rd menu item
+          </a>
+        </Menu.Item>
+      </Menu>
+    );
+
     const Demo = () => (
       <Tabs defaultActiveKey="1" >
         <TabPane tab="Donations" key="1">
@@ -153,17 +174,18 @@ class Profile extends Component {
             >
               <div style={{ display: "flex" }}>
                 <Image
-                  width={200}
+                  width={250}
                   src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
                 />
-                <div style={{ marginLeft: "20px" }}>
-                  <b>User Name</b>
-                  <br />
+                <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                  <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>Krishnendu Sudheesh</p>
+
                   <div>
-                    <b>Brief Description about user</b>
-                    <br />
-          Information about his contact Number and address
-          </div>
+                    <p>lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's dasdsdsaaaaaaaaa sdass </p>
+
+                    <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>93128398123</span>
+                    <HomeOutlined /> <span style={{ fontWeight: 500 }}>777 Brockton Avenue, Abington MA 2351</span>
+                  </div>
                   <div>
                     <Button type="link">
                       39 Followers
@@ -172,12 +194,26 @@ class Profile extends Component {
                       53 Following
           </Button>
                   </div>
+                  <div>
+                    <Button type="primary" style={{ marginRight: "10px" }}>
+                      <TeamOutlined /> Follow
+                    </Button>
+                    <Button type="primary" style={{ marginRight: "10px" }}>
+                      <SendOutlined /> Message
+                  </Button>
+
+                    <Dropdown overlay={menu} placement="bottomLeft" arrow>
+                      <Button type="primary" >
+                        <MoreOutlined />
+                      </Button>
+                    </Dropdown>
+                  </div>
                 </div>
 
               </div>
               <br />
               <div>
-                <p>User has fed 324 No. of people since last month.</p>
+                <p style={{ fontWeight: 600 }}>User has fed 324 No. of people since last month.</p>
               </div>
 
               <Demo />

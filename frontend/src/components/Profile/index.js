@@ -3,6 +3,7 @@ import ReactDOM, { render } from 'react-dom';
 import 'antd/dist/antd.css';
 import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import ListModal from '../ListModal';
+import EditProfile from '../EditProfile';
 
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider } from 'antd';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
@@ -19,6 +20,8 @@ class Profile extends Component {
     visible: false,
     loadingAccept: false,
     visibleAccept: false,
+    visibleEdit: false,
+    loadingEdit: false,
     suggestedPages: [
       {
         title: 'User 1',
@@ -76,13 +79,30 @@ class Profile extends Component {
     this.setState({ visibleAccept: false });
   };
 
+  showModalEdit = () => {
+    this.setState({
+      visibleEdit: true,
+    });
+  };
+
+  handleOkEdit = () => {
+    this.setState({ loadingEdit: true });
+    setTimeout(() => {
+      this.setState({ loadingEdit: false, visibleEdit: false });
+    }, 1000);
+  };
+
+  handleCancelEdit = () => {
+    this.setState({ visibleEdit: false });
+  };
+
   callback = (key) => {
     console.log(key);
   }
 
   render() {
 
-    const { suggestedPages, visible, loadingAccept, visibleAccept } = this.state;
+    const { suggestedPages, visible, loadingAccept, visibleAccept ,visibleEdit , loadingEdit } = this.state;
     const suffix = (
       <AudioOutlined
         style={{
@@ -244,13 +264,17 @@ class Profile extends Component {
                     <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} />
                   </div>
                   <div>
-                    <Button type="primary" style={{ marginRight: "10px" }}>
+                    <Button type="primary" style={{ marginRight: "8px" }}>
                       <TeamOutlined /> Follow
                     </Button>
-                    <Button type="primary" style={{ marginRight: "10px" }}>
+                    <Button type="primary" style={{ marginRight: "8px" }}>
                       <SendOutlined /> Message
                   </Button>
 
+                  <Button onClick={this.showModalEdit} type="primary" style={{ marginRight: "8px" }}  >
+                      <EditOutlined /> Edit Profile
+                  </Button>
+                  <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
                     <Dropdown overlay={menu} placement="bottomLeft" arrow>
                       <Button type="primary" >
                         <MoreOutlined />
@@ -258,7 +282,7 @@ class Profile extends Component {
                     </Dropdown>
                   </div>
                 </div>
-
+              
               </div>
               <br />
               <div>

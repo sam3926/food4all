@@ -113,7 +113,7 @@ class Profile extends Component {
     );
 
     const Demo = () => (
-      <Tabs size="large" defaultActiveKey="1" >
+      <Tabs centered="true" size="large" defaultActiveKey="1" >
         <TabPane tab="Donations" key="1">
           <Timeline mode="alternate">
             <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
@@ -128,7 +128,7 @@ class Profile extends Component {
         </Timeline.Item>
           </Timeline>
         </TabPane>
-        <TabPane tab="Posts" key="2">
+        <TabPane centered="true" tab="Posts" key="2">
           <Card title="User Name" style={{ width: 1000 }}
             actions={[
               <LikeOutlined key="Like" />,
@@ -160,7 +160,7 @@ class Profile extends Component {
             <p>Card content</p>
           </Card>
         </TabPane>
-        <TabPane tab="Acheivements" key="3">
+        <TabPane tab="Acheivements" centered="true" key="3">
           Content of Acheivements
         </TabPane>
       </Tabs>

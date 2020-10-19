@@ -66,12 +66,12 @@ class HomeCenter extends Component{
         const Actions = [
             <div><LikeOutlined key="Like" style={{margin:"8px"}}/>20</div>,
             <div><ShareAltOutlined key="share" style={{margin:"8px"}}/>30</div>,
-            <div><CommentOutlined key="Comment" style={{margin:"8px"}}/>20</div>,
+            <div><CommentOutlined hoverable={true} onClick={this.showModalComments} key="Comment" style={{margin:"8px"}}/>20</div>,
             <div><GiftOutlined key="Award" style={{margin:"8px"}}/>20</div>,
             ]
-   
+            
         const { posts } = this.props;
-        
+
         const postList = posts.length? (
             posts.map(post =>{
                 return(
@@ -97,7 +97,6 @@ class HomeCenter extends Component{
                 actions={[
                 <LikeOutlined key="Like" />,
                 <ShareAltOutlined key="share" />,
-                <CommentOutlined hoverable={true} onClick={this.showModalComments} key="Comment" />,
                 <GiftOutlined key="Award" />,
                 ]}
                 >

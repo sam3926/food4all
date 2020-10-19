@@ -3,6 +3,7 @@ import ReactDOM, { render } from 'react-dom';
 import 'antd/dist/antd.css';
 import { Layout, Menu, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown } from 'antd';
 import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined } from '@ant-design/icons';
+import ListModal from '../ListModal';
 
 const { Search } = Input;
 const { SubMenu } = Menu;
@@ -13,6 +14,7 @@ const { Header, Content, Sider } = Layout;
 class Profile extends Component {
 
   state = {
+    visible: false,
     suggestedPages: [
       {
         title: 'User 1',
@@ -29,12 +31,32 @@ class Profile extends Component {
     ]
   }
 
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
   callback = (key) => {
     console.log(key);
   }
 
   render() {
-    const { suggestedPages } = this.state;
+    const { suggestedPages, visible } = this.state;
     const suffix = (
       <AudioOutlined
         style={{
@@ -187,12 +209,13 @@ class Profile extends Component {
                     <HomeOutlined /> <span style={{ fontWeight: 500 }}>777 Brockton Avenue, Abington MA 2351</span>
                   </div>
                   <div>
-                    <Button type="link">
+                    <Button type="link" onClick={this.showModal}>
                       39 Followers
           </Button>
-                    <Button type="link">
+                    <Button type="link" onClick={this.showModal}>
                       53 Following
           </Button>
+                    <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} />
                   </div>
                   <div>
                     <Button type="primary" style={{ marginRight: "10px" }}>

@@ -5,10 +5,11 @@ import './styles.css'
 
 import { Layout, Card,  } from 'antd';
 import { CommentOutlined , LikeOutlined ,
-         GiftOutlined , ShareAltOutlined } from '@ant-design/icons';
+         GiftOutlined , ShareAltOutlined , EditOutlined  } from '@ant-design/icons';
 
 import { Modal } from 'antd';
 import PostModal from '../PostModal';
+import Comments from '../Comments';
 
 const { Content } = Layout;
 
@@ -16,11 +17,20 @@ class HomeCenter extends Component{
     
     state = {
         loading: false,
-        visible: false
+        visible: false,
+        loadingComments: false,
+        visibleComments: false,
     }
+
     showModal = () => {
         this.setState({
             visible: true
+        });
+    };
+
+    showModalComments = () => {
+        this.setState({
+            visibleComments: true
         });
     };
 
@@ -34,13 +44,24 @@ class HomeCenter extends Component{
         });
     };
 
+    handleOkComments = () => {
+        this.setState({ loadingComments: true });
+        setTimeout(() => {
+          this.setState({ loadingComments: false, visibleComments: false });
+        }, 100);
+      };
+
     handleCancel = () => {
         this.setState({ visible: false });
+    };
+
+    handleCancelComments = () => {
+        this.setState({ visibleComments: false });
     };
     
     render (){
         
-        const { visible, loading } = this.state;
+        const { visible, loading , visibleComments, loadingComments} = this.state;
 
         const Actions = [
             <LikeOutlined key="Like" />,
@@ -69,9 +90,20 @@ class HomeCenter extends Component{
         return (
             <Content style={{"margin":"auto"}}>
                 <Card style={{ width: 1000 , margin:"8px"}} hoverable={true} onClick={this.showModal} >
-                    <p className="cardtext"><b>Share something with the community</b></p>
+                    <p className="cardtext"> <EditOutlined /> Share something with the community</p>
                 </Card>
                 <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    
+                <Card title="User Name" style={{ width: 1000 }}
+                actions={[
+                <LikeOutlined key="Like" />,
+                <ShareAltOutlined key="share" />,
+                <CommentOutlined hoverable={true} onClick={this.showModalComments} key="Comment" />,
+                <GiftOutlined key="Award" />,
+                ]}
+                >
+                <p>Card content</p>
+                </Card>
+                <Comments handleCancel={this.handleCancelComments} handleOk={this.handleOkComments} showModal={this.showModalComments} visible={visibleComments} loading={loadingComments}/>
                 {postList}   
             </Content>
         )

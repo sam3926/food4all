@@ -43,10 +43,10 @@ class HomeCenter extends Component{
         const { visible, loading } = this.state;
 
         const Actions = [
-            <LikeOutlined key="Like" />,
-            <ShareAltOutlined key="share" />,
-            <CommentOutlined key="Comment" />,
-            <GiftOutlined key="Award" />,
+            <div><LikeOutlined key="Like" style={{margin:"8px"}}/>20</div>,
+            <div><ShareAltOutlined key="share" style={{margin:"8px"}}/>30</div>,
+            <div><CommentOutlined key="Comment" style={{margin:"8px"}}/>20</div>,
+            <div><GiftOutlined key="Award" style={{margin:"8px"}}/>20</div>,
             ]
    
         const { posts } = this.props;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM, { render } from 'react-dom';
 import 'antd/dist/antd.css';
+import ListModal from '../ListModal';
 import { Layout, Menu, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button } from 'antd';
 import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -11,8 +12,9 @@ const { TabPane } = Tabs;
 const { Header, Content, Sider } = Layout;
 
 class Profile extends Component {
-
+  
   state = {
+    visible: false,
     suggestedPages: [
       {
         title: 'User 1',
@@ -29,12 +31,32 @@ class Profile extends Component {
     ]
   }
 
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
   callback = (key) => {
     console.log(key);
   }
 
   render() {
-    const { suggestedPages } = this.state;
+    const { suggestedPages , visible} = this.state;
     const suffix = (
       <AudioOutlined
         style={{
@@ -165,12 +187,13 @@ class Profile extends Component {
           Information about his contact Number and address
           </div>
                   <div>
-                    <Button type="link">
+                    <Button type="link" onClick={this.showModal}>
                       39 Followers
           </Button>
-                    <Button type="link">
+                    <Button type="link" onClick={this.showModal}>
                       53 Following
           </Button>
+          <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible}/>
                   </div>
                 </div>
 

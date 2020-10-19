@@ -76,7 +76,7 @@ class LeftSidePanel extends Component{
                 style={{ height: '90%', borderRight: 0, marginTop: '26px', marginBottom: '20px'}}
                 >
                 
-                <Menu.Item key="1" style={{fontSize: '20px', marginBlock: '10px'}}>
+                <Menu.Item key="Sub1" style={{fontSize: '20px', marginBlock: '10px'}}>
                     <Space>
                         <Avatar size={36}
                         style={{
@@ -106,7 +106,6 @@ class LeftSidePanel extends Component{
                         <Checkbox.Group options={plainOptions} onChange={onChange} />
                     </div>
                 </SubMenu>
-                <button onClick={()=>console.log(this.props)}>click me</button>
                 </Menu>
             </Sider>  
             

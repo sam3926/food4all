@@ -6,17 +6,17 @@ const initialState = {
         profilePic: ''
     },
     following: [
-        {name:'arpit',id:1},
-        {name:'Krishnendu',id:2},
+        {name:'arpit',id:'f1'},
+        {name:'Krishnendu',id:'f2'},
         {name: 'Dinkar'}
     ],
     donations:[
-        {name:'xyz12',id:1},
-        {name:'xyz',id:2}
+        {name:'xyz12',id:'d1'},
+        {name:'xyz',id:'d2'}
     ],
     achievements:[
-        {title:'in top 3!',id:1},
-        {title: 'Top Donor',id:2}
+        {title:'in top 3!',id:'a1'},
+        {title: 'Top Donor',id:'a2'}
     ],
     currentfilter:[]
 }

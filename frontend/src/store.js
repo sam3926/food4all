@@ -11,6 +11,7 @@ import navReducer from "./components/Navbar/reducer";
 import authReducer from "./components/Auth/reducer";
 import HomeCenterReducer from './components/HomeCenter/reducer';
 import LeftSidePanelReducer from './components/LeftSidePanel/reducer';
+import DiscoverReducer from './components/Discover/reducer';
 //import all reducers here
 
 const persistConfig = {
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
     navReducer,
     authReducer,
     HomeCenterReducer,
+    DiscoverReducer,
     LeftSidePanelReducer
 });
 

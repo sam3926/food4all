@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import {connect} from 'react-redux';
 import 'antd/dist/antd.css';
 import './styles.css'
 
@@ -13,19 +13,11 @@ import PostModal from '../PostModal';
 const { Content } = Layout;
 
 class HomeCenter extends Component{
-
+    
     state = {
-        posts: [
-            {user_name:'Arpit', description:'Card Content'},
-            {user_name:'Dinkar', description:'Card Content'},
-            {user_name:'Sudheesh', description:'Card Content'},
-            {user_name:'Shreyansh', description:'Card Content'}
-        ],
         loading: false,
         visible: false
     }
-
-
     showModal = () => {
         this.setState({
             visible: true
@@ -47,6 +39,7 @@ class HomeCenter extends Component{
     };
     
     render (){
+        
         const { visible, loading } = this.state;
 
         const Actions = [
@@ -56,7 +49,7 @@ class HomeCenter extends Component{
             <GiftOutlined key="Award" />,
             ]
    
-        const { posts } = this.state;
+        const { posts } = this.props;
         
         const postList = posts.length? (
             posts.map(post =>{
@@ -76,7 +69,7 @@ class HomeCenter extends Component{
         return (
             <Content style={{"margin":"auto"}}>
                 <Card style={{ width: 1000 , margin:"8px"}} hoverable={true} onClick={this.showModal} >
-                    <p class="cardtext"><b>Share something with the community</b></p>
+                    <p className="cardtext"><b>Share something with the community</b></p>
                 </Card>
                 <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    
                 {postList}   
@@ -84,5 +77,8 @@ class HomeCenter extends Component{
         )
     }
 }
+const mapStateToProps = state => ({
+    posts:state.HomeCenterReducer.posts
+})
 
-export default HomeCenter;
+export default connect(mapStateToProps)(HomeCenter);

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM, { render } from 'react-dom';
 import 'antd/dist/antd.css';
+import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import ListModal from '../ListModal';
-import { Layout, Menu, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button } from 'antd';
-import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
+
+import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider } from 'antd';
+// import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 const { SubMenu } = Menu;
@@ -12,9 +14,11 @@ const { TabPane } = Tabs;
 const { Header, Content, Sider } = Layout;
 
 class Profile extends Component {
-  
+
   state = {
     visible: false,
+    loadingAccept: false,
+    visibleAccept: false,
     suggestedPages: [
       {
         title: 'User 1',
@@ -51,12 +55,34 @@ class Profile extends Component {
     });
   };
 
+  showModalAccept = () => {
+    this.setState({
+      visibleAccept: true
+    });
+    //console.log(this.state.visibleAccept);
+  };
+
+  handleOkAccept = () => {
+    this.setState({ loadingAccept: true });
+    setTimeout(() => {
+      this.setState({ loadingAccept: false, visibleAccept: false });
+    }, 1000);
+    Modal.success({
+      content: "Donation Shared on profile"
+    });
+  };
+
+  handleCancelAccept = () => {
+    this.setState({ visibleAccept: false });
+  };
+
   callback = (key) => {
     console.log(key);
   }
 
   render() {
-    const { suggestedPages , visible} = this.state;
+
+    const { suggestedPages, visible, loadingAccept, visibleAccept } = this.state;
     const suffix = (
       <AudioOutlined
         style={{
@@ -65,8 +91,29 @@ class Profile extends Component {
         }}
       />
     );
+
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+            1st menu item
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+            2nd menu item
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+            3rd menu item
+          </a>
+        </Menu.Item>
+      </Menu>
+    );
+
     const Demo = () => (
-      <Tabs defaultActiveKey="1" >
+      <Tabs size="large" defaultActiveKey="1" >
         <TabPane tab="Donations" key="1">
           <Timeline mode="alternate">
             <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
@@ -164,28 +211,29 @@ class Profile extends Component {
               )}
             />
           </Sider>
-          <Layout style={{ paddingLeft: '24px' }}>
+          <Layout >
             <Content
               // className="site-layout-background"
               style={{
-                // padding: 24,
+                padding: 24,
                 marginTop: 24,
                 minHeight: 280,
               }}
             >
               <div style={{ display: "flex" }}>
                 <Image
-                  width={200}
+                  width={250}
                   src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
                 />
-                <div style={{ marginLeft: "20px" }}>
-                  <b>User Name</b>
-                  <br />
+                <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                  <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>Krishnendu Sudheesh</p>
+
                   <div>
-                    <b>Brief Description about user</b>
-                    <br />
-          Information about his contact Number and address
-          </div>
+                    <p>lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's dasdsdsaaaaaaaaa sdass </p>
+
+                    <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>93128398123</span>
+                    <HomeOutlined /> <span style={{ fontWeight: 500 }}>777 Brockton Avenue, Abington MA 2351</span>
+                  </div>
                   <div>
                     <Button type="link" onClick={this.showModal}>
                       39 Followers
@@ -193,40 +241,74 @@ class Profile extends Component {
                     <Button type="link" onClick={this.showModal}>
                       53 Following
           </Button>
-          <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible}/>
+                    <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} />
+                  </div>
+                  <div>
+                    <Button type="primary" style={{ marginRight: "10px" }}>
+                      <TeamOutlined /> Follow
+                    </Button>
+                    <Button type="primary" style={{ marginRight: "10px" }}>
+                      <SendOutlined /> Message
+                  </Button>
+
+                    <Dropdown overlay={menu} placement="bottomLeft" arrow>
+                      <Button type="primary" >
+                        <MoreOutlined />
+                      </Button>
+                    </Dropdown>
                   </div>
                 </div>
 
               </div>
               <br />
               <div>
-                <p>User has fed 324 No. of people since last month.</p>
+                <p style={{ fontWeight: 600 }}>User has fed 324 No. of people since last month.</p>
               </div>
-
+              <Divider style={{ "background": "rgba(151,3,62, 0.2)" }} />
               <Demo />
 
             </Content>
-            <Sider width={250} style={{ padding: "20px  " }}>
+            <Sider width={300} style={{ padding: "20px  " }}>
               <div>
-                <br />
-                <br />
-                <Button type="primary" >
-                  Button A
-          </Button>
-                <br />
-                <br />
-                <Button type="primary">
-                  Button B
-          </Button>
-                <br />
-                <br />
-                <Button type="primary">
-                  Button C
-          </Button>
+                <Card title="User Name" style={{ width: 250 }}
+                  actions={[
+                    <p onClick={this.showModalAccept} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
+                    <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
+                  ]}
+                >
+                  <p>Card content</p>
+                </Card>
               </div>
             </Sider>
           </Layout>
         </Layout>
+
+        <Modal
+          visible={visibleAccept}
+          title="Accept Donation"
+          onOk={this.handleOkAccept}
+          onCancel={this.handleCancelAccept}
+          footer={[
+            <Button key="back" onClick={this.handleCancelAccept}>
+              Say Thanks
+                  </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              loading={loadingAccept}
+              onClick={this.handleOkAccept}
+            >
+              Share Donation
+                  </Button>
+          ]}
+        >
+          <b> Enter No of people will be fed from this donation ?</b>
+          <Input placeholder="Input Number Here" />
+          <b> Rate the User</b>
+          <Input placeholder="Rate Between 1 to 5" />
+        </Modal>
+
+
       </Layout>
     )
   };

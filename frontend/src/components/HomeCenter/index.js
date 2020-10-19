@@ -5,7 +5,7 @@ import './styles.css'
 
 import { Layout, Card,  } from 'antd';
 import { CommentOutlined , LikeOutlined ,
-         GiftOutlined , ShareAltOutlined } from '@ant-design/icons';
+         GiftOutlined , ShareAltOutlined , EditOutlined  } from '@ant-design/icons';
 
 import { Modal } from 'antd';
 import PostModal from '../PostModal';
@@ -90,7 +90,7 @@ class HomeCenter extends Component{
         return (
             <Content style={{"margin":"auto"}}>
                 <Card style={{ width: 1000 , margin:"8px"}} hoverable={true} onClick={this.showModal} >
-                    <p className="cardtext"><b>Share something with the community</b></p>
+                    <p className="cardtext"> <EditOutlined /> Share something with the community</p>
                 </Card>
                 <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    
                 <Card title="User Name" style={{ width: 1000 }}

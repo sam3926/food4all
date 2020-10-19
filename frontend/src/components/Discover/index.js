@@ -1,9 +1,27 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css';
 import '../../index.css';
-import { Menu, Layout, Card } from 'antd';
+import './styles.css'
+import {connect} from 'react-redux'
+import {changeFilters} from './action'
+import { bindActionCreators } from 'redux';
+import { Modal, Menu, Checkbox , Layout, Card , Button , Input } from 'antd';
 
 const { Content,Sider } = Layout;
+const { SubMenu } = Menu;
+
+const ContactNo = [
+  {
+    No: '000000',
+  }
+]
+
+function success() {
+  Modal.success({
+    title: 'Donor Notified',
+    content: 'You can contact Donor -Contact No-'
+  });
+}
 
 class Discover extends Component{
    state ={
@@ -28,17 +46,59 @@ class Discover extends Component{
         {title:'Arpit2',description:'Card Content'},
         {title:'Arpit2',description:'Card Content'}
       ],
-      selectedMenuItem:'1'
+      selectedMenuItem:'1',
+      loading: false,
+      visible: false,
     }
+  
+    showModal = () => {
+      this.setState({
+        visible: true
+      });
+    };
+  
+    handleOk = () => {
+      this.setState({ loading: true });
+      setTimeout(() => {
+        this.setState({ loading: false, visible: false });
+      }, 1000);
+      Modal.success({
+        content: "Donation Accepted"
+      });
+    };
+  
+    handleCancel = () => {
+      this.setState({ visible: false });
+    };
+  
+
+
    
   render () {
 
-    const { Donations, Organisations, Events, selectedMenuItem } = this.state;
+    const { Donations, Organisations, Events, selectedMenuItem , visible, loading} = this.state;
+
+    const plainOptions = [
+      { label: 'Location', value: 'Location' },
+      { label: 'Expiry Date', value: 'Expiry Date' },
+      { label: 'Time', value: 'Time' },
+    ];
+    const onChange = (checkedValues) =>{
+      this.props.changeFilters(checkedValues)
+      //console.log(this.props)
+      //console.log('checked = ', checkedValues);
+    }
+
 
     const DonationList = Donations.length? (
       Donations.map(Donation=>{
         return (
-          <Card title={Donation.title} style={{ width: 1000 }}>
+          <Card title={Donation.title} style={{ width: 1000 }} 
+          actions={[
+            <p hoverable={true} className="text" onClick={success} ><b> Contact Donor </b></p>,
+            <p hoverable={true} className="text" onClick={this.showModal} ><b> Accept Donation  </b></p>,
+          ]}
+          >
             <p>{Donation.description}</p>
           </Card>
         )
@@ -104,10 +164,15 @@ class Discover extends Component{
             <Menu
                 mode="inline"
                 defaultSelectedKeys={['1']}
+                defaultOpenKeys={['1']}
                 style={{ height: '100%', borderRight: 0 }}
                 onClick={(e) => onclick(e.key)} >
 
-                <Menu.Item key="1">Donations</Menu.Item>
+                <SubMenu key="1" title="Donations" style={{fontSize: '16px'}}>
+                    <div style={{"padding":"auto"}}>
+                        <Checkbox.Group options={plainOptions} onChange={onChange} />
+                    </div>
+                </SubMenu>
                 <Menu.Item key="2">Nearby Organisations</Menu.Item>
                 <Menu.Item key="3">Nearby Events/Activities</Menu.Item>
             </Menu>    
@@ -118,9 +183,44 @@ class Discover extends Component{
                         {componentsSwitch(selectedMenuItem)}
               </Content>
             </Layout>
+                
+          <Modal
+            visible={visible}
+            title="Accept Donation"
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            footer={[
+              <Button key="back" onClick={this.handleCancel}>
+              Cancel
+              </Button>,
+              <Button
+              key="submit"
+              type="primary"
+              loading={loading}
+              onClick={this.handleOk}
+              >
+              Accept Donation
+              </Button>
+              ]}
+              >
+              <b> Enter No of people will be fed from this donation ?</b>
+            <Input placeholder="Input Number Here" />
+          </Modal>
+
+
         </Layout>
       )
   }
 }
 
-export default Discover;
+
+const mapStatetoProps = state => {
+  return {
+  };
+  
+};
+const mapDispatchToProps = dispatch => ({
+  changeFilters : bindActionCreators(changeFilters, dispatch)
+})
+
+export default connect(mapStatetoProps,mapDispatchToProps)(Discover);

@@ -113,15 +113,13 @@ class Profile extends Component {
     );
 
     const Demo = () => (
-      <Tabs size="large" defaultActiveKey="1" >
+      <Tabs centered="true" size="large" defaultActiveKey="1" >
         <TabPane tab="Donations" key="1">
           <Timeline mode="alternate">
             <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
             <Timeline.Item color="green">Solve initial network problems 2015-09-01</Timeline.Item>
             <Timeline.Item dot={<ClockCircleOutlined style={{ fontSize: '16px' }} />}>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-              laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto
-              beatae vitae dicta sunt explicabo.
+            Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted
         </Timeline.Item>
             <Timeline.Item color="red">Network problems being solved 2015-09-01</Timeline.Item>
             <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
@@ -130,7 +128,7 @@ class Profile extends Component {
         </Timeline.Item>
           </Timeline>
         </TabPane>
-        <TabPane tab="Posts" key="2">
+        <TabPane centered="true" tab="Posts" key="2">
           <Card title="User Name" style={{ width: 1000 }}
             actions={[
               <LikeOutlined key="Like" />,
@@ -162,7 +160,7 @@ class Profile extends Component {
             <p>Card content</p>
           </Card>
         </TabPane>
-        <TabPane tab="Acheivements" key="3">
+        <TabPane tab="Acheivements" centered="true" key="3">
           Content of Acheivements
         </TabPane>
       </Tabs>
@@ -196,8 +194,8 @@ class Profile extends Component {
               itemLayout="horizontal"
               dataSource={suggestedPages}
               header={
-                <div>
-                  <b>Suggested pages</b>
+                <div style={{fontWeight: "bolder", padding: "5px", fontSize: "medium"}}>
+                  Suggested pages
                 </div>
               }
               renderItem={item => (
@@ -229,48 +227,59 @@ class Profile extends Component {
                   <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>Krishnendu Sudheesh</p>
 
                   <div>
-                    <p>lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's dasdsdsaaaaaaaaa sdass </p>
+                    <p>Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted </p>
 
                     <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>93128398123</span>
                     <HomeOutlined /> <span style={{ fontWeight: 500 }}>777 Brockton Avenue, Abington MA 2351</span>
                   </div>
-                  <div>
-                    <Button type="link" onClick={this.showModal}>
+                  <div style={{marginLeft: "-16px", marginTop:"6px"}}>
+                    <Button type="link" size="large" style={{fontWeight: "bolder"}} onClick={this.showModal}>
                       39 Followers
           </Button>
-                    <Button type="link" onClick={this.showModal}>
+                    <Button type="link" size="large" style={{fontWeight: "bolder"}} onClick={this.showModal}>
                       53 Following
           </Button>
                     <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} />
-                  </div>
-                  <div>
-                    <Button type="primary" style={{ marginRight: "10px" }}>
+                  <span style={{float: "right", marginTop:"6px"}}>
+                    <Button type="primary" style={{ marginRight: "14px" }}>
                       <TeamOutlined /> Follow
                     </Button>
-                    <Button type="primary" style={{ marginRight: "10px" }}>
+                    <Button type="primary" style={{ marginRight: "14px" }}>
                       <SendOutlined /> Message
                   </Button>
-
+                  
                     <Dropdown overlay={menu} placement="bottomLeft" arrow>
                       <Button type="primary" >
                         <MoreOutlined />
                       </Button>
                     </Dropdown>
+                    </span>
                   </div>
-                </div>
-
+                
+                <div style={{marginTop: "8px"}}>
+                <p style={{ fontWeight: 600 }}>
+                  <span >Krishnendu has fed 324 people last month and 512 people overall!</span>
+                  </p> 
               </div>
-              <br />
+              </div>
+              </div>
+              {/*
               <div>
                 <p style={{ fontWeight: 600 }}>User has fed 324 No. of people since last month.</p>
               </div>
+              */}
               <Divider style={{ "background": "rgba(151,3,62, 0.2)" }} />
               <Demo />
 
             </Content>
-            <Sider width={300} style={{ padding: "20px  " }}>
+            <Sider width={300} style={{ padding: "20px" }}>
+            {
+                //add title div here 
+              }
+
+              <div style={{fontWeight: "bolder", padding: "15px", fontSize: "medium"}}>Pending Donations</div>
               <div>
-                <Card title="User Name" style={{ width: 250 }}
+                <Card title="User Name" size="small" style={{ width: 250 }}
                   actions={[
                     <p onClick={this.showModalAccept} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
                     <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,

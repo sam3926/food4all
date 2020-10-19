@@ -47,8 +47,8 @@ import { bindActionCreators } from "redux";
           <Modal
             visible={this.props.visible}
             title="Share your Thoughts"
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
+            onOk={this.props.handleOk}
+            onCancel={this.props.handleCancel}
             footer={[
               <Button key="back" onClick={this.props.handleCancel}>
                 Return

@@ -13,7 +13,17 @@ const initialState = {
 const HomeCenterReducer = (state = initialState, action) => {
     switch (action.type) {
         case ACTION.GET_SOME_DATA: {
-            state = { ...state, someData: action.payload }
+            return { ...state, someData: action.payload }
+        }
+        case 'ADD_POST': {
+            console.log('inside the ADD post')
+            console.log(action.post)
+            let posts = [...state.posts,action.post]
+            console.log(posts)
+            return {
+                 ...state,
+                 posts:posts
+                }
         }
     }
     return state;

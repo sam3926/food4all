@@ -23,14 +23,21 @@ class HomeCenter extends Component {
         visible: false,
         loadingComments: false,
         visibleComments: false,
+        currentPostid: 2
     }
-
+    
     showModal = () => {
         this.setState({
             visible: true
         });
     };
-
+    startModalComments = (id) =>{
+        this.setState({
+            visibleComments: true,
+            currentPostid:id
+        });
+        console.log(id);
+    }
     showModalComments = () => {
         this.setState({
             visibleComments: true
@@ -68,7 +75,6 @@ class HomeCenter extends Component {
     render (){
         
         const { visible, loading , visibleComments, loadingComments} = this.state;
-
         const Actions = [
             <div><LikeOutlined key="Like" style={{ margin: "8px" }} />20</div>,
             <div><ShareAltOutlined key="share" style={{ margin: "8px" }} />30</div>,
@@ -85,7 +91,7 @@ class HomeCenter extends Component {
                       actions= {[
                         <div><LikeOutlined key="Like" style={{margin:"8px"}} onClick={(id) =>this.incrementLike(post.id)}/>{post.likes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/>{post.shares}</div>,
-                        <div><CommentOutlined hoverable={true} onClick={this.showModalComments} key="Comment" style={{margin:"8px"}}/>20</div>,
+                        <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post.id)} key="Comment" style={{margin:"8px"}}/>20</div>,
                         <div><GiftOutlined key="Award" style={{margin:"8px"}}/>20</div>,
                         ]} >
                         <p>{post.description}</p>
@@ -104,7 +110,7 @@ class HomeCenter extends Component {
                     <p className="cardtext"> <EditOutlined /> Share something with the community</p>
                 </Card>
                 <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    
-                <Comments handleCancel={this.handleCancelComments} handleOk={this.handleOkComments} showModal={this.showModalComments} visible={visibleComments} loading={loadingComments}/>
+                <Comments id={this.state.currentPostid} handleCancel={this.handleCancelComments} handleOk={this.handleOkComments} showModal={this.showModalComments} visible={visibleComments} loading={loadingComments}/>
                 {postList}   
             </Content>
         )

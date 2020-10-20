@@ -1,6 +1,53 @@
 import { ACTION } from "../Home/constants";
 
 const initialState = {
+    postComments:[
+        {
+            id:1,    
+            comments: [
+                {
+                    author: 'Arpit Bandejiya',
+                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    content: 'hello there',
+                    datetime: "2000-12-11",
+                }
+            ]
+        },
+        {
+            id:2,    
+            comments: [
+                {
+                    author: 'Krishnendu',
+                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    content: 'hello there',
+                    datetime: "2000-12-11",
+                }
+            ]
+        },
+        {
+            id:3,    
+            comments: [
+                {
+                    author: 'Shreyansh',
+                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    content: 'hello there',
+                    datetime: "2000-12-11",
+                }
+            ]
+        },
+        {
+            id:4,    
+            comments: [
+                {
+                    author: 'Dinkar',
+                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    content: 'hello there',
+                    datetime: "2000-12-11",
+                }
+            ]
+        },
+        
+    ],
     posts: [
         {user_name:'Arpit', description:'Card Content',id:1,likes:20,liked:false,shares:30},
         {user_name:'Dinkar', description:'Card Content',id:2,likes:30,liked:false,shares:17},
@@ -19,10 +66,16 @@ const HomeCenterReducer = (state = initialState, action) => {
             console.log('inside the ADD post')
             console.log(action.post)
             let posts = [...state.posts,action.post]
+            const comment = {
+                id:action.post.id,
+                comments:[]
+            }
+            let postComments = [...state.postComments,comment]
             console.log(posts)
             return {
                  ...state,
-                 posts:posts
+                 posts:posts,
+                 postComments:postComments
                 }
         }
         case 'CHANGE_LIKE': {
@@ -39,6 +92,15 @@ const HomeCenterReducer = (state = initialState, action) => {
             }
             console.log(posts)    
             return {...state,posts}
+        }
+        case 'ADD_COMMENT':{
+            
+            var postComments = [...state.postComments]
+            var allcomments = postComments.find( (comment) => comment.id == action.id )
+            allcomments.comments = [...allcomments.comments, action.comment]
+
+            console.log(postComments)
+            return {...state}
         }
     }
     return state;

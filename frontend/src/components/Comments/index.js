@@ -4,6 +4,9 @@ import 'antd/dist/antd.css';
 import { Modal, Button } from 'antd';
 import { Comment, Avatar, Form, List, Input } from 'antd';
 import moment from 'moment';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {addComment} from './action'
 
 const { TextArea } = Input;
 
@@ -31,52 +34,54 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 
 class Comments extends React.Component {
   state = {
-    comments: [],
     submitting: false,
     value: '',
   };
-
-   handleSubmit = () => {
+  
+   handleSubmit = (e) => {
     if (!this.state.value) {
       return;
     }
-
+    console.log('inside comments',this.props.postComments,this.props.id)
+    const value = this.state.value
+    console.log(value)
     this.setState({
       submitting: true,
     });
 
     setTimeout(() => {
-      this.setState({
-        submitting: false,
-        value: '',
-        comments: [
-          {
-            author: 'Han Solo',
-            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-            content: <p>{this.state.value}</p>,
-            datetime: moment().fromNow(),
-          },
-          ...this.state.comments,
-        ],
-      });
+      
+      var comments = {
+          author: 'Arpit Bandjiya',
+          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+          content: value,
+          datetime: moment().fromNow(),
+        }
+      this.props.addComment(this.props.id,comments)
     }, 1000);
+
+    this.setState({
+      submitting: false,
+      value: '',
+      
+    });
   };
 
   handleChange = e => {
+    console.log(e.target.value);
     this.setState({
       value: e.target.value,
     });
   };
 
   render() {
-    const { comments, submitting, value  } = this.state;
+    const {  submitting, value  } = this.state;
+    const comments = this.props.postComments.comments
     return (
       <>
         <Modal
           visible={this.props.visible}
           title="Comments"
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
           onOk={this.props.handleOk}
           onCancel={this.props.handleCancel}
           footer={[
@@ -110,5 +115,15 @@ class Comments extends React.Component {
     );
   }
 }
+const mapStateToProps = (state,ownProps) => {    
+  const {id} = ownProps
+  const allcomments = state.HomeCenterReducer.postComments;
 
-export default Comments;
+  return{
+    postComments: allcomments.find( (comment) => comment.id == id )
+  }
+}
+const mapDispatchToProps = dispatch => ({
+  addComment: bindActionCreators(addComment, dispatch)
+})
+export default connect(mapStateToProps,mapDispatchToProps)(Comments);

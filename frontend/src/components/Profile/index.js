@@ -3,6 +3,7 @@ import ReactDOM, { render } from 'react-dom';
 import 'antd/dist/antd.css';
 import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import ListModal from '../ListModal';
+import EditProfile from '../EditProfile';
 
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider } from 'antd';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
@@ -19,6 +20,8 @@ class Profile extends Component {
     visible: false,
     loadingAccept: false,
     visibleAccept: false,
+    visibleEdit: false,
+    loadingEdit: false,
     suggestedPages: [
       {
         title: 'User 1',
@@ -76,13 +79,30 @@ class Profile extends Component {
     this.setState({ visibleAccept: false });
   };
 
+  showModalEdit = () => {
+    this.setState({
+      visibleEdit: true,
+    });
+  };
+
+  handleOkEdit = () => {
+    this.setState({ loadingEdit: true });
+    setTimeout(() => {
+      this.setState({ loadingEdit: false, visibleEdit: false });
+    }, 1000);
+  };
+
+  handleCancelEdit = () => {
+    this.setState({ visibleEdit: false });
+  };
+
   callback = (key) => {
     console.log(key);
   }
 
   render() {
 
-    const { suggestedPages, visible, loadingAccept, visibleAccept } = this.state;
+    const { suggestedPages, visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit } = this.state;
     const suffix = (
       <AudioOutlined
         style={{
@@ -119,7 +139,7 @@ class Profile extends Component {
             <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
             <Timeline.Item color="green">Solve initial network problems 2015-09-01</Timeline.Item>
             <Timeline.Item dot={<ClockCircleOutlined style={{ fontSize: '16px' }} />}>
-            Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted
+              Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted
         </Timeline.Item>
             <Timeline.Item color="red">Network problems being solved 2015-09-01</Timeline.Item>
             <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
@@ -194,7 +214,7 @@ class Profile extends Component {
               itemLayout="horizontal"
               dataSource={suggestedPages}
               header={
-                <div style={{fontWeight: "bolder", padding: "5px", fontSize: "medium"}}>
+                <div style={{ fontWeight: "bolder", padding: "5px", fontSize: "medium" }}>
                   Suggested pages
                 </div>
               }
@@ -232,36 +252,42 @@ class Profile extends Component {
                     <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>93128398123</span>
                     <HomeOutlined /> <span style={{ fontWeight: 500 }}>777 Brockton Avenue, Abington MA 2351</span>
                   </div>
-                  <div style={{marginLeft: "-16px", marginTop:"6px"}}>
-                    <Button type="link" size="large" style={{fontWeight: "bolder"}} onClick={this.showModal}>
+                  <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
+                    <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={this.showModal}>
                       39 Followers
           </Button>
-                    <Button type="link" size="large" style={{fontWeight: "bolder"}} onClick={this.showModal}>
+                    <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={this.showModal}>
                       53 Following
           </Button>
                     <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} />
-                  <span style={{float: "right", marginTop:"6px"}}>
-                    <Button type="primary" style={{ marginRight: "14px" }}>
-                      <TeamOutlined /> Follow
+
+                    <span style={{ float: "right", marginTop: "6px" }}>
+                      <Button type="primary" style={{ marginRight: "14px" }}>
+                        <TeamOutlined /> Follow
                     </Button>
-                    <Button type="primary" style={{ marginRight: "14px" }}>
-                      <SendOutlined /> Message
+                      <Button type="primary" style={{ marginRight: "14px" }}>
+                        <SendOutlined /> Message
                   </Button>
-                  
-                    <Dropdown overlay={menu} placement="bottomLeft" arrow>
-                      <Button type="primary" >
-                        <MoreOutlined />
-                      </Button>
-                    </Dropdown>
+                      <Button onClick={this.showModalEdit} type="primary" style={{ marginRight: "8px" }}  >
+                        <EditOutlined /> Edit Profile
+                  </Button>
+                      <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
+
+
+                      <Dropdown overlay={menu} placement="bottomLeft" arrow>
+                        <Button type="primary" >
+                          <MoreOutlined />
+                        </Button>
+                      </Dropdown>
                     </span>
                   </div>
-                
-                <div style={{marginTop: "8px"}}>
-                <p style={{ fontWeight: 600 }}>
-                  <span >Krishnendu has fed 324 people last month and 512 people overall!</span>
-                  </p> 
-              </div>
-              </div>
+
+                  <div style={{ marginTop: "8px" }}>
+                    <p style={{ fontWeight: 600 }}>
+                      <span >Krishnendu has fed 324 people last month and 512 people overall!</span>
+                    </p>
+                  </div>
+                </div>
               </div>
               {/*
               <div>
@@ -273,11 +299,11 @@ class Profile extends Component {
 
             </Content>
             <Sider width={300} style={{ padding: "20px" }}>
-            {
+              {
                 //add title div here 
               }
 
-              <div style={{fontWeight: "bolder", padding: "15px", fontSize: "medium"}}>Pending Donations</div>
+              <div style={{ fontWeight: "bolder", padding: "15px", fontSize: "medium" }}>Pending Donations</div>
               <div>
                 <Card title="User Name" size="small" style={{ width: 250 }}
                   actions={[

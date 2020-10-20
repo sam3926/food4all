@@ -5,6 +5,10 @@ import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutli
 import ListModal from '../ListModal';
 import EditProfile from '../EditProfile';
 
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import { getSomeData, changeTab } from './action';
+
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider } from 'antd';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -22,20 +26,6 @@ class Profile extends Component {
     visibleAccept: false,
     visibleEdit: false,
     loadingEdit: false,
-    suggestedPages: [
-      {
-        title: 'User 1',
-      },
-      {
-        title: 'User 2',
-      },
-      {
-        title: 'User 3',
-      },
-      {
-        title: 'User 4',
-      }
-    ]
   }
 
   showModal = () => {
@@ -102,7 +92,8 @@ class Profile extends Component {
 
   render() {
 
-    const { suggestedPages, visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit } = this.state;
+    const { visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit } = this.state;
+    const { suggestedPages, currentTab, changeTab, donations, posts, profileDetails } = this.props
     const suffix = (
       <AudioOutlined
         style={{
@@ -132,55 +123,35 @@ class Profile extends Component {
       </Menu>
     );
 
+    const Actions = [
+      <div><LikeOutlined key="Like" style={{ margin: "8px" }} />20</div>,
+      <div><ShareAltOutlined key="share" style={{ margin: "8px" }} />30</div>,
+      <div onClick={this.showModalComments} ><CommentOutlined hoverable={true} key="Comment" style={{ margin: "8px" }} />20</div>,
+      <div><GiftOutlined key="Award" style={{ margin: "8px" }} />20</div>,
+    ]
+
     const Demo = () => (
-      <Tabs centered="true" size="large" defaultActiveKey="1" >
-        <TabPane tab="Donations" key="1">
+      <Tabs centered="true" size="large" activeKey={currentTab} onChange={changeTab}>
+        <TabPane tab="Donations" key="donations">
           <Timeline mode="alternate">
-            <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-            <Timeline.Item color="green">Solve initial network problems 2015-09-01</Timeline.Item>
-            <Timeline.Item dot={<ClockCircleOutlined style={{ fontSize: '16px' }} />}>
-              Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted
-        </Timeline.Item>
-            <Timeline.Item color="red">Network problems being solved 2015-09-01</Timeline.Item>
-            <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-            <Timeline.Item dot={<ClockCircleOutlined style={{ fontSize: '16px' }} />}>
-              Technical testing 2015-09-01
-        </Timeline.Item>
+
+            {donations?.map(donation => (
+              <Timeline.Item color={donation?.color} dot={donation?.dot == "clock" ? <ClockCircleOutlined /> : null}>{donation.text}</Timeline.Item>
+            ))}
+
           </Timeline>
+
         </TabPane>
-        <TabPane centered="true" tab="Posts" key="2">
-          <Card title="User Name" style={{ width: 1000 }}
-            actions={[
-              <LikeOutlined key="Like" />,
-              <ShareAltOutlined key="share" />,
-              <CommentOutlined key="Comment" />,
-              <GiftOutlined key="Award" />,
-            ]} >
-            <p>Card content</p>
-          </Card>
-          <br />
-          <Card title="User Name" style={{ width: 1000 }}
-            actions={[
-              <LikeOutlined key="Like" />,
-              <ShareAltOutlined key="share" />,
-              <CommentOutlined key="Comment" />,
-              <GiftOutlined key="Award" />,
-            ]} >
-            <p>Card content</p>
-          </Card>
-          <br />
-          <Card title="User Name" style={{ width: 1000 }}
-            actions={[
-              <LikeOutlined key="Like" />,
-              <ShareAltOutlined key="share" />,
-              <CommentOutlined key="Comment" />,
-              <GiftOutlined key="Award" />,
-            ]}
-          >
-            <p>Card content</p>
-          </Card>
+        <TabPane centered="true" tab="Posts" key="posts">
+
+
+          {posts?.map(post => (
+            <Card title={post.user_name} style={{ width: 1000 }} actions={Actions}>
+              <p>{post.description}</p>
+            </Card>
+          ))}
         </TabPane>
-        <TabPane tab="Acheivements" centered="true" key="3">
+        <TabPane tab="Acheivements" centered="true" key="achievements">
           Content of Acheivements
         </TabPane>
       </Tabs>
@@ -188,26 +159,7 @@ class Profile extends Component {
 
     return (
       <Layout className="layout" style={{ marginTop: "56px" }}>
-        {/* <Header> 
-      <div className="logo" />
-      <Menu theme="dark" mode="horizontal" >
-            <Button type="dashed" danger>
-              Donate Now
-            </Button>
-            <Menu.Item key="1" icon={ <HomeOutlined /> } >Home</Menu.Item>
-            <Menu.Item key="2" icon={<BulbOutlined />}>Discover</Menu.Item>
-            <Menu.Item key="3" icon={<TrophyOutlined />} >LeaderBoard</Menu.Item>
-            <Menu.Item key="4" icon={<UsergroupDeleteOutlined />} >community</Menu.Item>
-            <Menu.Item key="5" icon={<BellOutlined /> }>Notifications</Menu.Item>
-            <Menu.Item key="6" icon={<MessageOutlined /> } >Messages</Menu.Item>
-            <Menu.Item key="7" icon={<UserOutlined />} >Profile</Menu.Item>
-            <Menu.Item key="8" icon={<LogoutOutlined />} >Logout</Menu.Item>
-            <Search
-                    placeholder="Search"
-                    onSearch={value => console.log(value)}
-                    style={{ width: 250 }}/>
-          </Menu>
-        </Header> */}
+
         <Layout>
           <Sider width={250} style={{ padding: "20px" }}>
             <List
@@ -241,23 +193,23 @@ class Profile extends Component {
               <div style={{ display: "flex" }}>
                 <Image
                   width={250}
-                  src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                  src={profileDetails?.profilePic}
                 />
                 <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-                  <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>Krishnendu Sudheesh</p>
+                  <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
 
                   <div>
-                    <p>Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted </p>
+                    <p>{profileDetails?.description}</p>
 
-                    <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>93128398123</span>
-                    <HomeOutlined /> <span style={{ fontWeight: 500 }}>777 Brockton Avenue, Abington MA 2351</span>
+                    <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
+                    <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
                   </div>
                   <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
                     <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={this.showModal}>
-                      39 Followers
+                      {profileDetails?.followers} Followers
           </Button>
                     <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={this.showModal}>
-                      53 Following
+                      {profileDetails?.following} Following
           </Button>
                     <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} />
 
@@ -347,7 +299,20 @@ class Profile extends Component {
       </Layout>
     )
   };
-
-
 }
-export default Profile;
+
+const mapStateToProps = state => ({
+  suggestedPages: state.profileReducer.suggestedPages,
+  currentTab: state.profileReducer.currentTab,
+  donations: state.profileReducer.donations,
+  posts: state.profileReducer.posts,
+  profileDetails: state.profileReducer.profileDetails
+})
+
+const mapDispatchToProps = dispatch => ({
+  getSomeData: bindActionCreators(getSomeData, dispatch),
+  changeTab: bindActionCreators(changeTab, dispatch)
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

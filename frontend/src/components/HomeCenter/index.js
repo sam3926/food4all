@@ -75,13 +75,6 @@ class HomeCenter extends Component {
     render (){
         
         const { visible, loading , visibleComments, loadingComments} = this.state;
-        const Actions = [
-            <div><LikeOutlined key="Like" style={{ margin: "8px" }} />20</div>,
-            <div><ShareAltOutlined key="share" style={{ margin: "8px" }} />30</div>,
-            <div onClick={this.showModalComments} ><CommentOutlined hoverable={true} key="Comment" style={{ margin: "8px" }} />20</div>,
-            <div><GiftOutlined key="Award" style={{ margin: "8px" }} />20</div>,
-        ]
-
         const { posts } = this.props;
 
         const postList = posts.length? (

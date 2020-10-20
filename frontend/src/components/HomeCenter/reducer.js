@@ -94,12 +94,6 @@ const HomeCenterReducer = (state = initialState, action) => {
             return { ...state, posts }
         }
         case 'ADD_COMMENT': {
-
-            // var postComments = [...state.postComments]
-            // var allcomments = postComments.find((comment) => comment.id == action.id)
-            // allcomments.comments = [...allcomments.comments, action.comment]
-
-            // console.log("baan", postComments)
             return { ...state, postComments: state.postComments.map(p => p.id == action.id ? { ...p, comments: [...p.comments, action.comment] } : { ...p }) }
         }
     }

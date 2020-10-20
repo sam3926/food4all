@@ -2,18 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 import './styles.css'
-<<<<<<< HEAD
-import { Layout, Card,  } from 'antd';
-import { CommentOutlined , LikeOutlined ,
-         GiftOutlined , ShareAltOutlined , EditOutlined  } from '@ant-design/icons';
-=======
 
 import { Layout, Card, } from 'antd';
 import {
     CommentOutlined, LikeOutlined,
     GiftOutlined, ShareAltOutlined, EditOutlined
 } from '@ant-design/icons';
->>>>>>> dbd3c6280c962a3b6a6b04bf763f7ff1540ff7ca
 
 import { Modal } from 'antd';
 import PostModal from '../PostModal';

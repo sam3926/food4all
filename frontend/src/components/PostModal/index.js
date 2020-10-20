@@ -30,6 +30,7 @@ import { bindActionCreators } from "redux";
               description: this.state.description,
               id:Math.random(),
               likes:0,
+              liked:false,
               shares:0};
 
       this.props.addPost(post);

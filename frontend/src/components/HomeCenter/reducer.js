@@ -1,9 +1,9 @@
 import { ACTION } from "../Home/constants";
 
 const initialState = {
-    postComments:[
+    postComments: [
         {
-            id:1,    
+            id: 1,
             comments: [
                 {
                     author: 'Arpit Bandejiya',
@@ -14,7 +14,7 @@ const initialState = {
             ]
         },
         {
-            id:2,    
+            id: 2,
             comments: [
                 {
                     author: 'Krishnendu',
@@ -25,7 +25,7 @@ const initialState = {
             ]
         },
         {
-            id:3,    
+            id: 3,
             comments: [
                 {
                     author: 'Shreyansh',
@@ -36,7 +36,7 @@ const initialState = {
             ]
         },
         {
-            id:4,    
+            id: 4,
             comments: [
                 {
                     author: 'Dinkar',
@@ -46,15 +46,15 @@ const initialState = {
                 }
             ]
         },
-        
+
     ],
     posts: [
-        {user_name:'Arpit', description:'Card Content',id:1,likes:20,liked:false,shares:30},
-        {user_name:'Dinkar', description:'Card Content',id:2,likes:30,liked:false,shares:17},
-        {user_name:'Sudheesh', description:'Card Content',id:3,likes:34,liked:false,shares:16},
-        {user_name:'Shreyansh', description:'Card Content',id:4,likes:31,liked:false,shares:14}
+        { user_name: 'Arpit', description: 'Card Content', id: 1, likes: 20, liked: false, shares: 30 },
+        { user_name: 'Dinkar', description: 'Card Content', id: 2, likes: 30, liked: false, shares: 17 },
+        { user_name: 'Sudheesh', description: 'Card Content', id: 3, likes: 34, liked: false, shares: 16 },
+        { user_name: 'Shreyansh', description: 'Card Content', id: 4, likes: 31, liked: false, shares: 14 }
     ],
-    currentfilter:['Donations','Events','Posts']
+    currentfilter: ['Donations', 'Events', 'Posts']
 }
 
 const HomeCenterReducer = (state = initialState, action) => {
@@ -65,42 +65,42 @@ const HomeCenterReducer = (state = initialState, action) => {
         case 'ADD_POST': {
             console.log('inside the ADD post')
             console.log(action.post)
-            let posts = [...state.posts,action.post]
+            let posts = [...state.posts, action.post]
             const comment = {
-                id:action.post.id,
-                comments:[]
+                id: action.post.id,
+                comments: []
             }
-            let postComments = [...state.postComments,comment]
+            let postComments = [...state.postComments, comment]
             console.log(posts)
             return {
-                 ...state,
-                 posts:posts,
-                 postComments:postComments
-                }
+                ...state,
+                posts: posts,
+                postComments: postComments
+            }
         }
         case 'CHANGE_LIKE': {
             console.log(action.id)
             let posts = [...state.posts];
-            let Post = posts.find((post) => { return post.id == action.id})
-            if(Post.liked){
+            let Post = posts.find((post) => { return post.id == action.id })
+            if (Post.liked) {
                 Post.likes = Post.likes - 1
                 Post.liked = false;
             }
-            else{
+            else {
                 Post.likes = Post.likes + 1
                 Post.liked = true;
             }
-            console.log(posts)    
-            return {...state,posts}
+            console.log(posts)
+            return { ...state, posts }
         }
-        case 'ADD_COMMENT':{
-            
-            var postComments = [...state.postComments]
-            var allcomments = postComments.find( (comment) => comment.id == action.id )
-            allcomments.comments = [...allcomments.comments, action.comment]
+        case 'ADD_COMMENT': {
 
-            console.log(postComments)
-            return {...state}
+            // var postComments = [...state.postComments]
+            // var allcomments = postComments.find((comment) => comment.id == action.id)
+            // allcomments.comments = [...allcomments.comments, action.comment]
+
+            // console.log("baan", postComments)
+            return { ...state, postComments: state.postComments.map(p => p.id == action.id ? { ...p, comments: [...p.comments, action.comment] } : { ...p }) }
         }
     }
     return state;

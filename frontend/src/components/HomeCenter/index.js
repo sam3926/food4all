@@ -1,10 +1,19 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 import './styles.css'
+<<<<<<< HEAD
 import { Layout, Card,  } from 'antd';
 import { CommentOutlined , LikeOutlined ,
          GiftOutlined , ShareAltOutlined , EditOutlined  } from '@ant-design/icons';
+=======
+
+import { Layout, Card, } from 'antd';
+import {
+    CommentOutlined, LikeOutlined,
+    GiftOutlined, ShareAltOutlined, EditOutlined
+} from '@ant-design/icons';
+>>>>>>> dbd3c6280c962a3b6a6b04bf763f7ff1540ff7ca
 
 import { Modal } from 'antd';
 import PostModal from '../PostModal';
@@ -13,8 +22,8 @@ import { changelike } from './action';
 import {bindActionCreators} from 'redux'
 const { Content } = Layout;
 
-class HomeCenter extends Component{
-    
+class HomeCenter extends Component {
+
     state = {
         loading: false,
         visible: false,
@@ -37,19 +46,19 @@ class HomeCenter extends Component{
     handleOk = () => {
         this.setState({ loading: true });
         setTimeout(() => {
-        this.setState({ loading: false, visible: false });
+            this.setState({ loading: false, visible: false });
         }, 500);
-    Modal.success({
-        content: "Post Shared"
+        Modal.success({
+            content: "Post Shared"
         });
     };
 
     handleOkComments = () => {
         this.setState({ loadingComments: true });
         setTimeout(() => {
-          this.setState({ loadingComments: false, visibleComments: false });
+            this.setState({ loadingComments: false, visibleComments: false });
         }, 100);
-      };
+    };
 
     handleCancel = () => {
         this.setState({ visible: false });
@@ -67,12 +76,12 @@ class HomeCenter extends Component{
         const { visible, loading , visibleComments, loadingComments} = this.state;
 
         const Actions = [
-            <div><LikeOutlined key="Like" style={{margin:"8px"}}/>20</div>,
-            <div><ShareAltOutlined key="share" style={{margin:"8px"}}/>30</div>,
-            <div><CommentOutlined hoverable={true} onClick={this.showModalComments} key="Comment" style={{margin:"8px"}}/>20</div>,
-            <div><GiftOutlined key="Award" style={{margin:"8px"}}/>20</div>,
-            ]
-            
+            <div><LikeOutlined key="Like" style={{ margin: "8px" }} />20</div>,
+            <div><ShareAltOutlined key="share" style={{ margin: "8px" }} />30</div>,
+            <div onClick={this.showModalComments} ><CommentOutlined hoverable={true} key="Comment" style={{ margin: "8px" }} />20</div>,
+            <div><GiftOutlined key="Award" style={{ margin: "8px" }} />20</div>,
+        ]
+
         const { posts } = this.props;
 
         const postList = posts.length? (
@@ -90,14 +99,14 @@ class HomeCenter extends Component{
 
                 )
             })
-            
-        ):(
-            <div> No post are here! </div>
-        )
-        
+
+        ) : (
+                <div> No post are here! </div>
+            )
+
         return (
-            <Content style={{"margin":"auto"}}>
-                <Card style={{ width: 1000 , margin:"8px"}} hoverable={true} onClick={this.showModal} >
+            <Content style={{ "margin": "auto" }}>
+                <Card style={{ width: 1000, margin: "8px" }} hoverable={true} onClick={this.showModal} >
                     <p className="cardtext"> <EditOutlined /> Share something with the community</p>
                 </Card>
                 <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    
@@ -108,7 +117,7 @@ class HomeCenter extends Component{
     }
 }
 const mapStateToProps = state => ({
-    posts:state.HomeCenterReducer.posts
+    posts: state.HomeCenterReducer.posts
 })
 const mapDispatchToProps = dispatch => ({
     changelike: bindActionCreators(changelike, dispatch)

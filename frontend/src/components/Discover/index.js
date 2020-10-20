@@ -69,9 +69,6 @@ class Discover extends Component{
   
     handleCancel = () => {
       this.setState({ visible: false });
-      Modal.success({
-        content: "You said Thank You"
-      });
     };
   
 

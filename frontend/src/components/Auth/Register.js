@@ -4,26 +4,30 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "./action";
 import { bindActionCreators } from "redux";
-import { Form, Input, Button, notification , Upload, message , Radio} from 'antd';
-import { MailOutlined, LockOutlined, UserOutlined, PhoneOutlined ,  UploadOutlined , CompassOutlined } from '@ant-design/icons';
+import { Form, Input, Button, notification, Upload, message, Radio } from 'antd';
+import { MailOutlined, LockOutlined, UserOutlined, PhoneOutlined, UploadOutlined, CompassOutlined } from '@ant-design/icons';
+import MapComp from "../MapComp";
+import Modal from "antd/lib/modal/Modal";
+
+// import 
 
 const props = {
     name: 'file',
     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
     headers: {
-      authorization: 'authorization-text',
+        authorization: 'authorization-text',
     },
     onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
+        if (info.file.status !== 'uploading') {
+            console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
     },
-  };
+};
 
 
 class Register extends Component {
@@ -32,13 +36,15 @@ class Register extends Component {
         this.state = {
             errors: {},
             value: 1,
+            mapOpen: false,
+            latlng: null
         };
     }
 
     onChange = e => {
         console.log('radio checked', e.target.value);
         this.setState({
-          value: e.target.value,
+            value: e.target.value,
         });
     };
 
@@ -66,21 +72,32 @@ class Register extends Component {
         console.log(values)
         if (values.password != values.password2)
             this.openNotificationWithIcon('warning', 'Passwords are not matching')
-        else
-            this.props.registerUser(values, this.props.history);
+        else if (values.type == "organisation" && !this.state.latlng)
+            console.log("pleaseenter location");
+        else {
+            console.log("everythhing okay", { ...values, location: this.state.latlng })
+            this.props.registerUser({ ...values, location: this.state.latlng }, this.props.history);
+        }
+
     };
+
+    saveLatLng = (latlng) => {
+        this.setState({
+            latlng: latlng
+        })
+    }
 
     render() {
         const radioStyle = {
             display: 'block',
             height: '30px',
             lineHeight: '30px',
-          };
-        
-        const { errors , value } = this.state;
+        };
+
+        const { errors, value } = this.state;
 
         return (
-            <div style={{ paddingTop: "150px", height: "100vh", display: "flex", justifyContent: "center" }}>
+            <div style={{ paddingTop: "20px", height: "100vh", display: "flex", justifyContent: "center" }}>
                 <Form
                     layout="vertical"
                     style={{
@@ -137,26 +154,27 @@ class Register extends Component {
 
                     <Form.Item
                         label="Choose User type"
-                        name="Usertype"
+                        name="type"
 
                         rules={[{ required: true, message: 'Please Choose user type' }]}
                     >
                         <Radio.Group onChange={this.onChange} value={value}>
-                            <Radio style={radioStyle} value={1}>
+                            <Radio style={radioStyle} value={"donor"}>
                                 Donor
                             </Radio>
-                        <Radio style={radioStyle} value={4}>
-                            Organisation
-                            <br/>
-                            {value === 4 
-                            ? <div style={{ marginLeft: 25 }}> <Input placeholder="Location" style={{ width: 200}} />
-                            <Button icon={<CompassOutlined />} /> <br/>
-                            <Upload {...props} >
-                            <p>Please upload Government issued certificate for your Organisation</p>
-                            <Button icon={<UploadOutlined />}>Upload certificates</Button>
-                            </Upload>
-                            </div>
-                            : null}
+                            <Radio style={radioStyle} value={"organisation"}>
+                                Organisation
+                            <br />
+                                {value === "organisation"
+                                    ? <div style={{ marginLeft: 25 }}> <Input placeholder="Location" disabled value={this.state.latlng ? this.state.latlng.lat + " , " + this.state.latlng.lng : ""} style={{ width: 300 }} />
+                                        <Button onClick={() => this.setState({ mapOpen: true })} icon={<CompassOutlined />} /> <br />
+
+                                        <Upload {...props} >
+                                            <p>Please upload Government issued certificate for your Organisation</p>
+                                            <Button icon={<UploadOutlined />}>Upload certificates</Button>
+                                        </Upload>
+                                    </div>
+                                    : null}
                             </Radio>
                         </Radio.Group>
 
@@ -170,7 +188,20 @@ class Register extends Component {
                         {" "}Or <Link to="/login">Login now!</Link>
                     </Form.Item>
                 </Form>
+                <Modal footer={[
+                    <Button onClick={() => this.setState({ mapOpen: false })}>
+                        Return
+            </Button>
+                ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+                    <MapComp saveLatLng={this.saveLatLng} />
+                </Modal>
+
+
             </div>
+
+
+
+
         )
 
     }

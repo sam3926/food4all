@@ -36,6 +36,8 @@ class MapComp extends Component {
     const { markers } = this.state;
     markers.pop();
     markers.push(e.latlng);
+    console.log(markers)
+    this.props.saveLatLng(markers[0]);
     this.setState({ markers });
   };
 
@@ -53,62 +55,62 @@ class MapComp extends Component {
   }
 
   render() {
-  const longitude = this.props.coords? this.props.coords.longitude: DEFUALT_LONGITUDE;
-  const latitude = this.props.coords? this.props.coords.latitude: DEFAULT_LATITUDE;
+    const longitude = this.props.coords ? this.props.coords.longitude : DEFUALT_LONGITUDE;
+    const latitude = this.props.coords ? this.props.coords.latitude : DEFAULT_LATITUDE;
     const center = [28.6139, 77.209];
     return (
       <>
-      <div className="MAP">
-      <Map
-        style={{ height: "90vh" }}
-        center={[latitude,longitude]}
-        zoom="10"
-        ref={(m) => {
-          this.leafletMap = m;
-        }}
-        onClick={this.addMarker}
-      >
-        <TileLayer
-          attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
-          url={"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
-        />
-        <div className="pointer" />
-
-
-        {
-          !this.props.coords
-          ?<div className="loading">Loading</div>
-          :
-          <Marker 
-          position={[latitude,longitude]}
+        <div className="MAP">
+          <Map
+            style={{ height: "80vh" }}
+            center={[latitude, longitude]}
+            zoom="10"
+            ref={(m) => {
+              this.leafletMap = m;
+            }}
+            onClick={this.addMarker}
           >
-            <Popup>
-              you are here!
-            </Popup>
-          </Marker>
-        }
+            <TileLayer
+              attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
+              url={"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
+            />
+            <div className="pointer" />
 
-        {this.state.markers.map((position, idx) => (
-          <Marker draggable={true} key={`marker-${idx}`} position={position}>
-            <Popup>
-              <span>Marked Location</span>
+
+            {
+              !this.props.coords
+                ? <div className="loading">Loading</div>
+                :
+                <Marker
+                  position={[latitude, longitude]}
+                >
+                  <Popup>
+                    you are here!
             </Popup>
-          </Marker>
-        ))}
-      </Map>
-        <div class="container">
-          <div class="vertical-center">
-            <button class="button">Done</button>
-          </div>
+                </Marker>
+            }
+
+            {this.state.markers.map((position, idx) => (
+              <Marker draggable={true} key={`marker-${idx}`} position={position}>
+                <Popup>
+                  <span>Marked Location</span>
+                </Popup>
+              </Marker>
+            ))}
+          </Map>
+          {/* <div class="container">
+            <div class="vertical-center">
+              <button class="button">Done</button>
+            </div>
+          </div> */}
         </div>
-      </div>
-    </>
+      </>
     );
   }
 }
 
-export default geolocated ({
-  positionOptions:{
+export default geolocated({
+  positionOptions: {
     enableHighAccuracy: false
   },
   userDecisionTimeout: 1000

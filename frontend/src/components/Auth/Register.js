@@ -72,7 +72,7 @@ class Register extends Component {
         console.log(values)
         if (values.password != values.password2)
             this.openNotificationWithIcon('warning', 'Passwords are not matching')
-        else if (values.type == "organisation" && !this.state.latlng)
+        else if (!this.state.latlng)
             console.log("pleaseenter location");
         else {
             console.log("everythhing okay", { ...values, location: this.state.latlng })
@@ -151,6 +151,10 @@ class Register extends Component {
                     >
                         <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} />
                     </Form.Item>
+                    <Input placeholder="Location" disabled value={this.state.latlng ? this.state.latlng.lat + " , " + this.state.latlng.lng : ""} style={{ width: 300, marginBottom: "10px" }} />
+
+                    <Button onClick={() => this.setState({ mapOpen: true })} icon={<CompassOutlined />} /> <br />
+
 
                     <Form.Item
                         label="Choose User type"
@@ -166,8 +170,7 @@ class Register extends Component {
                                 Organisation
                             <br />
                                 {value === "organisation"
-                                    ? <div style={{ marginLeft: 25 }}> <Input placeholder="Location" disabled value={this.state.latlng ? this.state.latlng.lat + " , " + this.state.latlng.lng : ""} style={{ width: 300 }} />
-                                        <Button onClick={() => this.setState({ mapOpen: true })} icon={<CompassOutlined />} /> <br />
+                                    ? <div style={{ marginLeft: 25 }}>
 
                                         <Upload {...props} >
                                             <p>Please upload Government issued certificate for your Organisation</p>

@@ -114,15 +114,7 @@ class Register extends Component {
 
                     </Form.Item>
 
-                    <Form.Item
-                        label="Contact"
-                        name="contact"
 
-                        rules={[{ required: true, message: 'Please input your contact!' }]}
-                    >
-                        <Input prefix={<PhoneOutlined className="site-form-item-icon" />} />
-
-                    </Form.Item>
 
                     <Form.Item
                         label="Email"
@@ -154,11 +146,39 @@ class Register extends Component {
                     <Input placeholder="Location" disabled value={this.state.latlng ? this.state.latlng.lat + " , " + this.state.latlng.lng : ""} style={{ width: 300, marginBottom: "10px" }} />
 
                     <Button onClick={() => this.setState({ mapOpen: true })} icon={<CompassOutlined />} /> <br />
+                    <Form.Item
+                        label="Contact"
+                        name="contact"
 
+                        rules={[{ required: true, message: 'Please input your contact!' }]}
+                    >
+                        <Input prefix={<PhoneOutlined className="site-form-item-icon" />} />
+
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Address"
+                        name="address"
+
+                        rules={[{ required: true, message: 'Please input your address!' }]}
+                    >
+                        <Input.TextArea />
+
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Description"
+                        name="description"
+
+                        rules={[{ required: true, message: 'Please input a brief description!' }]}
+                    >
+                        <Input.TextArea />
+
+                    </Form.Item>
 
                     <Form.Item
                         label="Choose User type"
-                        name="type"
+                        name="userType"
 
                         rules={[{ required: true, message: 'Please Choose user type' }]}
                     >

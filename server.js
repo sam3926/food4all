@@ -36,7 +36,7 @@ app.use('/upload', uploadRoutes)
 // require("./config/passport")(passport);
 
 // Routes
-app.use("/api/users", users);
+app.use("/api/users", userRoutes);
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);

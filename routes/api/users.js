@@ -8,7 +8,9 @@ const keys = require("../../config/keys");
 const User = require("../../models/User");
 
 router.post("/register", async (req, res, next) => {
-  const { email, name, password, contact, description, address, userType, latlng } = req.body;
+  const { email, name, password, contact, description, address, userType, location } = req.body;
+  console.log(req.body)
+  console.log(location)
   const checkExistingUser = await User.findOne({ email: email })
   if (!checkExistingUser) {
     try {
@@ -24,7 +26,7 @@ router.post("/register", async (req, res, next) => {
         userType: userType,
         location: {
           type: "Point",
-          coordinates: [latlng.lng, latlng.lat]
+          coordinates: [location.lng, location.lat]
         }
       });
       const result = await user.save();
@@ -73,7 +75,7 @@ router.post("/login", async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      token: "Bearer " + token
+      token: token
     })
 
   } catch (err) {

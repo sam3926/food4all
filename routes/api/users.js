@@ -3,109 +3,86 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
-const passport = require("passport");
-
-// Load input validation
-const validateRegisterInput = require("../../validation/register");
-const validateLoginInput = require("../../validation/login");
 
 // Load User model
 const User = require("../../models/User");
 
-// @route POST api/users/register
-// @desc Register user
-// @access Public
-router.post("/register", (req, res) => {
-  // Form validation
+router.post("/register", async (req, res, next) => {
+  const { email, name, password, contact, description, address, userType, latlng } = req.body;
+  const checkExistingUser = await User.findOne({ email: email })
+  if (!checkExistingUser) {
+    try {
+      const hashedPw = await bcrypt.hash(password, 12);
 
-  const { errors, isValid } = validateRegisterInput(req.body);
-  console.log(errors)
-
-  // Check validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
-  User.findOne({ email: req.body.email }).then(user => {
-    if (user) {
-      return res.status(400).json({ email: "Email already exists" });
-    } else {
-      const newUser = new User({
-        name: req.body.name,
-        contact: req.body.contact,
-        email: req.body.email,
-        password: req.body.password
+      const user = new User({
+        email: email,
+        password: hashedPw,
+        name: name,
+        description: description,
+        contact: contact,
+        address: address,
+        userType: userType,
+        location: {
+          type: "Point",
+          coordinates: [latlng.lng, latlng.lat]
+        }
       });
-
-      // Hash password before saving in database
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then(user => res.json(user))
-            .catch(err => console.log(err));
-        });
-      });
-    }
-  });
-});
-
-// @route POST api/users/login
-// @desc Login user and return JWT token
-// @access Public
-router.post("/login", (req, res) => {
-  // Form validation
-
-  const { errors, isValid } = validateLoginInput(req.body);
-
-  // Check validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
-  const email = req.body.email;
-  const password = req.body.password;
-
-  // Find user by email
-  User.findOne({ email }).then(user => {
-    // Check if user exists
-    if (!user) {
-      return res.status(404).json({ emailnotfound: "Email not found" });
-    }
-
-    // Check password
-    bcrypt.compare(password, user.password).then(isMatch => {
-      if (isMatch) {
-        // User matched
-        // Create JWT Payload
-        const payload = {
-          id: user.id,
-          name: user.name
-        };
-
-        // Sign token
-        jwt.sign(
-          payload,
-          keys.secretOrKey,
-          {
-            expiresIn: 31556926 // 1 year in seconds
-          },
-          (err, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token
-            });
-          }
-        );
-      } else {
-        return res
-          .status(400)
-          .json({ passwordincorrect: "Password incorrect" });
+      const result = await user.save();
+      console.log("result", result)
+      res.status(201).json({ message: 'User created!', userId: result._id });
+    } catch (err) {
+      if (!err.statusCode) {
+        err.statusCode = 500
       }
-    });
-  });
-});
+      next(err);
+    }
+  }
+  else {
+    const err = new Error('User already exists');
+    err.statusCode = 401;
+    next(err)
+  }
+})
+
+router.post("/login", async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email: email })
+    if (!user) {
+      const err = new Error('A User with this email could not be found')
+      err.statusCode = 401;
+      throw err;
+    }
+    const isEqual = await bcrypt.compare(password, user.password);
+    if (!isEqual) {
+      const err = new Error('Wrong Password');
+      err.statusCode = 401;
+      throw err;
+    }
+
+    const token = jwt.sign({
+      email: user.email,
+      userId: user.id,
+      userType: user.userType
+    },
+      keys.secretOrKey,
+      {
+        expiresIn: 31556926 // 1 year in seconds
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      token: "Bearer " + token
+    })
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err);
+  }
+
+})
 
 module.exports = router;

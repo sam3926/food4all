@@ -104,6 +104,12 @@ const profileReducer = (state = initialState, action) => {
 
         case ACTION.GET_PROFILE: {
             state = { ...state, profileDetails: action.payload }
+            break;
+        }
+
+        case ACTION.UPDATE_PROFILE_PIC: {
+            state = { ...state, profileDetails: { ...state.profileDetails, profilePic: action.payload } }
+            break;
         }
     }
     return state;

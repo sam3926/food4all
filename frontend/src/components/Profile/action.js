@@ -38,3 +38,10 @@ export const changeTab = tab => (dispatch) => {
         payload: tab
     })
 }
+
+export const uploadProfilePic = profilePic => (dispatch) => {
+    dispatch({
+        type: ACTION.UPDATE_PROFILE_PIC,
+        payload: profilePic
+    })
+}

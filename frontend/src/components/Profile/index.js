@@ -10,8 +10,9 @@ import { bindActionCreators } from 'redux';
 import { getSomeData, changeTab, getProfile } from './action';
 
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider } from 'antd';
+import ProfilePic from './ProfilePic';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
-
+import "./styles.css"
 const { Search } = Input;
 const { SubMenu } = Menu;
 
@@ -25,6 +26,7 @@ class Profile extends Component {
     loadingAccept: false,
     visibleAccept: false,
     visibleEdit: false,
+    visibleProfilePic: false,
     loadingEdit: false,
   }
 
@@ -69,6 +71,10 @@ class Profile extends Component {
     this.setState({ visibleAccept: false });
   };
 
+  handleCancelProfilePic = () => {
+    this.setState({ visibleProfilePic: false })
+  }
+
   showModalEdit = () => {
     this.setState({
       visibleEdit: true,
@@ -96,7 +102,7 @@ class Profile extends Component {
   }
   render() {
 
-    const { visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit } = this.state;
+    const { visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit, visibleProfilePic } = this.state;
     const { suggestedPages, currentTab, changeTab, donations, timelinePost, posts, profileDetails } = this.props
     const suffix = (
       <AudioOutlined
@@ -212,6 +218,12 @@ class Profile extends Component {
                   width={250}
                   src={profileDetails?.profilePic}
                 />
+                <Button
+                  shape="circle"
+                  style={{ marginLeft: "-15px", zIndex: "10" }}
+                  onClick={() => this.setState({ visibleProfilePic: true })}>
+                  <EditOutlined />
+                </Button>
                 <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
                   <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
 
@@ -241,7 +253,7 @@ class Profile extends Component {
                         <EditOutlined /> Edit Profile
                   </Button>
                       <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
-
+                      <ProfilePic visible={visibleProfilePic} handleCancel={this.handleCancelProfilePic} />
 
                       <Dropdown overlay={menu} placement="bottomLeft" arrow>
                         <Button type="primary" >

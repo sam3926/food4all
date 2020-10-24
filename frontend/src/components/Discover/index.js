@@ -6,6 +6,8 @@ import {connect} from 'react-redux'
 import {changeFilters} from './action'
 import { bindActionCreators } from 'redux';
 import { Modal, Menu, Checkbox , Layout, Card , Button , Input , Space , Image } from 'antd';
+import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+
 
 const { Content,Sider } = Layout;
 const { SubMenu } = Menu;
@@ -93,7 +95,7 @@ class Discover extends Component{
     const DonationList = Donations.length? (
       Donations.map(Donation=>{
         return (
-          <Card title={Donation.title} extra={<p>Date And time</p>} style={{ width: 700 }} 
+          <Card title={Donation.title} extra={<p>Date And time</p>} style={{ width: 700 , margin: '8px'}} 
           actions={[
             <p hoverable={true} className="text" onClick={success} ><b> Contact Donor </b></p>,
             <p hoverable={true} className="text" onClick={this.showModal} ><b> Accept Donation  </b></p>,
@@ -125,7 +127,7 @@ class Discover extends Component{
     const OrganisationList = Organisations.length? (
       Organisations.map(Organisation=>{
         return (
-          <Card title={Organisation.title} extra={<p>People fed</p>} style={{ width: 700 }}>
+          <Card title={Organisation.title} extra={<p>People fed</p>} style={{ width: 700, margin: '8px' }}>
             <p>{Organisation.description}</p>
             <p>{Organisation.description1}</p>
           </Card>
@@ -138,7 +140,7 @@ class Discover extends Component{
     const EventList = Events.length? (
       Events.map(Event=>{
         return (
-          <Card title={Event.title} style={{ width: 700 }}>
+          <Card title={Event.title} style={{ width: 700, margin: '8px' }}>
             <p>{Event.description}</p>
           </Card>
         )
@@ -202,8 +204,18 @@ class Discover extends Component{
               }}>
                         {componentsSwitch(selectedMenuItem)}
               </Content>
-              <Sider width={280} style={{ padding: "20px" }}>
-
+              <Sider width={300} style={{ padding: "25px" }}>
+              <div style={{ fontWeight: "bolder", paddingBottom: "15px", fontSize: "medium" }}>Pending Donations</div>
+              <div>
+                <Card title="User Name" size="small" style={{ width: 250 }}
+                  actions={[
+                    <p onClick={this.showModal} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
+                    <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
+                  ]}
+                >
+                  <p>Card content</p>
+                </Card>
+              </div>
               </Sider>
 
             </Layout>

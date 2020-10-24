@@ -266,7 +266,7 @@ class Profile extends Component {
                 //add title div here 
               }
 
-              <div style={{ fontWeight: "bolder", padding: "15px", fontSize: "medium" }}>Pending Donations</div>
+              <div style={{ fontWeight: "bolder", paddingBottom: "15px", paddingTop:"15px", fontSize: "medium" }}>Pending Donations</div>
               <div>
                 <Card title="User Name" size="small" style={{ width: 250 }}
                   actions={[

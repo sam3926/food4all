@@ -33,7 +33,7 @@ profileRightPaneHeading {
 }
 
 .site-layout-background {
-  background: #fff;
+  background: #f2f2f2 !important ;
 }
 
 .ant-menu.ant-menu-dark.ant-menu-root.ant-menu-horizontal{

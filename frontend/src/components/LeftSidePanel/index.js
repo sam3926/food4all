@@ -67,13 +67,13 @@ class LeftSidePanel extends Component{
                     height: '100vh',
                     position: 'fixed',
                     left: 0,
-                    marginTop: '64px',
+                    marginTop: '40px',
                 }}
               >
                 <Menu
                 mode="inline"
                 defaultOpenKeys={['sub5']}
-                style={{ height: '90%', borderRight: 0, marginTop: '26px', marginBottom: '20px'}}
+                style={{ height: '100%', borderRight: 0, paddingTop: '40px'}}
                 >
                 
                 <Menu.Item key="Sub1" style={{fontSize: '20px', marginBlock: '10px'}}>

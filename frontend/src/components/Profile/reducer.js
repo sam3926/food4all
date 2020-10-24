@@ -21,10 +21,12 @@ const initialState = {
         description: "Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted",
         contact: "9373321987",
         address: "777 Brockton Avenue, Abington MA 2351",
-        followers: 39,
-        following: 53
+        followers: [],
+        following: [],
+        noFed: 0,
+        noDonations: 0
     },
-    
+
     donations: [
         {
             title: "food",
@@ -38,10 +40,10 @@ const initialState = {
             photo: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
             status: "active"
         },
-        
+
 
     ],
-    
+
     timelinePost: [
         {
             color: "green",
@@ -98,6 +100,10 @@ const profileReducer = (state = initialState, action) => {
         case ACTION.CHANGE_TAB: {
             state = { ...state, currentTab: action.payload }
             break;
+        }
+
+        case ACTION.GET_PROFILE: {
+            state = { ...state, profileDetails: action.payload }
         }
     }
     return state;

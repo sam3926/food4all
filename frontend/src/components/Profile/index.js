@@ -7,7 +7,7 @@ import EditProfile from '../EditProfile';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab } from './action';
+import { getSomeData, changeTab, getProfile } from './action';
 
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider } from 'antd';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
@@ -90,6 +90,10 @@ class Profile extends Component {
     console.log(key);
   }
 
+
+  componentDidMount() {
+    this.props.getProfile()
+  }
   render() {
 
     const { visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit } = this.state;
@@ -131,13 +135,15 @@ class Profile extends Component {
     ]
 
     const Demo = () => (
-      <Tabs centered="true" size="large" activeKey={currentTab} onChange={changeTab}>
-        
+      <Tabs centered="true" size="large"
+        activeKey={currentTab}
+        onChange={changeTab}
+      >
+
         <TabPane tab="Timeline" key="timelinePost">
           <Timeline mode="alternate">
 
             {timelinePost?.map(timelinepost => (
-              console.log(timelinepost),
               <Timeline.Item color={timelinepost?.color} dot={timelinepost?.dot == "clock" ? <ClockCircleOutlined /> : null}>{timelinepost.text}</Timeline.Item>
             ))}
 
@@ -147,13 +153,13 @@ class Profile extends Component {
 
 
         <TabPane tab="Donations" key="donations">
-              Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
+          Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
         </TabPane>
 
 
 
 
-        <TabPane centered="true" tab="Posts" key="posts">
+        <TabPane tab="Posts" key="posts">
 
 
           {posts?.map(post => (
@@ -162,7 +168,7 @@ class Profile extends Component {
             </Card>
           ))}
         </TabPane>
-        <TabPane tab="Acheivements" centered="true" key="achievements">
+        <TabPane tab="Acheivements" key="achievements">
           Content of Acheivements
         </TabPane>
       </Tabs>
@@ -217,10 +223,10 @@ class Profile extends Component {
                   </div>
                   <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
                     <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={this.showModal}>
-                      {profileDetails?.followers} Followers
+                      {profileDetails?.followers?.length} Followers
           </Button>
                     <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={this.showModal}>
-                      {profileDetails?.following} Following
+                      {profileDetails?.following?.length} Following
           </Button>
                     <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} />
 
@@ -247,7 +253,7 @@ class Profile extends Component {
 
                   <div style={{ marginTop: "8px" }}>
                     <p style={{ fontWeight: 600 }}>
-                      <span >Krishnendu has fed 324 people last month and 512 people overall!</span>
+                      <span >{profileDetails?.name} has fed {profileDetails?.noFed} people and made {profileDetails?.noDonations} donations overall!</span>
                     </p>
                   </div>
                 </div>
@@ -266,7 +272,7 @@ class Profile extends Component {
                 //add title div here 
               }
 
-              <div style={{ fontWeight: "bolder", paddingBottom: "15px", paddingTop:"15px", fontSize: "medium" }}>Pending Donations</div>
+              <div style={{ fontWeight: "bolder", paddingBottom: "15px", paddingTop: "15px", fontSize: "medium" }}>Pending Donations</div>
               <div>
                 <Card title="User Name" size="small" style={{ width: 250 }}
                   actions={[
@@ -323,7 +329,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getSomeData: bindActionCreators(getSomeData, dispatch),
-  changeTab: bindActionCreators(changeTab, dispatch)
+  changeTab: bindActionCreators(changeTab, dispatch),
+  getProfile: bindActionCreators(getProfile, dispatch)
 })
 
 

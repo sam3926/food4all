@@ -5,7 +5,7 @@ import './styles.css'
 import {connect} from 'react-redux'
 import {changeFilters} from './action'
 import { bindActionCreators } from 'redux';
-import { Modal, Menu, Checkbox , Layout, Card , Button , Input } from 'antd';
+import { Modal, Menu, Checkbox , Layout, Card , Button , Input , Space , Image } from 'antd';
 
 const { Content,Sider } = Layout;
 const { SubMenu } = Menu;
@@ -33,11 +33,11 @@ class Discover extends Component{
           {title:'Arpit',description:'Card Content'}
       ],
       Organisations:[
-        {title:'Arpit1',description:'Card Content'},
-        {title:'Arpit1',description:'Card Content'},
-        {title:'Arpit1',description:'Card Content'},
-        {title:'Arpit1',description:'Card Content'},
-        {title:'Arpit1',description:'Card Content'}
+        {title:'Arpit1',description:'Address',description1:'Brief Detail'},
+        {title:'Arpit1',description:'Address',description1:'Brief Detail'},
+        {title:'Arpit1',description:'Address',description1:'Brief Detail'},
+        {title:'Arpit1',description:'Address',description1:'Brief Detail'},
+        {title:'Arpit1',description:'Address',description1:'Brief Detail'}
       ],
       Events:[
         {title:'Arpit2',description:'Card Content'},
@@ -93,13 +93,28 @@ class Discover extends Component{
     const DonationList = Donations.length? (
       Donations.map(Donation=>{
         return (
-          <Card title={Donation.title} style={{ width: 1000 }} 
+          <Card title={Donation.title} extra={<p>Date And time</p>} style={{ width: 700 }} 
           actions={[
             <p hoverable={true} className="text" onClick={success} ><b> Contact Donor </b></p>,
             <p hoverable={true} className="text" onClick={this.showModal} ><b> Accept Donation  </b></p>,
           ]}
           >
             <p>{Donation.description}</p>
+            <Space>
+            <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+                        />
+
+            <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+            />
+            </Space>
           </Card>
         )
       })
@@ -110,8 +125,9 @@ class Discover extends Component{
     const OrganisationList = Organisations.length? (
       Organisations.map(Organisation=>{
         return (
-          <Card title={Organisation.title} style={{ width: 1000 }}>
+          <Card title={Organisation.title} extra={<p>People fed</p>} style={{ width: 700 }}>
             <p>{Organisation.description}</p>
+            <p>{Organisation.description1}</p>
           </Card>
         )
       })
@@ -122,7 +138,7 @@ class Discover extends Component{
     const EventList = Events.length? (
       Events.map(Event=>{
         return (
-          <Card title={Event.title} style={{ width: 1000 }}>
+          <Card title={Event.title} style={{ width: 700 }}>
             <p>{Event.description}</p>
           </Card>
         )
@@ -179,9 +195,17 @@ class Discover extends Component{
             </Sider>
 
             <Layout style={{ marginLeft: '300px', marginTop: '64px' }}>
-              <Content className="site-layout-background" style={{"margin":"auto"}}>
+              <Content className="site-layout-background" 
+              style={{
+                paddingLeft: 120,
+                minHeight: 280,
+              }}>
                         {componentsSwitch(selectedMenuItem)}
               </Content>
+              <Sider width={280} style={{ padding: "20px" }}>
+
+              </Sider>
+
             </Layout>
                 
           <Modal

@@ -10,6 +10,8 @@ import "./styles.css";
 import LeftSidePanel from '../LeftSidePanel';
 import HomeCenter from '../HomeCenter';
 
+const { Sider } = Layout;
+
 class Home extends Component {
 
     constructor(props) {
@@ -26,6 +28,9 @@ class Home extends Component {
                     <Layout style={{ marginLeft: '300px', marginTop: '64px' }}>   
                         <HomeCenter/>
                     </Layout>   
+                    <Sider width={280} style={{ padding: "20px" }}>
+
+                    </Sider>
                 </Layout>
         )
     }

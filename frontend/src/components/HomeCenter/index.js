@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 import './styles.css'
 
-import { Layout, Card, } from 'antd';
+import { Layout, Card, Space ,Image } from 'antd';
 import {
     CommentOutlined, LikeOutlined,
     GiftOutlined, ShareAltOutlined, EditOutlined
@@ -80,7 +80,7 @@ class HomeCenter extends Component {
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={post.user_name} style={{ width: 1000 , margin:"8px"}} 
+                    <Card title={post.user_name} extra={<p>Date And time</p>} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
                         <div><LikeOutlined key="Like" style={{margin:"8px"}} onClick={(id) =>this.incrementLike(post.id)}/>{post.likes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/>{post.shares}</div>,
@@ -88,6 +88,21 @@ class HomeCenter extends Component {
                         <div><GiftOutlined key="Award" style={{margin:"8px"}}/>20</div>,
                         ]} >
                         <p>{post.description}</p>
+                        <Space>
+                        <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+                        />
+
+                        <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+                        />
+                        </Space>
                     </Card>
 
                 )
@@ -99,7 +114,7 @@ class HomeCenter extends Component {
 
         return (
             <Content style={{ "margin": "auto" }}>
-                <Card style={{ width: 1000, margin: "8px" }} hoverable={true} onClick={this.showModal} >
+                <Card style={{ width: 700, margin: "8px" }} hoverable={true} onClick={this.showModal} >
                     <p className="cardtext"> <EditOutlined /> Share something with the community</p>
                 </Card>
                 <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    

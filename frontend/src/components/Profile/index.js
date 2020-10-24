@@ -93,7 +93,7 @@ class Profile extends Component {
   render() {
 
     const { visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit } = this.state;
-    const { suggestedPages, currentTab, changeTab, donations, posts, profileDetails } = this.props
+    const { suggestedPages, currentTab, changeTab, donations, timelinePost, posts, profileDetails } = this.props
     const suffix = (
       <AudioOutlined
         style={{
@@ -132,16 +132,27 @@ class Profile extends Component {
 
     const Demo = () => (
       <Tabs centered="true" size="large" activeKey={currentTab} onChange={changeTab}>
-        <TabPane tab="Donations" key="donations">
+        
+        <TabPane tab="Timeline" key="timelinePost">
           <Timeline mode="alternate">
 
-            {donations?.map(donation => (
-              <Timeline.Item color={donation?.color} dot={donation?.dot == "clock" ? <ClockCircleOutlined /> : null}>{donation.text}</Timeline.Item>
+            {timelinePost?.map(timelinepost => (
+              console.log(timelinepost),
+              <Timeline.Item color={timelinepost?.color} dot={timelinepost?.dot == "clock" ? <ClockCircleOutlined /> : null}>{timelinepost.text}</Timeline.Item>
             ))}
 
           </Timeline>
 
         </TabPane>
+
+
+        <TabPane tab="Donations" key="donations">
+              Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
+        </TabPane>
+
+
+
+
         <TabPane centered="true" tab="Posts" key="posts">
 
 
@@ -305,6 +316,7 @@ const mapStateToProps = state => ({
   suggestedPages: state.profileReducer.suggestedPages,
   currentTab: state.profileReducer.currentTab,
   donations: state.profileReducer.donations,
+  timelinePost: state.profileReducer.timelinePost,
   posts: state.profileReducer.posts,
   profileDetails: state.profileReducer.profileDetails
 })

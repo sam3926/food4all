@@ -24,7 +24,25 @@ const initialState = {
         followers: 39,
         following: 53
     },
+    
     donations: [
+        {
+            title: "food",
+            text: "Create a services site 2015-09-01",
+            photo: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+            status: "accepted by XXX on 28-10-20"
+        },
+        {
+            title: "34 kg food",
+            text: "Create a services site 2015-09-01",
+            photo: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+            status: "active"
+        },
+        
+
+    ],
+    
+    timelinePost: [
         {
             color: "green",
             text: "Create a services site 2015-09-01",
@@ -62,7 +80,7 @@ const initialState = {
         { user_name: 'Shreyansh', description: 'Card Content', id: 4, likes: 31, shares: 14 }
     ],
 
-    currentTab: "donations"
+    currentTab: "timelinePost"
 
 }
 

@@ -1,3 +1,4 @@
+import { latLng } from "leaflet";
 import { ACTION } from "./constants";
 
 const initialState = {
@@ -99,6 +100,19 @@ const DiscoverReducer = (state = initialState, action) => {
         case ACTION.CHANGE_FILTERS: {
             //console.log('hahaha')
             return { ...state, currentfilter: action.selectedfilters }
+        }
+        case 'ADD_DONATION': {
+            const {title, description,Date,files,latlng} = action
+            const donation = {
+                donorName: title,
+                description: description,
+                contact: '94111890675',
+                imageurl: files,
+                postTime: Date,
+                latLng:latlng
+            }
+            console.log(donation)
+            return { ...state,Donations: [...state.Donations,donation]}
         }
     }
     return state;

@@ -76,7 +76,7 @@ class Register extends Component {
             console.log("pleaseenter location");
         else {
             console.log("everythhing okay", { ...values, location: this.state.latlng })
-            this.props.registerUser({ ...values, location: this.state.latlng }, this.props.history);
+            this.props.registerUser({ ...values, location: { type: "Point", coordinates: [this.state.latlng.lng, this.state.latlng.lat] } }, this.props.history);
         }
 
     };

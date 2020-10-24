@@ -184,7 +184,7 @@ class Discover extends Component{
                 style={{ height: '100%', borderRight: 0 }}
                 onClick={(e) => onclick(e.key)} >
 
-                <SubMenu key="1" title="Donations" style={{fontSize: '16px'}}>
+                <SubMenu key="1" title="Donations" style={{fontSize: '16px'}} onTitleClick={(e) => onclick(e.key)} >
                     <div style={{"padding":"auto"}}>
                         <Checkbox.Group options={plainOptions} onChange={onChange} />
                     </div>

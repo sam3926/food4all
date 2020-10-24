@@ -3,14 +3,11 @@ const cors = require('cors')
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path')
-const passport = require("passport");
+// const passport = require("passport");
 
-const users = require("./routes/api/users");
 //IMPORT all routes
 
-// const authRoutes = require('./routes/auth')
-// const donorRoutes = require('./routes/donor');
-// const organisationRoutes = require('./routes/organisation');
+const userRoutes = require("./routes/api/users")
 const uploadRoutes = require('./routes/upload')
 
 const app = express();
@@ -29,19 +26,17 @@ app.get('/api/test', (req, res) => {//TEST ROUTE
     res.json({ "yes": "no" })
 })
 
-// app.use('/api/auth', authRoutes)
-// app.use('/api/donor', donorRoutes);
-// app.use('/api/organisation', organisationRoutes);
+
 app.use('/upload', uploadRoutes)
 
 // Passport middleware
-app.use(passport.initialize());
+// app.use(passport.initialize());
 
 // Passport config
-require("./config/passport")(passport);
+// require("./config/passport")(passport);
 
 // Routes
-app.use("/api/users", users);
+app.use("/api/users", userRoutes);
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);

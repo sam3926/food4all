@@ -22,6 +22,11 @@ module.exports = (req, res, next) => {
         error.statusCode = 401;
         throw error;
     }
+    if (decodedToken.userType != "donor") {
+        const error = new Error("Only Donors allowed");
+        error.statusCode = 401;
+        throw error;
+    }
     req.userId = decodedToken.userId;
     req.userType = decodedToken.userType;
     next();

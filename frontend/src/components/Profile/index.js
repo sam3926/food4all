@@ -175,7 +175,7 @@ class Profile extends Component {
           <Sider width={250} style={{ padding: "20px" }}>
             <List
               itemLayout="horizontal"
-              dataSource={suggestedPages}
+              //dataSource={suggestedPages}
               header={
                 <div style={{ fontWeight: "bolder", padding: "5px", fontSize: "medium" }}>
                   Suggested pages

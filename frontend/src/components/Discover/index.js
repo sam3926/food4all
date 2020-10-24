@@ -171,7 +171,7 @@ class Discover extends Component{
     }
       return (
         <Layout>
-            <Sider width={300} className="site-layout-background" 
+            <Sider width={280} className="site-layout-background" 
                 style={{
                     overflow: 'auto',
                     height: '100vh',

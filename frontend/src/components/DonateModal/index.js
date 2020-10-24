@@ -36,6 +36,9 @@ import { UploadOutlined, InboxOutlined , AimOutlined } from '@ant-design/icons';
   class DonateModal extends Component {
   
     render() {
+      const onFieldsChange = (changedFields,allFields) =>{
+        console.log(allFields)
+      }
       return(
         <Modal
           visible={this.props.visible}
@@ -53,6 +56,7 @@ import { UploadOutlined, InboxOutlined , AimOutlined } from '@ant-design/icons';
         >
           <Form
             name="validate_other"
+            onFieldsChange = {onFieldsChange}
             {...formItemLayout}
           >
             <Form.Item

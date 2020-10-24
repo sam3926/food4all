@@ -10,16 +10,11 @@ import { Modal, Menu, Checkbox , Layout, Card , Button , Input , Space , Image }
 const { Content,Sider } = Layout;
 const { SubMenu } = Menu;
 
-const ContactNo = [
-  {
-    No: '000000',
-  }
-]
 
-function success() {
+function success( contact) {
   Modal.success({
     title: 'Donor Notified',
-    content: 'You can contact Donor -Contact No-'
+    content: 'You can contact Donor on ' + contact
   });
 }
 
@@ -75,9 +70,9 @@ class Discover extends Component{
 
    
   render () {
-
-    const { Donations, Organisations, Events, selectedMenuItem , visible, loading} = this.state;
-
+    const { Organisations, Events, selectedMenuItem , visible, loading} = this.state;
+    const {Donations} = this.props
+    console.log(this.props);
     const plainOptions = [
       { label: 'Location', value: 'Location' },
       { label: 'Expiry Date', value: 'Expiry Date' },
@@ -89,32 +84,34 @@ class Discover extends Component{
       //console.log('checked = ', checkedValues);
     }
 
-
+    const imagelist = (images) => {
+      return images.length? (
+        images.map(image =>{
+          return (
+            <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src={image}
+                        />
+          )
+        })
+        ):(<div> No images!</div>)
+    }
     const DonationList = Donations.length? (
       Donations.map(Donation=>{
         return (
-          <Card title={Donation.title} extra={<p>Date And time</p>} style={{ width: 700 }} 
+          <Card title={Donation.donorName} extra={<p>{Donation.postTime}</p>} style={{ width: 700 }} 
           actions={[
-            <p hoverable={true} className="text" onClick={success} ><b> Contact Donor </b></p>,
+            <p hoverable={true} className="text" onClick={() => success(Donation.contact)} ><b> Contact Donor </b></p>,
             <p hoverable={true} className="text" onClick={this.showModal} ><b> Accept Donation  </b></p>,
           ]}
           >
             <p>{Donation.description}</p>
             <Space>
-            <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                        />
-
-            <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-            />
+            {imagelist(Donation.imageurl)}
             </Space>
+
           </Card>
         )
       })
@@ -242,6 +239,9 @@ class Discover extends Component{
 
 const mapStatetoProps = state => {
   return {
+    Donations: state.DiscoverReducer.Donations,
+    Organisations: state.DiscoverReducer.Organisations,
+    Events: state.DiscoverReducer.Events
   };
   
 };

@@ -1,6 +1,96 @@
 import { ACTION } from "./constants";
 
 const initialState = {
+    Donations:[
+            {   
+                donorName:'Arpit',
+                contact:9411890675,
+                postTime:'12-10-2020',
+                description: 'Card content description',
+                imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
+            },
+            {   
+                donorName:'Arpit',
+                contact:9411890675,
+                postTime:'12-10-2020',
+                description: 'Card content description',
+                imageurl:[]
+            },
+            {   
+                donorName:'Arpit',
+                contact:9411890675,
+                postTime:'12-10-2020',
+                description: 'Card content description',
+                imageurl:[]
+            },
+            {   
+                donorName:'Arpit',
+                contact:9411890675,
+                postTime:'12-10-2020',
+                description: 'Card content description',
+                imageurl:[]
+            },
+    ],
+    Organisations:[
+        {   
+            organisationName:'Arpit',
+            contact:9411890675,
+            postTime:'12-10-2020',
+            description: 'Card content description',
+            imageurl:[]
+        },
+        {   
+            organisationName:'Arpit',
+            contact:9411890675,
+            postTime:'12-10-2020',
+            description: 'Card content description',
+            imageurl:[]
+        },
+        {   
+            organisationName:'Arpit',
+            contact:9411890675,
+            postTime:'12-10-2020',
+            description: 'Card content description',
+            imageurl:[]
+        },
+        {   
+            organisationName:'Arpit',
+            contact:9411890675,
+            postTime:'12-10-2020',
+            description: 'Card content description',
+            imageurl:[]
+        },
+    ],
+    Events:[
+        {   
+            organiserName:'Arpit',
+            contact:9411890675,
+            postTime:'12-10-2020',
+            description: 'Card content description',
+            imageurl:[]
+        },
+        {   
+            organiserName:'Arpit',
+            contact:9411890675,
+            postTime:'12-10-2020',
+            description: 'Card content description',
+            imageurl:[]
+        },
+        {   
+            organiserName:'Arpit',
+            contact:9411890675,
+            postTime:'12-10-2020',
+            description: 'Card content description',
+            imageurl:[]
+        },
+        {   
+            organiserName:'Arpit',
+            contact:9411890675,
+            postTime:'12-10-2020',
+            description: 'Card content description',
+            imageurl:[]
+        },
+    ],
     currentfilter:[]
 }
 

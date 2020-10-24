@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import { Form, Upload, Row , Col , Input , Modal,DatePicker, Button } from 'antd';
-import { UploadOutlined, InboxOutlined , AimOutlined } from '@ant-design/icons';
+import { UploadOutlined, InboxOutlined , CompassOutlined , AimOutlined } from '@ant-design/icons';
+import MapComp from "../MapComp";
 
   const formItemLayout = {
       labelCol: {
@@ -34,12 +35,29 @@ import { UploadOutlined, InboxOutlined , AimOutlined } from '@ant-design/icons';
   };
 
   class DonateModal extends Component {
-  
+    constructor() {
+      super();
+      this.state = {
+          mapOpen: false,
+          latlng: null
+      };
+    }
+
+    saveLatLng = (latlng) => {
+      this.setState({
+          latlng: latlng
+      })
+      //console.log(this.state.latlng.lat + " , " + this.state.latlng.lng);
+    }
+
     render() {
       const onFieldsChange = (changedFields,allFields) =>{
         console.log(allFields)
       }
+
+      const { latlng } = this.state;
       return(
+        <>
         <Modal
           visible={this.props.visible}
           title="Donation Details"
@@ -95,18 +113,18 @@ import { UploadOutlined, InboxOutlined , AimOutlined } from '@ant-design/icons';
             >
               <Row gutter={8}>
                 <Col span={20}>
-                  <Form.Item name="Address" noStyle
+                  {/* <Form.Item name="Address" noStyle
                     rules={
                       [{
                       required: true, message: 'Please input the Address',
                       },]
                     }
-                  >
-                    <Input />
-                  </Form.Item>
+                  > */}
+                    <Input placeholder="Location" disabled value={latlng ? latlng.lat + " , " + latlng.lng : ""} />
+                  {/* </Form.Item> */}
                 </Col>
                 <Col span={2}>
-                  <Button icon={<AimOutlined />}></Button>
+                  <Button onClick={() => this.setState({ mapOpen: true })} icon={<CompassOutlined />}></Button>
                 </Col>
               </Row>
             </Form.Item>
@@ -124,6 +142,15 @@ import { UploadOutlined, InboxOutlined , AimOutlined } from '@ant-design/icons';
             </Form.Item>
           </Form> 
         </Modal>
+
+        <Modal footer={[
+          <Button onClick={() => this.setState({ mapOpen: false })}>
+            Return
+          </Button>
+          ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+        <MapComp saveLatLng={this.saveLatLng} />
+        </Modal>
+</>
       )
     }
   }

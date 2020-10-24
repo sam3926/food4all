@@ -118,7 +118,7 @@ class Discover extends Component{
     ):(
       <div>No Donations are currently there!</div>
     )
-
+      
     const OrganisationList = Organisations.length? (
       Organisations.map(Organisation=>{
         return (

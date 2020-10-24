@@ -93,7 +93,7 @@ class Profile extends Component {
   render() {
 
     const { visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit } = this.state;
-    const { suggestedPages, currentTab, changeTab, donations, posts, profileDetails } = this.props
+    const { suggestedPages, currentTab, changeTab, donations, timelinePost, posts, profileDetails } = this.props
     const suffix = (
       <AudioOutlined
         style={{
@@ -132,16 +132,27 @@ class Profile extends Component {
 
     const Demo = () => (
       <Tabs centered="true" size="large" activeKey={currentTab} onChange={changeTab}>
-        <TabPane tab="Donations" key="donations">
+        
+        <TabPane tab="Timeline" key="timelinePost">
           <Timeline mode="alternate">
 
-            {donations?.map(donation => (
-              <Timeline.Item color={donation?.color} dot={donation?.dot == "clock" ? <ClockCircleOutlined /> : null}>{donation.text}</Timeline.Item>
+            {timelinePost?.map(timelinepost => (
+              console.log(timelinepost),
+              <Timeline.Item color={timelinepost?.color} dot={timelinepost?.dot == "clock" ? <ClockCircleOutlined /> : null}>{timelinepost.text}</Timeline.Item>
             ))}
 
           </Timeline>
 
         </TabPane>
+
+
+        <TabPane tab="Donations" key="donations">
+              Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
+        </TabPane>
+
+
+
+
         <TabPane centered="true" tab="Posts" key="posts">
 
 
@@ -164,7 +175,7 @@ class Profile extends Component {
           <Sider width={250} style={{ padding: "20px" }}>
             <List
               itemLayout="horizontal"
-              dataSource={suggestedPages}
+              //dataSource={suggestedPages}
               header={
                 <div style={{ fontWeight: "bolder", padding: "5px", fontSize: "medium" }}>
                   Suggested pages
@@ -255,7 +266,7 @@ class Profile extends Component {
                 //add title div here 
               }
 
-              <div style={{ fontWeight: "bolder", padding: "15px", fontSize: "medium" }}>Pending Donations</div>
+              <div style={{ fontWeight: "bolder", paddingBottom: "15px", paddingTop:"15px", fontSize: "medium" }}>Pending Donations</div>
               <div>
                 <Card title="User Name" size="small" style={{ width: 250 }}
                   actions={[
@@ -305,6 +316,7 @@ const mapStateToProps = state => ({
   suggestedPages: state.profileReducer.suggestedPages,
   currentTab: state.profileReducer.currentTab,
   donations: state.profileReducer.donations,
+  timelinePost: state.profileReducer.timelinePost,
   posts: state.profileReducer.posts,
   profileDetails: state.profileReducer.profileDetails
 })

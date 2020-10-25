@@ -4,6 +4,9 @@ import 'antd/dist/antd.css';
 import { Form, Upload, Row , Col , Input , Modal,DatePicker, Button } from 'antd';
 import { UploadOutlined, InboxOutlined , CompassOutlined , AimOutlined } from '@ant-design/icons';
 import MapComp from "../MapComp";
+import { addDonation } from './action';
+import { bindActionCreators } from 'redux'
+import {connect} from 'react-redux'
 
   const formItemLayout = {
       labelCol: {
@@ -33,11 +36,19 @@ import MapComp from "../MapComp";
 
     return e && e.fileList;
   };
-
+  
   class DonateModal extends Component {
+    state = {
+      user:'Arpit',
+
+    }
     constructor() {
       super();
       this.state = {
+          title:'',
+          description:'',
+          Date:'',
+          files:[],
           mapOpen: false,
           latlng: null
       };
@@ -49,9 +60,26 @@ import MapComp from "../MapComp";
       })
       //console.log(this.state.latlng.lat + " , " + this.state.latlng.lng);
     }
-
+    onChange = (value,dateString) => {
+        this.setState({
+          Date: dateString
+        })
+    }
     render() {
-
+      const onFieldsChange = (changedFields,allFields) =>{
+        console.log(allFields)
+        this.setState({
+          title: allFields[0].value,
+          description:allFields[1].value,
+          //Date:allFields[2].value==undefined? (null):(allFields[2].value.getDate),
+          files: allFields[3].value ==undefined? ([]):([allFields[3].value])
+        })
+      }
+      const createPost = () =>{
+        console.log(this.state)
+        this.props.handleOk()
+        this.props.addDonation(this.state)
+      }
       const { latlng } = this.state;
       return(
         <>
@@ -64,13 +92,14 @@ import MapComp from "../MapComp";
             <Button key="back" onClick={this.props.handleCancel}>
               Return
             </Button>,
-            <Button key="submit" type="primary" loading={this.props.loading} onClick={this.props.handleOk}>
+            <Button key="submit" type="primary" loading={this.props.loading} onClick={createPost}>
               Submit
             </Button>,
           ]}
         >
           <Form
             name="validate_other"
+            onFieldsChange = {onFieldsChange}
             {...formItemLayout}
           >
             <Form.Item
@@ -97,7 +126,7 @@ import MapComp from "../MapComp";
             </Form.Item>
 
             <Form.Item name="date-picker" label="Enter expiry date" {...config}>
-              <DatePicker />
+              <DatePicker onChange={this.onChange} format="YYYY-MM-DD HH:mm" />
             </Form.Item>
 
             <Form.Item label="Address" 
@@ -109,15 +138,7 @@ import MapComp from "../MapComp";
             >
               <Row gutter={8}>
                 <Col span={20}>
-                  {/* <Form.Item name="Address" noStyle
-                    rules={
-                      [{
-                      required: true, message: 'Please input the Address',
-                      },]
-                    }
-                  > */}
                     <Input placeholder="Location" disabled value={latlng ? latlng.lat + " , " + latlng.lng : ""} />
-                  {/* </Form.Item> */}
                 </Col>
                 <Col span={2}>
                   <Button onClick={() => this.setState({ mapOpen: true })} icon={<CompassOutlined />}></Button>
@@ -150,5 +171,7 @@ import MapComp from "../MapComp";
       )
     }
   }
-
-export default DonateModal;
+const mapDispatchToProps = dispatch => ({
+  addDonation : bindActionCreators(addDonation,dispatch)
+})
+export default connect(null,mapDispatchToProps)(DonateModal);

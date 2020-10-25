@@ -1,17 +1,5 @@
 const initialState = {
-    postComments:[
-        {
-            id:1,    
-            comments: [
-                {
-                    author: 'Han Solo',
-                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-                    content: <p>{this.state.value}</p>,
-                    datetime: moment().fromNow(),
-                }
-            ]
-        }
-    ]
+   
 }
 
 

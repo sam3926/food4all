@@ -48,10 +48,12 @@ const userSchema = new Schema({
     ref: 'User'
   }],
   noFed: {
-    type: Number
+    type: Number,
+    default: 0
   },
-  noPeople: {
-    type: Number
+  noDonations: {
+    type: Number,
+    default: 0
   },
   joinedAt: {
     type: Date,
@@ -61,10 +63,13 @@ const userSchema = new Schema({
     type: String
   }],
   profilePic: {
-    type: String
+    type: String,
+    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=400"
   },
   avatar: {
-    type: String
+    type: String,
+    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"
+
   },
   posts: [{
     type: Schema.Types.ObjectId,

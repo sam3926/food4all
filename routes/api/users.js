@@ -26,10 +26,7 @@ router.post("/register", async (req, res, next) => {
         contact: contact,
         address: address,
         userType: userType,
-        location: {
-          type: "Point",
-          coordinates: [location.lng, location.lat]
-        }
+        location: location
       });
       const result = await user.save();
       console.log("result", result)
@@ -92,7 +89,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get('/profile/:id', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noPeople')
+    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic location')
     if (user) {
       console.log(user)
       res.status(200).json(user)

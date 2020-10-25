@@ -61,10 +61,10 @@ class Navbar extends Component {
               <DonateModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading} />
               <Menu.Item key="home" icon={<HomeOutlined />} ><Link to="/home">Home</Link></Menu.Item>
               <Menu.Item key="discover" icon={<BulbOutlined />}><Link to='/discover'>Discover</Link></Menu.Item>
-              <Menu.Item key="community" icon={<TrophyOutlined />} >Community</Menu.Item>
-              <Menu.Item key="leaderboard" icon={<UsergroupDeleteOutlined />} >Leaderboard</Menu.Item>
-              <Menu.Item key="notifications" icon={<BellOutlined />}>Notifications</Menu.Item>
-              <Menu.Item key="messages" icon={<MessageOutlined />} >Messages</Menu.Item>
+              <Menu.Item key="community" icon={<TrophyOutlined />} ><Link to="/community">Community</Link></Menu.Item>
+              <Menu.Item key="leaderboard" icon={<UsergroupDeleteOutlined />} ><Link to="/leaderboard">Leaderboard</Link></Menu.Item>
+              <Menu.Item key="notifications" icon={<BellOutlined />}><Link to="/notifications">Notifications</Link></Menu.Item>
+              <Menu.Item key="messages" icon={<MessageOutlined />} ><Link to="/messages">Messages</Link></Menu.Item>
               <Menu.Item key="profile" icon={<UserOutlined />} ><Link to="/profile">Profile</Link></Menu.Item>
               <Menu.Item key="search">
                 <Search

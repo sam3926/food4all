@@ -9,6 +9,17 @@ export const getSomeData = (data) => async (dispatch) => {
     });
 };
 
+export const getProfile = () => async (dispatch, getState) => {
+    const userId = getState().authReducer.user.userId
+    const res = await axios.get(`/api/users/profile/${userId}`)
+    // const res = await axios.get('/api/test')
+    console.log(res.data)
+    dispatch({
+        type: ACTION.GET_PROFILE,
+        payload: res.data
+    })
+}
+
 export const getSuggestedPages = () => async (dispatch) => {
     const res = await axios.get("/api/path/to/sugPage");
     dispatch({

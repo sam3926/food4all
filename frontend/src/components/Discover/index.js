@@ -6,22 +6,15 @@ import {connect} from 'react-redux'
 import {changeFilters} from './action'
 import { bindActionCreators } from 'redux';
 import { Modal, Menu, Checkbox , Layout, Card , Button , Input , Space , Image } from 'antd';
-import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-
 
 const { Content,Sider } = Layout;
 const { SubMenu } = Menu;
 
-const ContactNo = [
-  {
-    No: '000000',
-  }
-]
 
-function success() {
+function success( contact) {
   Modal.success({
     title: 'Donor Notified',
-    content: 'You can contact Donor -Contact No-'
+    content: 'You can contact Donor on ' + contact
   });
 }
 
@@ -77,9 +70,9 @@ class Discover extends Component{
 
    
   render () {
-
-    const { Donations, Organisations, Events, selectedMenuItem , visible, loading} = this.state;
-
+    const { Organisations, Events, selectedMenuItem , visible, loading} = this.state;
+    const {Donations} = this.props
+    console.log(this.props);
     const plainOptions = [
       { label: 'Location', value: 'Location' },
       { label: 'Expiry Date', value: 'Expiry Date' },
@@ -91,43 +84,45 @@ class Discover extends Component{
       //console.log('checked = ', checkedValues);
     }
 
-
+    const imagelist = (images) => {
+      return images.length? (
+        images.map(image =>{
+          return (
+            <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src={image}
+                        />
+          )
+        })
+        ):(<div> No images!</div>)
+    }
     const DonationList = Donations.length? (
       Donations.map(Donation=>{
         return (
-          <Card title={Donation.title} extra={<p>Date And time</p>} style={{ width: 700 , margin: '8px'}} 
+          <Card title={Donation.donorName} extra={<p>{Donation.postTime}</p>} style={{ width: 700 }} 
           actions={[
-            <p hoverable={true} className="text" onClick={success} ><b> Contact Donor </b></p>,
+            <p hoverable={true} className="text" onClick={() => success(Donation.contact)} ><b> Contact Donor </b></p>,
             <p hoverable={true} className="text" onClick={this.showModal} ><b> Accept Donation  </b></p>,
           ]}
           >
             <p>{Donation.description}</p>
             <Space>
-            <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                        />
-
-            <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-            />
+            {imagelist(Donation.imageurl)}
             </Space>
+
           </Card>
         )
       })
     ):(
       <div>No Donations are currently there!</div>
     )
-
+      
     const OrganisationList = Organisations.length? (
       Organisations.map(Organisation=>{
         return (
-          <Card title={Organisation.title} extra={<p>People fed</p>} style={{ width: 700, margin: '8px' }}>
+          <Card title={Organisation.title} extra={<p>People fed</p>} style={{ width: 700 }}>
             <p>{Organisation.description}</p>
             <p>{Organisation.description1}</p>
           </Card>
@@ -140,7 +135,7 @@ class Discover extends Component{
     const EventList = Events.length? (
       Events.map(Event=>{
         return (
-          <Card title={Event.title} style={{ width: 700, margin: '8px' }}>
+          <Card title={Event.title} style={{ width: 700 }}>
             <p>{Event.description}</p>
           </Card>
         )
@@ -171,7 +166,7 @@ class Discover extends Component{
     }
       return (
         <Layout>
-            <Sider width={280} className="site-layout-background" 
+            <Sider width={300} className="site-layout-background" 
                 style={{
                     overflow: 'auto',
                     height: '100vh',
@@ -186,7 +181,7 @@ class Discover extends Component{
                 style={{ height: '100%', borderRight: 0 }}
                 onClick={(e) => onclick(e.key)} >
 
-                <SubMenu key="1" title="Donations" style={{fontSize: '16px'}} onTitleClick={(e) => onclick(e.key)} >
+                <SubMenu key="1" title="Donations" style={{fontSize: '16px'}}>
                     <div style={{"padding":"auto"}}>
                         <Checkbox.Group options={plainOptions} onChange={onChange} />
                     </div>
@@ -204,18 +199,8 @@ class Discover extends Component{
               }}>
                         {componentsSwitch(selectedMenuItem)}
               </Content>
-              <Sider width={300} style={{ padding: "25px" }}>
-              <div style={{ fontWeight: "bolder", paddingBottom: "15px", fontSize: "medium" }}>Pending Donations</div>
-              <div>
-                <Card title="User Name" size="small" style={{ width: 250 }}
-                  actions={[
-                    <p onClick={this.showModal} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
-                    <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
-                  ]}
-                >
-                  <p>Card content</p>
-                </Card>
-              </div>
+              <Sider width={280} style={{ padding: "20px" }}>
+
               </Sider>
 
             </Layout>
@@ -254,6 +239,9 @@ class Discover extends Component{
 
 const mapStatetoProps = state => {
   return {
+    Donations: state.DiscoverReducer.Donations,
+    Organisations: state.DiscoverReducer.Organisations,
+    Events: state.DiscoverReducer.Events
   };
   
 };

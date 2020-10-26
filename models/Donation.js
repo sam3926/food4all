@@ -11,6 +11,10 @@ const donationSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
     },
+    title:{
+        type: String,
+        required:true
+    },
     postTime: {
         type: Schema.Types.Date,
         default: Date.now()

@@ -1,8 +1,9 @@
+import axios from "axios"
 
 export const addPost = (post) => async (dispatch) => {
-    //const res = await axios.get("/some-api-route");
+    const res = await axios.post("/api/posts/create", { post });
     dispatch({
         type: 'ADD_POST',
-        post: post,
+        post: res.data,
     });
 };

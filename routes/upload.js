@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path');
 const isAuth = require('../middlewares/isAuth');
 const router = express.Router();
-
+const User = require('../models/User')
 //IMAGE UPLOADS
 
 const imageFilter = (req, file, cb) => {
@@ -124,11 +124,15 @@ router.post('/certificates', uploadCertificates.single('file'),
     }
 )
 
-router.post('/profile-', [isAuth, uploadProfile.single('file')],
+router.post('/profile-pic', [isAuth, uploadProfile.single('file')],
     async (req, res) => {
         //Update the User Model, create an avatar etc.
         //Get  userid from isAuth
-        res.json("profile pic updated")
+        await User.findByIdAndUpdate(req.userId, { profilePic: `/images/profile/${req.file.filename}` })
+
+        res.json({
+            "location": `/images/profile/${req.file.filename}`
+        })
     }
 
 )

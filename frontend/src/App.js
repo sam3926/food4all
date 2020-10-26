@@ -24,6 +24,7 @@ import Landing from "./components/Landing"
 import { setCurrentUser, logoutUser } from './components/Auth/action';
 import { store } from "./store"
 import ComingSoon from './components/ComingSoon';
+import messages from './components/messages';
 
 
 
@@ -76,6 +77,7 @@ const App = () => {
           <PrivateRoute exact path='/home' component={Home} />
           <PrivateRoute exact path='/profile' component={Profile} />
           <PrivateRoute exact path="/discover" component={Discover} />
+          <PrivateRoute exact path="/messages" component={messages} />
           <Route path="/" component={ComingSoon} />
         </RouterSwitch>
         {/* <Route path='/discover' component={Discover} /> */}

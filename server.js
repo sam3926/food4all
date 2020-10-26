@@ -7,8 +7,9 @@ const path = require('path')
 
 //IMPORT all routes
 
-const userRoutes = require("./routes/api/users")
+const userRoutes = require("./routes/users")
 const uploadRoutes = require('./routes/upload')
+const postRoutes = require("./routes/posts")
 
 const app = express();
 const PORT = process.env.PORT || 8000
@@ -37,6 +38,7 @@ app.use('/upload', uploadRoutes)
 
 // Routes
 app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);
@@ -53,7 +55,8 @@ const MONGO_URI = "mongodb+srv://arpit:arpit@cluster0.lr4ce.mongodb.net/techsite
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
 }).then(res => {
     app.listen(PORT, () => {
         console.log('server started')

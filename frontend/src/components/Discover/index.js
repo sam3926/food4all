@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {changeFilters} from './action'
 import { bindActionCreators } from 'redux';
 import { Modal, Menu, Checkbox , Layout, Card , Button , Input , Space , Image } from 'antd';
+import {CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 const { Content,Sider } = Layout;
 const { SubMenu } = Menu;
@@ -101,7 +102,7 @@ class Discover extends Component{
     const DonationList = Donations.length? (
       Donations.map(Donation=>{
         return (
-          <Card title={Donation.donorName} extra={<p>{Donation.postTime}</p>} style={{ width: 700 }} 
+          <Card title={Donation.donorName} extra={<p>{Donation.postTime}</p>} style={{ width: 700, margin:'8px' }} 
           actions={[
             <p hoverable={true} className="text" onClick={() => success(Donation.contact)} ><b> Contact Donor </b></p>,
             <p hoverable={true} className="text" onClick={this.showModal} ><b> Accept Donation  </b></p>,
@@ -122,7 +123,7 @@ class Discover extends Component{
     const OrganisationList = Organisations.length? (
       Organisations.map(Organisation=>{
         return (
-          <Card title={Organisation.title} extra={<p>People fed</p>} style={{ width: 700 }}>
+          <Card title={Organisation.title} extra={<p>People fed</p>} style={{ width: 700 , margin:'8px'}}>
             <p>{Organisation.description}</p>
             <p>{Organisation.description1}</p>
           </Card>
@@ -135,7 +136,7 @@ class Discover extends Component{
     const EventList = Events.length? (
       Events.map(Event=>{
         return (
-          <Card title={Event.title} style={{ width: 700 }}>
+          <Card title={Event.title} style={{ width: 700 , margin:'8px'}}>
             <p>{Event.description}</p>
           </Card>
         )
@@ -166,7 +167,7 @@ class Discover extends Component{
     }
       return (
         <Layout>
-            <Sider width={300} className="site-layout-background" 
+            <Sider width={280} className="site-layout-background" 
                 style={{
                     overflow: 'auto',
                     height: '100vh',
@@ -191,7 +192,7 @@ class Discover extends Component{
             </Menu>    
             </Sider>
 
-            <Layout style={{ marginLeft: '300px', marginTop: '64px' }}>
+            <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>
               <Content className="site-layout-background" 
               style={{
                 paddingLeft: 120,
@@ -199,8 +200,18 @@ class Discover extends Component{
               }}>
                         {componentsSwitch(selectedMenuItem)}
               </Content>
-              <Sider width={280} style={{ padding: "20px" }}>
-
+              <Sider width={300} style={{ padding: "25px" }}>
+              <div style={{ fontWeight: "bolder", paddingBottom: "15px", fontSize: "medium" }}>Pending Donations</div>	
+              <div>	
+                <Card title="User Name" size="small" style={{ width: 250 }}	
+                  actions={[	
+                    <p onClick={this.showModal} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,	
+                    <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,	
+                  ]}	
+                >	
+                  <p>Card content</p>	
+                </Card>	
+              </div>	
               </Sider>
 
             </Layout>

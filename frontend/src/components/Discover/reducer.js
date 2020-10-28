@@ -34,64 +34,15 @@ const initialState = {
     ],
     Organisations:[
         {   
-            organisationName:'Arpit',
+            organisationName:'Arpit1',
             contact:9411890675,
-            postTime:'12-10-2020',
-            description: 'Card content description',
-            imageurl:[]
-        },
-        {   
-            organisationName:'Arpit',
-            contact:9411890675,
-            postTime:'12-10-2020',
-            description: 'Card content description',
-            imageurl:[]
-        },
-        {   
-            organisationName:'Arpit',
-            contact:9411890675,
-            postTime:'12-10-2020',
-            description: 'Card content description',
-            imageurl:[]
-        },
-        {   
-            organisationName:'Arpit',
-            contact:9411890675,
-            postTime:'12-10-2020',
-            description: 'Card content description',
+            address:'Address',
+            description:'Brief description',
+            peoplefed: '0',
             imageurl:[]
         },
     ],
-    Events:[
-        {   
-            organiserName:'Arpit',
-            contact:9411890675,
-            postTime:'12-10-2020',
-            description: 'Card content description',
-            imageurl:[]
-        },
-        {   
-            organiserName:'Arpit',
-            contact:9411890675,
-            postTime:'12-10-2020',
-            description: 'Card content description',
-            imageurl:[]
-        },
-        {   
-            organiserName:'Arpit',
-            contact:9411890675,
-            postTime:'12-10-2020',
-            description: 'Card content description',
-            imageurl:[]
-        },
-        {   
-            organiserName:'Arpit',
-            contact:9411890675,
-            postTime:'12-10-2020',
-            description: 'Card content description',
-            imageurl:[]
-        },
-    ],
+    Events:[],
     currentfilter:[]
 }
 

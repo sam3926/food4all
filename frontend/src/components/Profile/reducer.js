@@ -82,6 +82,10 @@ const initialState = {
         { user_name: 'Shreyansh', description: 'Card Content', id: 4, likes: 31, shares: 14 }
     ],
 
+    Pending: [
+        {donorname:'Arpit1',posttime:'000',Description:'Brief description'}
+    ],
+
     currentTab: "timelinePost"
 
 }
@@ -110,6 +114,15 @@ const profileReducer = (state = initialState, action) => {
         case ACTION.UPDATE_PROFILE_PIC: {
             state = { ...state, profileDetails: { ...state.profileDetails, profilePic: action.payload } }
             break;
+        }
+        case 'PENDING_DONATION': {
+            const {donorName, postTime, description} = action
+            const PendingDonation = {
+                donorname: donorName,
+                Description: description,
+                posttime: postTime
+            }
+            return { ...state,Pending: [...state.Pending,PendingDonation]}
         }
     }
     return state;

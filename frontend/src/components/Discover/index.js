@@ -6,6 +6,8 @@ import {connect} from 'react-redux'
 import {changeFilters} from './action'
 import { bindActionCreators } from 'redux';
 import { Modal, Menu, Checkbox , Layout, Card , Button , Input , Space , Image } from 'antd';
+import { HomeOutlined, PhoneOutlined} from '@ant-design/icons';
+import { pendingDonation } from './action';
 
 const { Content,Sider } = Layout;
 const { SubMenu } = Menu;
@@ -20,27 +22,14 @@ function success( contact) {
 
 class Discover extends Component{
    state ={
-      Donations:[
-          {title:'Arpit',description:'Card Content'},
-          {title:'Arpit',description:'Card Content'},
-          {title:'Arpit',description:'Card Content'},
-          {title:'Arpit',description:'Card Content'},
-          {title:'Arpit',description:'Card Content'}
-      ],
       Organisations:[
-        {title:'Arpit1',description:'Address',description1:'Brief Detail'},
-        {title:'Arpit1',description:'Address',description1:'Brief Detail'},
-        {title:'Arpit1',description:'Address',description1:'Brief Detail'},
-        {title:'Arpit1',description:'Address',description1:'Brief Detail'},
-        {title:'Arpit1',description:'Address',description1:'Brief Detail'}
+        {organisationName:'Arpit1',address:'Address',contact:'contact no',peoplefed: '0',description:'Brief description'},
+        {organisationName:'Arpit1',address:'Address',contact:'contact no',peoplefed: '0',description:'Brief description'},
+        {organisationName:'Arpit1',address:'Address',contact:'contact no',peoplefed: '0',description:'Brief description'},
+        {organisationName:'Arpit1',address:'Address',contact:'contact no',peoplefed: '0',description:'Brief description'},
+        {organisationName:'Arpit1',address:'Address',contact:'contact no',peoplefed: '0',description:'Brief description'}
       ],
-      Events:[
-        {title:'Arpit2',description:'Card Content'},
-        {title:'Arpit2',description:'Card Content'},
-        {title:'Arpit2',description:'Card Content'},
-        {title:'Arpit2',description:'Card Content'},
-        {title:'Arpit2',description:'Card Content'}
-      ],
+      Events:[],
       selectedMenuItem:'1',
       loading: false,
       visible: false,
@@ -70,8 +59,8 @@ class Discover extends Component{
 
    
   render () {
-    const { Organisations, Events, selectedMenuItem , visible, loading} = this.state;
-    const {Donations} = this.props
+    const {  Events, selectedMenuItem , visible, loading} = this.state;
+    const {Organisations, Donations} = this.props
     console.log(this.props);
     const plainOptions = [
       { label: 'Location', value: 'Location' },
@@ -84,6 +73,17 @@ class Discover extends Component{
       //console.log('checked = ', checkedValues);
     }
 
+    const addpending = (N,P,D) =>{
+      
+      const Pending = {
+        donorName: N,
+        postTime: P,
+        description: D
+      };
+
+      this.props.pendingDonation(Pending);
+    }
+    
     const imagelist = (images) => {
       return images.length? (
         images.map(image =>{
@@ -101,10 +101,10 @@ class Discover extends Component{
     const DonationList = Donations.length? (
       Donations.map(Donation=>{
         return (
-          <Card title={Donation.donorName} extra={<p>{Donation.postTime}</p>} style={{ width: 700 }} 
+          <Card title={<a>{Donation.donorName}</a>} extra={<p>{Donation.postTime}</p>} style={{ width: 700 }} 
           actions={[
-            <p hoverable={true} className="text" onClick={() => success(Donation.contact)} ><b> Contact Donor </b></p>,
-            <p hoverable={true} className="text" onClick={this.showModal} ><b> Accept Donation  </b></p>,
+            <p className="text" onClick={() => success(Donation.contact) } ><b> Contact Donor </b></p>,
+            <p className="text" onClick={() => addpending(Donation.donorName,Donation.postTime,Donation.description)} ><b> Interested </b></p>,
           ]}
           >
             <p>{Donation.description}</p>
@@ -122,9 +122,9 @@ class Discover extends Component{
     const OrganisationList = Organisations.length? (
       Organisations.map(Organisation=>{
         return (
-          <Card title={Organisation.title} extra={<p>People fed</p>} style={{ width: 700 }}>
+        <Card title={<a>{Organisation.organisationName}</a>} extra={<p>People fed {Organisation.peoplefed}</p>} style={{ width: 700 }}>
+            <p><PhoneOutlined /> : {Organisation.contact} <HomeOutlined /> : {Organisation.address} </p>
             <p>{Organisation.description}</p>
-            <p>{Organisation.description1}</p>
           </Card>
         )
       })
@@ -181,7 +181,7 @@ class Discover extends Component{
                 style={{ height: '100%', borderRight: 0 }}
                 onClick={(e) => onclick(e.key)} >
 
-                <SubMenu key="1" title="Donations" style={{fontSize: '16px'}}>
+                <SubMenu key="1" title="Donations" onTitleClick={(e) => onclick(e.key)} style={{fontSize: '16px'}}>
                     <div style={{"padding":"auto"}}>
                         <Checkbox.Group options={plainOptions} onChange={onChange} />
                     </div>
@@ -246,7 +246,8 @@ const mapStatetoProps = state => {
   
 };
 const mapDispatchToProps = dispatch => ({
-  changeFilters : bindActionCreators(changeFilters, dispatch)
+  changeFilters : bindActionCreators(changeFilters, dispatch),
+  pendingDonation : bindActionCreators(pendingDonation,dispatch)
 })
 
 export default connect(mapStatetoProps,mapDispatchToProps)(Discover);

@@ -1,16 +1,15 @@
 import { ACTION } from "../EditProfile/constants";
 
 const initialState = {
-    user: [
+    user: 
         {
         name: 'Krishnendu Sudheesh',
-        email:"xyz",
+        email: "xyz",
         contact: "9373321987",
         address: "777 Brockton Avenue, Abington MA 2351",
         description:'Brief Description',
         id:1
         },
-    ],
 }
 
 const EditReducer = (state = initialState, action) => {

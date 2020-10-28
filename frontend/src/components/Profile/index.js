@@ -33,7 +33,7 @@ class Profile extends Component {
     loadingEdit: false,
     ButtonTitle: 'Follow',
     clicked: false,
-    self: false,
+    self: true,
   }
 
   showModal = () => {

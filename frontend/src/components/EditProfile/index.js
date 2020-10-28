@@ -8,9 +8,11 @@ import { UserOutlined , PhoneOutlined , MailOutlined , LockOutlined } from '@ant
 class EditProfile extends React.Component {
   render() {
     const {data} = this.props
+    console.log(this.props)
     //const Uname = data.name;
     return (
       <>
+        
             <Modal
                 visible={this.props.visible}
                 title="Edit Profile"
@@ -30,10 +32,10 @@ class EditProfile extends React.Component {
                 name="form_in_modal"
                 initialValues={{
                 ['name']: data.name,
-                ['contact']: "1234567890",
-                ['address']: "xyz",
-                ['email']: "x@x.xom",
-                ['description']: "brief description",
+                ['contact']: data.contact,
+                ['address']: data.address,
+                ['email']: data.email,
+                ['description']: data.description,
                 }}
                 >
                     <Form.Item

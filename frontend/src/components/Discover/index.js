@@ -101,7 +101,7 @@ class Discover extends Component{
     const DonationList = Donations.length? (
       Donations.map(Donation=>{
         return (
-          <Card title={Donation.donorName} extra={<p>{Donation.postTime}</p>} style={{ width: 700 }} 
+          <Card title={<a>{Donation.donorName}</a>} extra={<p>{Donation.postTime}</p>} style={{ width: 700 }} 
           actions={[
             <p className="text" onClick={() => success(Donation.contact) } ><b> Contact Donor </b></p>,
             <p className="text" onClick={() => addpending(Donation.donorName,Donation.postTime,Donation.description)} ><b> Interested </b></p>,
@@ -122,7 +122,7 @@ class Discover extends Component{
     const OrganisationList = Organisations.length? (
       Organisations.map(Organisation=>{
         return (
-          <Card title={Organisation.organisationName} extra={<p>People fed {Organisation.peoplefed}</p>} style={{ width: 700 }}>
+        <Card title={<a>{Organisation.organisationName}</a>} extra={<p>People fed {Organisation.peoplefed}</p>} style={{ width: 700 }}>
             <p><PhoneOutlined /> : {Organisation.contact} <HomeOutlined /> : {Organisation.address} </p>
             <p>{Organisation.description}</p>
           </Card>

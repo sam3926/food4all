@@ -66,11 +66,7 @@ const HomeCenterReducer = (state = initialState, action) => {
             console.log('inside the ADD post')
             console.log(action.post)
             let posts = [...state.posts, action.post]
-            const comment = {
-                id: action.post.id,
-                comments: []
-            }
-            let postComments = [...state.postComments, comment]
+            let postComments = [...state.postComments, action.comment]
             console.log(posts)
             return {
                 ...state,

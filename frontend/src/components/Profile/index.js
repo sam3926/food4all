@@ -188,7 +188,7 @@ class Profile extends Component {
             //Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
           }
           {donations.map(donation => (
-              <Card title={donation.title} extra={<p>{donation.status}</p>} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}}>
+              <Card title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}}>
                 <p>{donation.description}</p>
                 <Space>
                 {imagelist(donation.imageurl)}
@@ -203,7 +203,7 @@ class Profile extends Component {
 
 
           {posts?.map(post => (
-            <Card title={post.user_name} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}} actions={Actions}>
+            <Card title={post.title} extra={<div>{post.user_name}<br></br>{post.date}</div>} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}} actions={Actions}>
               <p>{post.description}</p>
             </Card>
           ))}

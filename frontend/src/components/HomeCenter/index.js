@@ -97,7 +97,7 @@ class HomeCenter extends Component {
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={post.user_name} extra={<p>Date And time</p>} style={{ width: 700 , margin:"8px"}} 
+                    <Card title={post.title} extra={<div>{post.user_name}<br></br>{post.date}</div>} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
                         <div><LikeOutlined key="Like" style={{margin:"8px"}} onClick={(id) =>this.incrementLike(post.id)}/>{post.likes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/>{post.shares}</div>,

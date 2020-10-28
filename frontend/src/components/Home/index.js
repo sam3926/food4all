@@ -26,10 +26,13 @@ class Home extends Component {
         return (
                 <Layout>
                     <LeftSidePanel/>
-                    <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>   
+                    <Layout style={{ marginTop: '64px' }}>   
                         <HomeCenter/>
-                    </Layout>   
-                    <Sider width={300} style={{ padding: "25px", marginTop: '48px' }}>
+                    </Layout>  
+                    {
+                        //right hand side pane, needs to be made a seperate component
+                    } 
+                    <Sider width={300} style={{ padding: "25px", marginTop: '48px', right : 0, position: 'fixed', height: '100vh' }}>
                     <List
                         itemLayout="horizontal"
                         //dataSource={savedEvents}
@@ -50,6 +53,7 @@ class Home extends Component {
                             </List.Item>
                         )}
                      />
+
 
                      <div style={{marginTop:'20px'}}>
 
@@ -76,13 +80,13 @@ class Home extends Component {
                         <Button type="link">About</Button>
                         <Button type="link">Help</Button>
                         <Button type="link">Contact us</Button>
-                        
+
                     </Space>
                     {
                         //can add logo here
                     }
                     </div>
-                    </Sider>
+                    </Sider>	                    
                 </Layout>
         )
     }

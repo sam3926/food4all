@@ -10,7 +10,7 @@ const path = require('path')
 const userRoutes = require("./routes/users")
 const uploadRoutes = require('./routes/upload')
 const postRoutes = require("./routes/posts")
-
+const commentRoutes = require("./routes/comment")
 const app = express();
 const PORT = process.env.PORT || 8000
 
@@ -39,6 +39,7 @@ app.use('/upload', uploadRoutes)
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/comment",commentRoutes);
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);

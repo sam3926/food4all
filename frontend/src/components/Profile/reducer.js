@@ -28,20 +28,24 @@ const initialState = {
     },
 
     donations: [
-        {
-            title: "food",
-            text: "Create a services site 2015-09-01",
-            photo: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-            status: "accepted by XXX on 28-10-20"
-        },
+        
         {
             title: "34 kg food",
-            text: "Create a services site 2015-09-01",
-            photo: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-            status: "active"
-        },
-
-
+            description: "Create a services site 2015-09-01",
+            status: "active, posted on 29-10-2020",
+            imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]        },
+            {
+                title: "food",
+                description: "Create a services site 2015-09-01",
+                status: "accepted by XXX on 28-10-20",
+                imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
+            },
+            {
+                title: "food",
+                description: "food doof food",
+                status: "accepted by XYXY on 26-10-20",
+                imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
+            },
     ],
 
     timelinePost: [
@@ -76,10 +80,14 @@ const initialState = {
     ],
 
     posts: [
-        { user_name: 'Arpit', description: 'Card Content', id: 1, likes: 20, shares: 30 },
-        { user_name: 'Dinkar', description: 'Card Content', id: 2, likes: 30, shares: 17 },
-        { user_name: 'Sudheesh', description: 'Card Content', id: 3, likes: 34, shares: 16 },
-        { user_name: 'Shreyansh', description: 'Card Content', id: 4, likes: 31, shares: 14 }
+        { user_name: 'Arpit', title: 'Felt so good to finally do something good in my life', date: '28-10-20', description: 'Card Content', id: 1, likes: 20, liked: false, shares: 30 },
+        { user_name: 'Dinkar', title: 'Vote for me in coming election', date: '28-10-20', description: 'Card Content', id: 2, likes: 30, liked: false, shares: 17 },
+        { user_name: 'Sudheesh', title: 'Feeding someone is so fulfilling!', date: '28-10-20', description: 'Card Content', id: 3, likes: 34, liked: false, shares: 16 },
+        { user_name: 'Shreyansh', title: 'What am i doing here?', date: '28-10-20', description: 'Card Content', id: 4, likes: 31, liked: false, shares: 14 }
+    ],
+
+    Pending: [
+        {donorname:'Arpit1',posttime:'000',Description:'Brief description'}
     ],
 
     currentTab: "timelinePost"
@@ -110,6 +118,15 @@ const profileReducer = (state = initialState, action) => {
         case ACTION.UPDATE_PROFILE_PIC: {
             state = { ...state, profileDetails: { ...state.profileDetails, ...action.payload } }
             break;
+        }
+        case 'PENDING_DONATION': {
+            const {donorName, postTime, description} = action
+            const PendingDonation = {
+                donorname: donorName,
+                Description: description,
+                posttime: postTime
+            }
+            return { ...state,Pending: [...state.Pending,PendingDonation]}
         }
     }
     return state;

@@ -189,8 +189,16 @@ router.get('/posts/:id', isAuth, async (req, res, next) => {
 //FETCH user's history/timeline
 router.get('/history/:id', isAuth, async (req, res, next) => {
   try {
-
-
+    const user = await User.findById(req.params.id).select('history')
+    if (user) {
+      console.log(user)
+      res.status(200).json(user)
+    }
+    else {
+      const err = new Error('Profile does not exist!')
+      err.statusCode = 404;
+      throw err
+    }
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500

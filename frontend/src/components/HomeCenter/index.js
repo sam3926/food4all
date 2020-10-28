@@ -76,11 +76,28 @@ class HomeCenter extends Component {
         
         const { visible, loading , visibleComments, loadingComments} = this.state;
         const { posts } = this.props;
-
+        const imageList = (imagelist) =>{
+            if(imagelist==undefined)
+                return(
+                    <div>No images!</div>
+                )
+            return imagelist.length? (imagelist.map(imageurl =>{
+                return (
+                    <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src={imageurl}
+                        />
+                )
+            })
+                
+            ):(<div>No images!</div>)
+        }
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={post.user_name} extra={<p>Date And time</p>} style={{ width: 700 , margin:"8px"}} 
+                    <Card title={post.title} extra={<div>{post.user_name}<br></br>{post.date}</div>} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
                         <div><LikeOutlined key="Like" style={{margin:"8px"}} onClick={(id) =>this.incrementLike(post.id)}/>{post.likes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/>{post.shares}</div>,
@@ -89,19 +106,7 @@ class HomeCenter extends Component {
                         ]} >
                         <p>{post.description}</p>
                         <Space>
-                        <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                        />
-
-                        <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                        />
+                        {imageList(post.imageUrl)}
                         </Space>
                     </Card>
 

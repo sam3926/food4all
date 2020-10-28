@@ -89,7 +89,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get('/profile/:id', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic location')
+    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic avatar location')
     if (user) {
       console.log(user)
       res.status(200).json(user)
@@ -114,7 +114,22 @@ router.get('/profile/:id', isAuth, async (req, res, next) => {
 //Can access requesting user's id throud through req.userId
 router.post('/follow/:id', isAuth, async (req, res, next) => {
   try {
-
+    const { id } = req.params;
+    const { following } = await User.findById(req.userId);
+    if (following.find(id)) {
+      const err = new Error('You have already followed this user');
+      err.statusCode = 403;
+      throw err;
+    }
+    else if (id == req.userId) {
+      const err = new Error('You cannot follow yourself');
+      err.statusCode = 403;
+      throw err;
+    } else {
+      await User.findByIdAndUpdate(id, { $push: { followers: req.userId } })
+      const updatedUser = await User.findByIdAndUpdate(req.userId, { $push: { following: id } })
+      res.status(200).json({ user: updatedUser })
+    }
 
   } catch (err) {
     if (!err.statusCode) {
@@ -130,20 +145,9 @@ router.post('/follow/:id', isAuth, async (req, res, next) => {
 //Editing should have name, contact, description, address ,location only
 router.post('/edit-profile', isAuth, async (req, res, next) => {
   try {
-
-
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500
-    }
-    next(err)
-  }
-})
-
-//CHANGE PROFILE PIC
-
-router.post('/change-pic', isAuth, async (req, res, next) => {
-  try {
+    const { user } = req.body;
+    const updated_user = await User.findByIdAndUpdate(req.userId, user, { new: true });
+    res.status(200).json({ user: updated_user })
 
   } catch (err) {
     if (!err.statusCode) {
@@ -152,6 +156,7 @@ router.post('/change-pic', isAuth, async (req, res, next) => {
     next(err)
   }
 })
+
 
 
 //FETCH USER's donations

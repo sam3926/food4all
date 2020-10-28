@@ -5,6 +5,7 @@ const path = require('path');
 const isAuth = require('../middlewares/isAuth');
 const router = express.Router();
 const User = require('../models/User')
+const sharp = require('sharp')
 //IMAGE UPLOADS
 
 const imageFilter = (req, file, cb) => {
@@ -128,10 +129,14 @@ router.post('/profile-pic', [isAuth, uploadProfile.single('file')],
     async (req, res) => {
         //Update the User Model, create an avatar etc.
         //Get  userid from isAuth
-        await User.findByIdAndUpdate(req.userId, { profilePic: `/images/profile/${req.file.filename}` })
+
+        sharp(path.join(__dirname, '..', 'images', 'profile', req.file.filename)).resize(50, 50).png().toFile(path.join(__dirname, '..', 'images', 'avatar', req.file.filename));
+
+        await User.findByIdAndUpdate(req.userId, { profilePic: `/images/profile/${req.file.filename}`, avatar: `/images/avatar/${req.file.filename}` })
 
         res.json({
-            "location": `/images/profile/${req.file.filename}`
+            "profilePic": `/images/profile/${req.file.filename}`,
+            "avatar": `/images/avatar/${req.file.filename}`
         })
     }
 

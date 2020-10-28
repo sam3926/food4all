@@ -28,7 +28,7 @@ class ProfilePic extends React.Component {
                             formData.append('file', file)
                             await axios.post('/upload/profile-pic', formData).then(res => {
                                 onSuccess(res.data)
-                                this.props.uploadProfilePic(res.data.location)
+                                this.props.uploadProfilePic(res.data.profilePic, res.data.avatar)
 
                             }).catch(err => {
                                 console.log("error in uploading");

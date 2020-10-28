@@ -68,7 +68,7 @@ const userSchema = new Schema({
   },
   avatar: {
     type: String,
-    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"
+    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=50"
 
   },
   posts: [{

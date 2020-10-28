@@ -114,7 +114,7 @@ router.get('/profile/:id', isAuth, async (req, res, next) => {
 //Can access requesting user's id throud through req.userId
 router.post('/follow/:id', isAuth, async (req, res, next) => {
   try {
-
+          
 
   } catch (err) {
     if (!err.statusCode) {
@@ -130,8 +130,13 @@ router.post('/follow/:id', isAuth, async (req, res, next) => {
 //Editing should have name, contact, description, address ,location only
 router.post('/edit-profile', isAuth, async (req, res, next) => {
   try {
-
-
+         const user =  await User.find({_id:req.id})
+         user = {...user,...req.body.updates}
+         await user.save();
+         console.log(user)
+         
+         res.status(200).json(user)
+         
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500
@@ -184,8 +189,16 @@ router.get('/posts/:id', isAuth, async (req, res, next) => {
 //FETCH user's history/timeline
 router.get('/history/:id', isAuth, async (req, res, next) => {
   try {
-
-
+        const user = await User.findById(req.params.id).select('history')
+        if (user) {
+          console.log(user)
+          res.status(200).json(user)
+        }
+        else {
+          const err = new Error('Profile does not exist!')
+          err.statusCode = 404;
+          throw err
+        }
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500

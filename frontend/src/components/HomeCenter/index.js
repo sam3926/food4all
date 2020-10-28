@@ -76,7 +76,24 @@ class HomeCenter extends Component {
         
         const { visible, loading , visibleComments, loadingComments} = this.state;
         const { posts } = this.props;
-
+        const imageList = (imagelist) =>{
+            if(imagelist==undefined)
+                return(
+                    <div>No images!</div>
+                )
+            return imagelist.length? (imagelist.map(imageurl =>{
+                return (
+                    <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src={imageurl}
+                        />
+                )
+            })
+                
+            ):(<div>No images!</div>)
+        }
         const postList = posts.length? (
             posts.map(post =>{
                 return(
@@ -89,19 +106,7 @@ class HomeCenter extends Component {
                         ]} >
                         <p>{post.description}</p>
                         <Space>
-                        <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                        />
-
-                        <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                        />
+                        {imageList(post.imageUrl)}
                         </Space>
                     </Card>
 

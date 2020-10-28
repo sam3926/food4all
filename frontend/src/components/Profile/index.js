@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { getSomeData, changeTab, getProfile } from './action';
 
-import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider } from 'antd';
+import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
 import ProfilePic from './ProfilePic';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
 import "./styles.css"
@@ -111,7 +111,22 @@ class Profile extends Component {
           color: '#1890ff',
         }}
       />
-    );
+    )
+
+    const imagelist = (images) => {
+      return images.length? (
+        images.map(image =>{
+          return (
+            <Image
+                        width={100}
+                        height={100}
+                        alt="example"
+                        src={image}
+                        />
+          )
+        })
+        ):(<div> No images!</div>)
+    }
 
     const menu = (
       <Menu>
@@ -159,17 +174,23 @@ class Profile extends Component {
 
 
         <TabPane tab="Donations" key="donations">
-          Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
+          {
+            //Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
+          }
+          {donations.map(donation => (
+              <Card title={donation.title} extra={<p>{donation.status}</p>} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}}>
+                <p>{donation.description}</p>
+                <Space>
+                {imagelist(donation.imageurl)}
+                </Space>
+              </Card>
+            )
+          )}
         </TabPane>
 
-
-
-
         <TabPane tab="Posts" key="posts">
-
-
           {posts?.map(post => (
-            <Card title={post.user_name} style={{ width: 1000 }} actions={Actions}>
+            <Card title={post.user_name} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}} actions={Actions}>
               <p>{post.description}</p>
             </Card>
           ))}

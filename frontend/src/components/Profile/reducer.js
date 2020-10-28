@@ -28,20 +28,24 @@ const initialState = {
     },
 
     donations: [
-        {
-            title: "food",
-            text: "Create a services site 2015-09-01",
-            photo: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-            status: "accepted by XXX on 28-10-20"
-        },
+        
         {
             title: "34 kg food",
-            text: "Create a services site 2015-09-01",
-            photo: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-            status: "active"
-        },
-
-
+            description: "Create a services site 2015-09-01",
+            status: "active, posted on 29-10-2020",
+            imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]        },
+            {
+                title: "food",
+                description: "Create a services site 2015-09-01",
+                status: "accepted by XXX on 28-10-20",
+                imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
+            },
+            {
+                title: "food",
+                description: "food doof food",
+                status: "accepted by XYXY on 26-10-20",
+                imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
+            },
     ],
 
     timelinePost: [

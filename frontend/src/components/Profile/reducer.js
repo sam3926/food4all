@@ -80,10 +80,10 @@ const initialState = {
     ],
 
     posts: [
-        { user_name: 'Arpit', description: 'Card Content', id: 1, likes: 20, shares: 30 },
-        { user_name: 'Dinkar', description: 'Card Content', id: 2, likes: 30, shares: 17 },
-        { user_name: 'Sudheesh', description: 'Card Content', id: 3, likes: 34, shares: 16 },
-        { user_name: 'Shreyansh', description: 'Card Content', id: 4, likes: 31, shares: 14 }
+        { user_name: 'Arpit', title: 'Felt so good to finally do something good in my life', date: '28-10-20', description: 'Card Content', id: 1, likes: 20, liked: false, shares: 30 },
+        { user_name: 'Dinkar', title: 'Vote for me in coming election', date: '28-10-20', description: 'Card Content', id: 2, likes: 30, liked: false, shares: 17 },
+        { user_name: 'Sudheesh', title: 'Feeding someone is so fulfilling!', date: '28-10-20', description: 'Card Content', id: 3, likes: 34, liked: false, shares: 16 },
+        { user_name: 'Shreyansh', title: 'What am i doing here?', date: '28-10-20', description: 'Card Content', id: 4, likes: 31, liked: false, shares: 14 }
     ],
 
     Pending: [

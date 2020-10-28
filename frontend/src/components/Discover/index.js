@@ -104,7 +104,7 @@ class Discover extends Component{
       Donations.map(Donation=>{
         return (
 
-          <Card title={<a>{Donation.donorName}</a>} extra={<p>{Donation.postTime}</p>} style={{ width: 700, margin:'8px'  }} 
+          <Card title={<a>{Donation.donorName}</a>} extra={<div>{Donation.postTime}</div>} style={{ width: 700, margin:'8px'  }} 
 
           actions={[
             <p className="text" onClick={() => success(Donation.contact) } ><b> Contact Donor </b></p>,

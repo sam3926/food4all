@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {connect} from 'react-redux'
 import 'antd/dist/antd.css';
 import { Button, Modal, Form, Input, Radio } from 'antd';
 import { UserOutlined , PhoneOutlined , MailOutlined , LockOutlined } from '@ant-design/icons';
 
 class EditProfile extends React.Component {
   render() {
+    const {data} = this.props
+    //const Uname = data.name;
     return (
       <>
             <Modal
@@ -26,7 +29,11 @@ class EditProfile extends React.Component {
                 layout="vertical"
                 name="form_in_modal"
                 initialValues={{
-                modifier: 'public',
+                ['name']: data.name,
+                ['contact']: "1234567890",
+                ['address']: "xyz",
+                ['email']: "x@x.xom",
+                ['description']: "brief description",
                 }}
                 >
                     <Form.Item
@@ -44,6 +51,26 @@ class EditProfile extends React.Component {
                         rules={[{ required: true, message: 'Please input your contact!' }]}
                     >
                         <Input prefix={<PhoneOutlined className="site-form-item-icon" />} />
+
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Address"
+                        name="address"
+
+                        rules={[{ required: true, message: 'Please input your address!' }]}
+                    >
+                        <Input.TextArea />
+
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Description"
+                        name="description"
+
+                        rules={[{ required: true, message: 'Please input a brief description!' }]}
+                    >
+                        <Input.TextArea />
 
                     </Form.Item>
 
@@ -81,4 +108,12 @@ class EditProfile extends React.Component {
   }
 }
 
-export default EditProfile;
+const mapStatetoProps = state => {
+    return {
+        data:state.EditReducer.user
+    };
+  
+  };
+  export default connect(mapStatetoProps)(EditProfile);
+
+//export default EditProfile;

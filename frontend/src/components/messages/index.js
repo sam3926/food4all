@@ -1,29 +1,30 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button, Row, Col, Layout ,List ,Avatar } from 'antd';
+import { Form, Input, Button, Row, Col, Layout, List, Avatar } from 'antd';
 import io from "socket.io-client";
 import { connect } from "react-redux";
 import moment from "moment";
-import { getChats, afterPostMessage } from "../../../_actions/chat_actions"
+import { getChats, afterPostMessage } from "./actions"
 import ChatCard from "./Sections/messageCard"
 import Dropzone from 'react-dropzone';
-import Axios from 'axios';
+import axios from 'axios';
+import { MessageOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
 import './styles.css'
 const { Content, Sider } = Layout;
 
 const data = [
     {
-      title: 'User 1',
+        title: 'User 1',
     },
     {
-      title: 'User 2',
+        title: 'User 2',
     },
     {
-      title: 'User 3',
+        title: 'User 3',
     },
     {
-      title: 'User 4',
+        title: 'User 4',
     },
-  ];
+];
 
 export class Messagepage extends Component {
     state = {
@@ -31,7 +32,7 @@ export class Messagepage extends Component {
     }
 
     componentDidMount() {
-        let server = "http://localhost:5000";
+        let server = "http://localhost:8000";
 
         this.props.dispatch(getChats());
 
@@ -63,7 +64,7 @@ export class Messagepage extends Component {
         console.log(files)
 
 
-        if (this.props.user.userData && !this.props.user.userData.isAuth) {
+        if (this.props.user && !this.props.isAuthenticated) {
             return alert('Please Log in first');
         }
 
@@ -77,7 +78,7 @@ export class Messagepage extends Component {
 
         formData.append("file", files[0])
 
-        Axios.post('api/chat/uploadfiles', formData, config)
+        axios.post('api/chat/uploadfiles', formData, config)
             .then(response => {
                 if (response.data.success) {
                     let chatMessage = response.data.url;
@@ -103,7 +104,7 @@ export class Messagepage extends Component {
     submitChatMessage = (e) => {
         e.preventDefault();
 
-        if (this.props.user.userData && !this.props.user.userData.isAuth) {
+        if (this.props.user && !this.props.isAuthenticated) {
             return alert('Please Log in first');
         }
 
@@ -132,80 +133,84 @@ export class Messagepage extends Component {
         return (
             <React.Fragment>
                 <Layout >
-                <Layout>   
-                <Sider width={300} className="site-layout-background">
-                <List
-                    itemLayout="horizontal"
-                    dataSource={data}
-                    renderItem={item => (
-                <List.Item>
-                    <List.Item.Meta
-                        avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                            title={item.title}
-                            description="xyz"
-                    />
-                </List.Item>
-                    )}
-                />
-                </Sider>
-                <Layout style={{ padding: "0 24px 24px" }}>
-                <Content
-                        style={{
-                        padding: 24,
-                        margin: 0,
-                }}
-                >
-                <div class="site-layout-background" style={{ marginLeft: '150px', maxWidth: '800px'}}>
-                    <div className="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
-                        {this.props.chats && (
-                            this.renderCards()
-                        )}
-                        <div
-                            ref={el => {
-                                this.messagesEnd = el;
-                            }}
-                            style={{ float: "left", clear: "both" }}
-                        />
-                    </div>
+                    <Layout>
+                        <Sider width={300} className="site-layout-background">
+                            <List
+                                itemLayout="horizontal"
+                                dataSource={data}
+                                renderItem={item => (
+                                    <List.Item>
+                                        <List.Item.Meta
+                                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                                            title={item.title}
+                                            description="xyz"
+                                        />
+                                    </List.Item>
+                                )}
+                            />
+                        </Sider>
+                        <Layout style={{ padding: "0 24px 24px" }}>
+                            <Content
+                                style={{
+                                    padding: 24,
+                                    margin: 0,
+                                }}
+                            >
+                                <div class="site-layout-background" style={{ marginLeft: '150px', maxWidth: '800px' }}>
+                                    <div className="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
+                                        {this.props.chats && (
+                                            this.renderCards()
+                                        )}
+                                        <div
+                                            ref={el => {
+                                                this.messagesEnd = el;
+                                            }}
+                                            style={{ float: "left", clear: "both" }}
+                                        />
+                                    </div>
 
-                    <Row >
-                        <Form layout="inline" onSubmit={this.submitChatMessage}>
-                            <Col span={18}>
-                                <Input
-                                    id="message"
-                                    prefix={<Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                    placeholder="Let's start talking"
-                                    type="text"
-                                    value={this.state.chatMessage}
-                                    onChange={this.hanleSearchChange}
-                                />
-                            </Col>
-                            <Col span={2}>
-                                <Dropzone onDrop={this.onDrop}>
-                                    {({ getRootProps, getInputProps }) => (
-                                        <section>
-                                            <div {...getRootProps()}>
-                                                <input {...getInputProps()} />
-                                                <Button>
-                                                    <Icon type="upload" />
+                                    <Row >
+                                        <Form layout="inline" onSubmit={this.submitChatMessage}>
+                                            <Col span={18}>
+                                                <Input
+                                                    id="message"
+                                                    prefix={<MessageOutlined />
+                                                        // <Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }} />
+                                                    }
+                                                    placeholder="Let's start talking"
+                                                    type="text"
+                                                    value={this.state.chatMessage}
+                                                    onChange={this.hanleSearchChange}
+                                                />
+                                            </Col>
+                                            <Col span={2}>
+                                                <Dropzone onDrop={this.onDrop}>
+                                                    {({ getRootProps, getInputProps }) => (
+                                                        <section>
+                                                            <div {...getRootProps()}>
+                                                                <input {...getInputProps()} />
+                                                                <Button>
+                                                                    {/* <Icon type="upload" /> */}
+                                                                    <UploadOutlined />
+                                                                </Button>
+                                                            </div>
+                                                        </section>
+                                                    )}
+                                                </Dropzone>
+                                            </Col>
+
+                                            <Col span={4}>
+                                                <Button type="primary" style={{ width: '100%' }} onClick={this.submitChatMessage} htmlType="submit">
+                                                    {/* <Icon type="enter" /> */}
+                                                    <SendOutlined />
                                                 </Button>
-                                            </div>
-                                        </section>
-                                    )}
-                                </Dropzone>
-                            </Col>
-
-                            <Col span={4}>
-                                <Button type="primary" style={{ width: '100%' }} onClick={this.submitChatMessage} htmlType="submit">
-                                    <Icon type="enter" />
-                                </Button>
-                            </Col>
-                        </Form>
-                    </Row>
-                </div>
-                </Content>
-                </Layout>
-                </Layout>
+                                            </Col>
+                                        </Form>
+                                    </Row>
+                                </div>
+                            </Content>
+                        </Layout>
+                    </Layout>
                 </Layout>
             </React.Fragment>
         )
@@ -214,8 +219,8 @@ export class Messagepage extends Component {
 
 const mapStateToProps = state => {
     return {
-        user: state.user,
-        chats: state.chat
+        user: state.authReducer,
+        chats: state.messageReducer.chat
     }
 }
 

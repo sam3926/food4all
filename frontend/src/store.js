@@ -14,7 +14,8 @@ import LeftSidePanelReducer from './components/LeftSidePanel/reducer';
 import DiscoverReducer from './components/Discover/reducer';
 import ListReducer from './components/ListModal/reducer';
 import EditReducer from './components/EditProfile/reducer';
-import profileReducer from "./components/Profile/reducer"
+import profileReducer from "./components/Profile/reducer";
+import messageReducer from "./components/Messages/reducer";
 //import all reducers here
 
 const persistConfig = {
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
     ListReducer,
     EditReducer,
     LeftSidePanelReducer,
-    profileReducer
+    profileReducer,
+    messageReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

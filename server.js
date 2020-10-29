@@ -3,8 +3,6 @@ const cors = require('cors')
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path')
-const server = require("http").createServer(app);
-const io = require("socket.io")(server);
 // const passport = require("passport");
 
 //IMPORT all routes
@@ -14,6 +12,10 @@ const uploadRoutes = require('./routes/upload')
 const postRoutes = require("./routes/posts")
 const commentRoutes = require("./routes/comment")
 const app = express();
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+
+
 const PORT = process.env.PORT || 8000
 
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -43,7 +45,7 @@ app.use('/upload', uploadRoutes)
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
-app.use("/api/comment",commentRoutes);
+app.use("/api/comment", commentRoutes);
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);
@@ -52,6 +54,7 @@ app.use((error, req, res, next) => {// Error Handling
     const data = error.data;
     res.status(status).json({ message: message, data: data });
 });
+
 
 //CONECTING TO MONGODB
 
@@ -75,29 +78,29 @@ mongoose.connect(MONGO_URI, {
 io.on("connection", socket => {
 
     socket.on("Input Chat Message", msg => {
-  
-      connect.then(db => {
-        try {
-            let chat = new Chat({ message: msg.chatMessage, sender:msg.userId, type: msg.type })
-  
-            chat.save((err, doc) => {
-              console.log(doc)
-              if(err) return res.json({ success: false, err })
-  
-              Chat.find({ "_id": doc._id })
-              .populate("sender")
-              .exec((err, doc)=> {
-  
-                  return io.emit("Output Chat Message", doc);
-              })
-            })
-        } catch (error) {
-          console.error(error);
-        }
-      })
-     })
-  
-  })
+
+        connect.then(db => {
+            try {
+                let chat = new Chat({ message: msg.chatMessage, sender: msg.userId, type: msg.type })
+
+                chat.save((err, doc) => {
+                    console.log(doc)
+                    if (err) return res.json({ success: false, err })
+
+                    Chat.find({ "_id": doc._id })
+                        .populate("sender")
+                        .exec((err, doc) => {
+
+                            return io.emit("Output Chat Message", doc);
+                        })
+                })
+            } catch (error) {
+                console.error(error);
+            }
+        })
+    })
+
+})
 
 
 // const multer = require("multer");
@@ -118,7 +121,7 @@ io.on("connection", socket => {
 //   //   cb(null, true)
 //   // }
 // })
- 
+
 // var upload = multer({ storage: storage }).single("file")
 
 // app.post("/api/chat/uploadfiles", auth ,(req, res) => {

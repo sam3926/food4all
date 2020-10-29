@@ -76,7 +76,7 @@ class Comments extends React.Component {
 
   render() {
     const { submitting, value } = this.state;
-    const comments = this.props.postComments.comments
+    const { comments } = this.props.postComments;
     return (
       <>
         <Modal
@@ -118,9 +118,11 @@ class Comments extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps
   const allcomments = state.HomeCenterReducer.postComments;
-
+  console.log('inside the commments');
+  console.log(id)
+  console.log(allcomments)
   return {
-    postComments: allcomments.find((comment) => comment.id == id)
+    postComments: allcomments.filter((comment) => comment.postId === id)
   }
 }
 const mapDispatchToProps = dispatch => ({

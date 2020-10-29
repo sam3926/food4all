@@ -3,7 +3,7 @@ import { ACTION } from "../Home/constants";
 const initialState = {
     postComments: [
         {
-            id: 1,
+            postId: 1,
             comments: [
                 {
                     author: 'Arpit Bandejiya',
@@ -14,7 +14,7 @@ const initialState = {
             ]
         },
         {
-            id: 2,
+            postId: 2,
             comments: [
                 {
                     author: 'Krishnendu',
@@ -25,7 +25,7 @@ const initialState = {
             ]
         },
         {
-            id: 3,
+            postId: 3,
             comments: [
                 {
                     author: 'Shreyansh',
@@ -36,7 +36,7 @@ const initialState = {
             ]
         },
         {
-            id: 4,
+            postId: 4,
             comments: [
                 {
                     author: 'Dinkar',
@@ -62,11 +62,17 @@ const HomeCenterReducer = (state = initialState, action) => {
         case ACTION.GET_SOME_DATA: {
             return { ...state, someData: action.payload }
         }
+        case 'GET_POST': {
+            console.log('this should work')
+            console.log(action.allcomments)
+            state = {...state,posts:action.payload,postComments:action.allcomments};
+            break;
+        }
         case 'ADD_POST': {
             console.log('inside the ADD post')
             console.log(action.post)
             let posts = [...state.posts, action.post]
-            let postComments = [...state.postComments, action.comment]
+            let postComments = [...state.postComments,action.comment]
             console.log(posts)
             return {
                 ...state,
@@ -75,22 +81,22 @@ const HomeCenterReducer = (state = initialState, action) => {
             }
         }
         case 'CHANGE_LIKE': {
-            console.log(action.id)
+            //console.log(action.value)
             let posts = [...state.posts];
-            let Post = posts.find((post) => { return post.id == action.id })
+            let Post = posts.find((post) => { return post._id == action.id })
             if (Post.liked) {
-                Post.likes = Post.likes - 1
+                Post.noOfLikes = Post.noOfLikes - 1
                 Post.liked = false;
             }
             else {
-                Post.likes = Post.likes + 1
+                Post.noOfLikes = Post.noOfLikes + 1
                 Post.liked = true;
             }
             console.log(posts)
             return { ...state, posts }
         }
         case 'ADD_COMMENT': {
-            return { ...state, postComments: state.postComments.map(p => p.id == action.id ? { ...p, comments: [...p.comments, action.comment] } : { ...p }) }
+            return { ...state, postComments: state.postComments.map(p => p.postId == action.id ? { ...p, comments: [...p.comments, action.comment] } : { ...p }) }
         }
     }
     return state;

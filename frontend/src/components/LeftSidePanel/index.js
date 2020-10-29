@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {changeFilters} from './action'
+import { changeFilters, initialiseState } from './action'
+
 import { bindActionCreators } from 'redux';
 import 'antd/dist/antd.css';
 import '../../index.css';
@@ -13,8 +14,13 @@ const { SubMenu } = Menu;
 
  
 class LeftSidePanel extends Component{
+    
+    componentDidMount() {
+        this.props.initialiseState();
+    }
     render() {
-        const {userDetails,following,achievements,donations} = this.props
+        const {following,achievements,donations, name, profilePic} = this.props.profileDetails
+        console.log(following)
         const plainOptions = [
             { label: 'Donations', value: 'Donations' },
             { label: 'Events', value: 'Events' },
@@ -36,7 +42,7 @@ class LeftSidePanel extends Component{
             <Menu.item> No following yet! </Menu.item>
         )
         
-        const achievementList = achievements.length? (
+        const achievementList = (achievements!=undefined)? (achievements.length? (
             achievements.map(achievement =>{
                 return(
                     <Menu.Item key={achievement.id}>{achievement.title}</Menu.Item>
@@ -45,9 +51,9 @@ class LeftSidePanel extends Component{
             
         ):(
             <Menu.item> No following yet! </Menu.item>
-        ) 
+        ) ): (<Menu.item> No following yet! </Menu.item>)
         
-        const donationList = donations.length? (
+        const donationList = (donations!=undefined)? (donations.length? (
             donations.map(donation =>{
                 return(
                     <Menu.Item key={donation.id}>{donation.name}</Menu.Item>
@@ -56,7 +62,7 @@ class LeftSidePanel extends Component{
             
         ):(
             <Menu.item> No following yet! </Menu.item>
-        )
+        ) ): (<Menu.item> No following yet! </Menu.item>)
         
 
         return(
@@ -79,13 +85,14 @@ class LeftSidePanel extends Component{
                 <Menu.Item key="Sub1" style={{fontSize: '20px', marginBlock: '10px'}}>
                     <Space>
                         <Avatar size={36}
+                        src = {profilePic}
                         style={{
                         backgroundColor: '#87d068',
                         }}
                         //-------------Upload profile pic here---------------
                         icon={<UserOutlined />}
                         />
-                        {userDetails.name}
+                        {name}
                     </Space>
                 </Menu.Item>
 
@@ -115,15 +122,13 @@ class LeftSidePanel extends Component{
 }
 const mapStatetoProps = state => {
     return {
-        userDetails:state.LeftSidePanelReducer.userDetails,
-        following:state.LeftSidePanelReducer.following,
-        donations:state.LeftSidePanelReducer.donations,
-        achievements:state.LeftSidePanelReducer.achievements
+        profileDetails: state.LeftSidePanelReducer.profileDetails,
     };
     
 };
 const mapDispatchToProps = dispatch => ({
-    changeFilters : bindActionCreators(changeFilters, dispatch)
+    changeFilters : bindActionCreators(changeFilters, dispatch),
+    initialiseState: bindActionCreators(initialiseState,dispatch)
 })
 
 export default connect(mapStatetoProps,mapDispatchToProps)(LeftSidePanel);

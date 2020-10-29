@@ -17,7 +17,7 @@ router.post("/register", async (req, res, next) => {
   if (!checkExistingUser) {
     try {
       const hashedPw = await bcrypt.hash(password, 12);
-
+      
       const user = new User({
         email: email,
         password: hashedPw,
@@ -89,7 +89,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get('/profile/:id', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic location')
+    const user = await User.findById(req.userId).select('name description contact address userType followers following noFed noDonations profilePic location')
     if (user) {
       console.log(user)
       res.status(200).json(user)

@@ -23,22 +23,25 @@ class HomeCenter extends Component {
         visible: false,
         loadingComments: false,
         visibleComments: false,
-        currentPostid: 2
+        currentPostid: null
     }
     componentDidMount(){
         console.log('mount called in home center');
         this.props.getPost();
+        
     }
     showModal = () => {
         this.setState({
             visible: true
         });
     };
-    startModalComments = (id) =>{
-        this.setState({
-            visibleComments: true,
+    startModalComments = async (id) =>{
+        await this.setState({
             currentPostid:id
         });
+        this.setState({
+            visibleComments:true
+        })
         console.log('inside start modal comment '.id);
     }
     showModalComments = () => {

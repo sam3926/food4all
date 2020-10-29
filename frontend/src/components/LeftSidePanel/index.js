@@ -20,7 +20,7 @@ class LeftSidePanel extends Component{
     }
     render() {
         const {following,achievements,donations, name, profilePic} = this.props.profileDetails
-        console.log(following)
+        console.log('following ',following)
         const plainOptions = [
             { label: 'Donations', value: 'Donations' },
             { label: 'Events', value: 'Events' },
@@ -39,7 +39,7 @@ class LeftSidePanel extends Component{
             })
             
         ):(
-            <Menu.item> No following yet! </Menu.item>
+            <Menu.item key='1' > No following yet! </Menu.item>
         )
         
         const achievementList = (achievements!=undefined)? (achievements.length? (

@@ -38,7 +38,7 @@ router.post('/create', isAuth, async (req, res, next) => {
     try {
         console.log(req.body.post)
         const { post } = req.body;
-        const p = new Post({ ...post, authorId: req.userId, DateTime: Date.now(),liked:false });
+        const p = new Post({ ...post, authorId: req.userId,liked:false });
         await p.save();
         const c = new Comment({postId: p._id});
         const commentResult = await c.save();

@@ -126,7 +126,7 @@ import {connect} from 'react-redux'
             </Form.Item>
 
             <Form.Item name="date-picker" label="Enter expiry date" {...config}>
-              <DatePicker onChange={this.onChange} format="YYYY-MM-DD HH:mm" />
+              <DatePicker onChange={this.onChange} format="HH:mm ll" />
             </Form.Item>
 
             <Form.Item label="Address" 

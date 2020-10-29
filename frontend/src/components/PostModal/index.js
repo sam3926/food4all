@@ -6,6 +6,7 @@ import "./styles.css";
 import { addPost } from './action';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
+import moment from 'moment';
 import axios from "axios"
 
 const normFile = e => {
@@ -35,6 +36,7 @@ class PostModal extends Component {
       likes: [],
       liked: false,
       noOfLikes: 0,
+      DateTime: moment().format("HH:mm ll"),
       imageUrl
     };
 

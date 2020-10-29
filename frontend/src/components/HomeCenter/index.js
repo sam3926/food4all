@@ -5,7 +5,7 @@ import './styles.css'
 
 import { Layout, Card, Space ,Image } from 'antd';
 import {
-    CommentOutlined, LikeOutlined,
+    CommentOutlined,LikeFilled, LikeOutlined,
     GiftOutlined, ShareAltOutlined, EditOutlined
 } from '@ant-design/icons';
 
@@ -100,15 +100,18 @@ class HomeCenter extends Component {
                 
             ):(<div>No images!</div>)
         }
+        const type = (liked) =>{
+            return liked? (<LikeFilled key="Like" style={{margin:"8px"}} />):(<LikeOutlined key="Like" style={{margin:"8px"}} />)
+        }
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={post.author} extra={<p>{post.DateTime}</p>} style={{ width: 700 , margin:"8px"}} 
+                    <Card title={post.author} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
-                        <div><LikeOutlined key="Like" style={{margin:"8px"}} onClick={(id) =>this.incrementLike(post._id,post.liked)}/>{post.noOfLikes}</div>,
+                        <div onClick={(id) =>this.incrementLike(post._id,post.liked)} >{type(post.liked)}{post.noOfLikes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
-                        <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post._id)} key="Comment" style={{margin:"8px"}}/>20</div>,
-                        <div><GiftOutlined key="Award" style={{margin:"8px"}}/>20</div>,
+                        <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post._id)} key="Comment" style={{margin:"8px"}}/> </div>,
+                        <div><GiftOutlined key="Award" style={{margin:"8px"}}/> </div>,
                         ]} >
                         <p>{post.description}</p>
                         <Space>

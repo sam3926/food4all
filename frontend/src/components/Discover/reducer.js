@@ -105,8 +105,12 @@ const DiscoverReducer = (state = initialState, action) => {
         case 'PENDING_DONATION': {
             const donation = action.payload;
             donation.status = "pending"
+            donation.receiverId = action.userId
             console.log('inside the discover reducer!',donation);
             return { ...state,Donations:state.Donations.map( d => d._id == donation._id? {...donation}:{...d})}
+        }
+        case 'REJECT_DONATION':{
+            return { ...state,Donations:state.Donations.map( d => d._id == action.id? {...d,status:'NotAccepted',receiverId:null}:{...d})}
         }
     }
     return state;

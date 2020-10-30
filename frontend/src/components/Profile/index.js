@@ -7,7 +7,7 @@ import EditProfile from '../EditProfile';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab, getProfile,getPendingDonations } from './action';
+import { getSomeData, changeTab, getProfile, getPendingDonations, rejectDonation } from './action';
 import moment from 'moment';
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
 import ProfilePic from './ProfilePic';
@@ -221,7 +221,7 @@ class Profile extends Component {
           <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }} 
           actions={[
             <p classname="cardtext1" onClick={this.showModalAccept} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
-            <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
+            <p onClick = {() => this.props.rejectDonation(PendingDonation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
           ]}
           >
             <p>{PendingDonation.description}</p>
@@ -385,6 +385,7 @@ const mapDispatchToProps = dispatch => ({
   getSomeData: bindActionCreators(getSomeData, dispatch),
   changeTab: bindActionCreators(changeTab, dispatch),
   getProfile: bindActionCreators(getProfile, dispatch),
+  rejectDonation: bindActionCreators(rejectDonation,dispatch),
   getPendingDonations: bindActionCreators(getPendingDonations,dispatch)
 })
 

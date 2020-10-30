@@ -131,7 +131,10 @@ const profileReducer = (state = initialState, action) => {
         case 'GET_PENDING_DONATION':{
             console.log(action.payload)
             return {...state,Pending:action.payload}
-            break;
+            
+        }
+        case 'REJECT_DONATION':{
+            return {...state,Pending:state.Pending.filter( pending => pending._id !== action.id)}
         }
     }
     return state;

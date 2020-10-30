@@ -14,11 +14,13 @@ export const getDonation = () => async (dispatch) =>{
         donations: res.data.donations
     })
 }
-export const pendingDonation = (data) => async (dispatch) => {
+export const pendingDonation = (data) => async (dispatch,getState) => {
+    const userId = getState().authReducer.user.userId
     const res = await axios.post('/api/donation/changeStatus',{_id:data._id,status:'pending'})
     console.log(res.data);
     dispatch({
         type: 'PENDING_DONATION',
-        payload:data
+        payload:data,
+        userId
     })
 }

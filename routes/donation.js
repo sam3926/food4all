@@ -83,4 +83,19 @@ router.post('/changeStatus',isAuth,async(req,res,next) =>{
         next(err)
     }
 })
+router.post('/reject',isAuth, async(req,res,next) =>{
+    try{
+        const {_id} = req.body
+        await Donations.updateOne({_id:_id},{
+            status: 'NotAccepted',
+            receiverId: null
+        })
+        res.status(200).json({'message':'changed successfully'})
+    } catch(err){
+        if(!err.statusCode){
+            err.statusCode = 500
+        }
+        next(err)
+    }
+})
 module.exports = router;

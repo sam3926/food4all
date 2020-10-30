@@ -203,7 +203,7 @@ class Profile extends Component {
 
 
           {posts?.map(post => (
-            <Card title={post.title} extra={<div>{post.user_name}<br></br>{post.date}</div>} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}} actions={Actions}>
+            <Card title={post.author} extra={post.DateTime} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}} actions={Actions}>
               <p>{post.description}</p>
             </Card>
           ))}

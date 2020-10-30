@@ -120,7 +120,7 @@ const profileReducer = (state = initialState, action) => {
             break;
         }
         case 'PENDING_DONATION': {
-            const {donorName, postTime, description} = action
+            const {donorName, postTime, description} = action.payload
             const PendingDonation = {
                 donorname: donorName,
                 Description: description,

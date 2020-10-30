@@ -128,6 +128,11 @@ const profileReducer = (state = initialState, action) => {
             }
             return { ...state,Pending: [...state.Pending,PendingDonation]}
         }
+        case 'GET_PENDING_DONATION':{
+            console.log(action.payload)
+            return {...state,Pending:action.payload}
+            break;
+        }
     }
     return state;
 }

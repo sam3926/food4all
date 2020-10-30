@@ -27,7 +27,17 @@ export const getSuggestedPages = () => async (dispatch) => {
         payload: res.data
     })
 }
-
+export const getPendingDonations = () => async (dispatch,getState) =>{
+    const checkvisibilty =(donation) => {
+        return donation.status.localeCompare("pending") == 0
+      }
+    const donations = getState().DiscoverReducer.Donations.filter(checkvisibilty);
+    console.log(donations);
+    dispatch({
+        type: 'GET_PENDING_DONATION',
+        payload: donations
+    })
+}
 export const changeTab = tab => (dispatch) => {
 
     // const res = await axios.get(`/api/route/${tab}`)

@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import { Form, Input, Button, notification, Upload, message, Radio } from 'antd';
 import { MailOutlined, LockOutlined, UserOutlined, PhoneOutlined, UploadOutlined, CompassOutlined } from '@ant-design/icons';
 import MapComp from "../MapComp";
+import axios from "axios"
 import Modal from "antd/lib/modal/Modal";
 
 // import 
@@ -37,7 +38,8 @@ class Register extends Component {
             errors: {},
             value: 1,
             mapOpen: false,
-            latlng: null
+            latlng: null,
+            certificates: []
         };
     }
 
@@ -73,10 +75,14 @@ class Register extends Component {
         if (values.password != values.password2)
             this.openNotificationWithIcon('warning', 'Passwords are not matching')
         else if (!this.state.latlng)
-            console.log("pleaseenter location");
+            this.openNotificationWithIcon('warning', 'Please enter your location')
+        else if (values.userType == "organisation" && this.state.certificates.length == 0) {
+            this.openNotificationWithIcon('warning', 'Please upload the certificates')
+        }
         else {
             console.log("everythhing okay", { ...values, location: this.state.latlng })
-            this.props.registerUser({ ...values, location: { type: "Point", coordinates: [this.state.latlng.lng, this.state.latlng.lat] } }, this.props.history);
+            console.log(this.state.certificates, values.userType)
+            this.props.registerUser({ ...values, certificates: this.state.certificates, location: { type: "Point", coordinates: [this.state.latlng.lng, this.state.latlng.lat] } }, this.props.history);
         }
 
     };
@@ -192,8 +198,28 @@ class Register extends Component {
                                 {value === "organisation"
                                     ? <div style={{ marginLeft: 25 }}>
 
-                                        <Upload {...props} >
-                                            <p>Please upload Government issued certificate for your Organisation</p>
+                                        <Upload multiple={false} name="file" accept="application/pdf"
+                                            customRequest={async ({ file, onSuccess, onError }) => {
+                                                let formData = new FormData()
+                                                formData.append('file', file)
+                                                await axios.post('/upload/certificates', formData).then(res => {
+                                                    this.setState({ certificates: [...this.state.certificates, res.data.location] })
+                                                    onSuccess(res.data)
+                                                }).catch(err => {
+                                                    console.log("error in uploading");
+                                                    onError("Error in uploading. Try again")
+                                                }
+                                                )
+                                            }}
+
+                                            onRemove={(file) => {
+                                                let removedLocation = file.response.location;
+                                                let newCertificates = this.state.certificates.filter(certificate => certificate != removedLocation)
+                                                this.setState({ certificates: newCertificates })
+                                            }}
+
+                                        >
+                                            <p>Please upload Government issued certificate for your Organisation(in pdf format)</p>
                                             <Button icon={<UploadOutlined />}>Upload certificates</Button>
                                         </Upload>
                                     </div>

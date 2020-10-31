@@ -29,6 +29,16 @@ const LeftSidePanelReducer = (state = initialstate(), action) => {
             state = { ...state, profileDetails: action.payload }
             break;
         }
+        // case 'ADD_POST':{
+        //     state = {...state,profileDetails:{...state.profileDetails,posts:[...state.profileDetails.posts,action.post._id]}}
+        //     break;
+        // }
+        case 'ADD_DONATION':{
+            
+            state = {...state,profileDetails:{...state.profileDetails,donations:[...state.profileDetails.donations,action.payload._id]}}
+            console.log('inside the left side reducer',state.profileDetails.donations)
+            break;
+        }
     }
     return state;
 }

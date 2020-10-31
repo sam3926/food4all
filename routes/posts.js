@@ -40,12 +40,18 @@ router.post('/create', isAuth, async (req, res, next) => {
         const { post } = req.body;
         const p = new Post({ ...post, authorId: req.userId,liked:false });
         await p.save();
+        
+        await User.updateOne({_id:req.userId},{
+            $push: {posts:p._id}
+        })
+
         const c = new Comment({postId: p._id});
         const commentResult = await c.save();
         p.commentId = c._id;
         const result  = await p.save();
-
-        console.log(result,commentResult)
+        const user = await User.findById(req.userId)
+        console.log(user)
+        //console.log(result,commentResult)
         res.status(201).json({
             'post':result,
             'comment':commentResult

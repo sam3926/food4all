@@ -40,7 +40,8 @@ class Profile extends Component {
     followLoading: false,
     unfollowLoading: false,
     followListLoading: false,
-    profilePageLoading: false
+    profilePageLoading: false,
+    followingText: "Following"
   }
 
   showModal = () => {
@@ -298,12 +299,21 @@ class Profile extends Component {
                           <>
                             {
                               profileDetails?.followers.find(f => f == user.userId) ?
-                                <Button loading={this.state.unfollowLoading} type="primary" style={{ marginRight: "14px" }} onClick={async () => {
+                                <Button onMouseOver={() => {
+                                  this.setState({
+                                    followingText: "Unfollow"
+                                  })
+                                }
+                                } onMouseLeave={() => {
+                                  this.setState({
+                                    followingText: "Following"
+                                  })
+                                }} loading={this.state.unfollowLoading} type={this.state.followingText == "Unfollow" ? "danger" : "primary"} style={{ marginRight: "14px" }} onClick={async () => {
                                   this.setState({ unfollowLoading: true })
                                   await unfollowUser(this.props.match.params.id)
                                   this.setState({ unfollowLoading: false })
                                 }} >
-                                  <p> <TeamOutlined /> Following </p>
+                                  <p> <TeamOutlined /> {this.state.followingText}</p>
                                 </Button> :
                                 <Button loading={this.state.followLoading} type="primary" style={{ marginRight: "14px" }} onClick={async () => {
                                   this.setState({ followLoading: true })

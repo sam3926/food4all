@@ -68,7 +68,7 @@ class Discover extends Component {
 
   render() {
     const { Events, selectedMenuItem, visible, loading } = this.state;
-    const { Organisations, Donations, pendingDonations } = this.props
+    const { Organisations, Donations, pendingDonations,pendingDonorDonation } = this.props
     //console.log('this is  the dicover ',pendingDonations);
 
     const plainOptions = [
@@ -186,7 +186,21 @@ class Discover extends Component {
     ) : (
         <div>No Donations are currently there!</div>
       )
-
+      const pendingDonorDonationList = pendingDonorDonation.length? (
+        pendingDonorDonation.map(Donation=> {
+  
+          return (
+            <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
+            
+            >
+              <p>{Donation.description}</p>
+            </Card>
+          )
+        })
+      ) : (
+          <div>No Donations are currently there!</div>
+        )
+  
     const OrganisationList = Organisations.length ? (
       Organisations.map(Organisation => {
         return (
@@ -272,7 +286,7 @@ class Discover extends Component {
           <Sider width={300} style={{ padding: "25px" }}>
             <div style={{ fontWeight: "bolder", paddingBottom: "15px", fontSize: "medium" }}>Pending Donations</div>
             <div>
-              {pendingDonationList}
+              {this.props.userType.localeCompare('donor') === 0? pendingDonorDonationList:pendingDonationList}
             </div>
           </Sider>
 
@@ -321,8 +335,15 @@ const mapStatetoProps = state => {
     //console.log(donation.status.localeCompare("pending") === 0 )
     return (donation.status.localeCompare("pending") == 0 && donation.receiverId == userId)
   }
+  const pendingdonordonations = (donation) => {
+    const userId = state.authReducer.user.userId
+    //console.log(userId)
+    //console.log(donation.status.localeCompare("pending") === 0 )
+    return (donation.status.localeCompare("pending") == 0 && donation.donorId == userId)
+  }
 
   return {
+    pendingDonorDonation: state.DiscoverReducer.Donations.filter(pendingdonordonations),
     userType: state.authReducer.user.userType,
     currentfilter: state.DiscoverReducer.currentfilter,
     Donations: state.DiscoverReducer.Donations.filter(checkvisibilty),

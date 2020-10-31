@@ -113,6 +113,9 @@ const DiscoverReducer = (state = initialState, action) => {
             console.log('called to reject donations')
             return { ...state,Donations:state.Donations.map( d => d._id == action.id? {...d,status:'NotAccepted',receiverId:null}:{...d})}
         }
+        case 'ACCEPT_DONATION':{
+            return { ...state,Donations:state.Donations.map( d => d._id == action.payload._id? {...d,status:'Accepted'}:{...d})}
+        }
     }
     return state;
 }

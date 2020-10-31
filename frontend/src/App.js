@@ -24,7 +24,7 @@ import Landing from "./components/Landing"
 import { setCurrentUser, logoutUser } from './components/Auth/action';
 import { store } from "./store"
 import ComingSoon from './components/ComingSoon';
-import Messages from './components/Messages';
+import Messages from './components/messages';
 import { startConnection } from './utils/common';
 
 

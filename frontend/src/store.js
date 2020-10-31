@@ -14,7 +14,7 @@ import LeftSidePanelReducer from './components/LeftSidePanel/reducer';
 import DiscoverReducer from './components/Discover/reducer';
 import ListReducer from './components/ListModal/reducer';
 import profileReducer from "./components/Profile/reducer";
-import messageReducer from "./components/Messages/reducer";
+import messageReducer from "./components/messages/reducer";
 //import all reducers here
 
 const persistConfig = {

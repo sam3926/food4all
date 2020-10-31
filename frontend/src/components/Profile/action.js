@@ -9,9 +9,9 @@ export const getSomeData = (data) => async (dispatch) => {
     });
 };
 
-export const getProfile = () => async (dispatch, getState) => {
-    const userId = getState().authReducer.user.userId
-    const res = await axios.get(`/api/users/profile/${userId}`)
+export const getProfile = (id) => async (dispatch, getState) => {
+    // const userId = getState().authReducer.user.userId
+    const res = await axios.get(`/api/users/profile/${id}`)
     // const res = await axios.get('/api/test')
     console.log(res.data)
     dispatch({
@@ -44,4 +44,56 @@ export const uploadProfilePic = (profilePic, avatar) => (dispatch) => {
         type: ACTION.UPDATE_PROFILE_PIC,
         payload: { profilePic, avatar }
     })
+}
+
+
+export const followUser = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/follow/${id}`);
+        dispatch({
+            type: ACTION.GET_PROFILE,
+            payload: res.data
+        })
+    } catch (err) {
+        console.log("error in followUser")
+    }
+
+}
+
+export const unfollowUser = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/unfollow/${id}`);
+        dispatch({
+            type: ACTION.GET_PROFILE,
+            payload: res.data
+        })
+    } catch (err) {
+        console.log("error in unfollowUser")
+    }
+}
+
+export const getFollowers = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/followers/${id}`)
+        dispatch({
+            type: ACTION.GET_FOLLOWERS,
+            payload: res.data
+        })
+
+    } catch (err) {
+        console.log("error in getFollowers")
+    }
+}
+
+export const getFollowing = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/following/${id}`)
+        dispatch({
+            type: ACTION.GET_FOLLOWING,
+            payload: res.data
+        })
+
+    } catch (err) {
+        console.log("error in getFollowing")
+    }
 }

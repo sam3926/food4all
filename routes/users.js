@@ -108,6 +108,24 @@ router.get('/profile/:id', isAuth, async (req, res, next) => {
   }
 })
 
+router.get('/left-details', isAuth, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId).select('name avatar following followers donations').populate('following', 'name avatar').populate('followers', 'name avatar').populate('donations', 'title')
+    if (user) {
+      res.status(200).json(user)
+    } else {
+      const err = new Error('Profile does not exist!')
+      err.statusCode = 404;
+      throw err;
+    }
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
 //TODOS
 
 //FOLLOW A USER

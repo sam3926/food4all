@@ -3,10 +3,10 @@ import 'antd/dist/antd.css';
 import '../../index.css';
 import './styles.css'
 import {connect} from 'react-redux'
-import {changeFilters} from './action'
+import {changeFilters,getDonation} from './action'
 import { bindActionCreators } from 'redux';
 import { Modal, Menu, Checkbox , Layout, Card , Button , Input , Space , Image } from 'antd';
-
+import moment from 'moment';
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { pendingDonation } from './action';
 
@@ -36,7 +36,9 @@ class Discover extends Component{
       loading: false,
       visible: false,
     }
-  
+  componentDidMount(){
+    this.props.getDonation();
+  }
     showModal = () => {
       this.setState({
         visible: true
@@ -75,15 +77,15 @@ class Discover extends Component{
       //console.log('checked = ', checkedValues);
     }
 
-    const addpending = (N,P,D) =>{
-      
+    const addpending = (Donation) =>{
+      const {_id,donorName,postTime,description} = Donation;
       const Pending = {
-        donorName: N,
-        postTime: P,
-        description: D
+        donorName: donorName,
+        postTime:postTime,
+        description: description
       };
 
-      this.props.pendingDonation(Pending);
+      this.props.pendingDonation(Donation);
     }
     
     const imagelist = (images) => {
@@ -100,20 +102,22 @@ class Discover extends Component{
         })
         ):(<div> No images!</div>)
     }
-    const DonationList = Donations.length? (
-      Donations.map(Donation=>{
+    const checkvisibilty =(donation) => {
+      return donation.status.localeCompare("NotAccepted") == 0
+    }
+    const DonationList = Donations.filter(checkvisibilty).length? (
+      Donations.map(Donation=> {
         return (
-
-          <Card title={<a>{Donation.donorName}</a>} extra={<div>{Donation.postTime}</div>} style={{ width: 700, margin:'8px'  }} 
+          <Card title={<a>{Donation.donorName}</a>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin:'8px'  }} 
 
           actions={[
             <p className="text" onClick={() => success(Donation.contact) } ><b> Contact Donor </b></p>,
-            <p className="text" onClick={() => addpending(Donation.donorName,Donation.postTime,Donation.description)} ><b> Interested </b></p>,
+            <p className="text" onClick={() => addpending(Donation)} ><b> Interested </b></p>,
           ]}
           >
             <p>{Donation.description}</p>
             <Space>
-            {imagelist(Donation.imageurl)}
+            {imagelist(Donation.images)}
             </Space>
 
           </Card>
@@ -263,7 +267,8 @@ const mapStatetoProps = state => {
 };
 const mapDispatchToProps = dispatch => ({
   changeFilters : bindActionCreators(changeFilters, dispatch),
-  pendingDonation : bindActionCreators(pendingDonation,dispatch)
+  pendingDonation : bindActionCreators(pendingDonation,dispatch),
+  getDonation : bindActionCreators(getDonation,dispatch)
 })
 
 export default connect(mapStatetoProps,mapDispatchToProps)(Discover);

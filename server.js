@@ -11,6 +11,7 @@ const userRoutes = require("./routes/users")
 const uploadRoutes = require('./routes/upload')
 const postRoutes = require("./routes/posts")
 const commentRoutes = require("./routes/comment")
+const donationRoutes = require("./routes/donation")
 const app = express();
 const PORT = process.env.PORT || 8000
 
@@ -32,14 +33,15 @@ app.use('/upload', uploadRoutes)
 
 // Passport middleware
 // app.use(passport.initialize());
-
 // Passport config
 // require("./config/passport")(passport);
 
 // Routes
+
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comment",commentRoutes);
+app.use("/api/donation",donationRoutes);
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);

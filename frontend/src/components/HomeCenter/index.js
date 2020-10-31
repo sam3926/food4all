@@ -5,14 +5,14 @@ import './styles.css'
 
 import { Layout, Card, Space ,Image } from 'antd';
 import {
-    CommentOutlined, LikeOutlined,
+    CommentOutlined,LikeFilled, LikeOutlined,
     GiftOutlined, ShareAltOutlined, EditOutlined
 } from '@ant-design/icons';
 
 import { Modal } from 'antd';
 import PostModal from '../PostModal';
 import Comments from '../Comments';
-import { changelike } from './action';
+import { changelike, getPost } from './action';
 import {bindActionCreators} from 'redux'
 const { Content } = Layout;
 
@@ -23,20 +23,26 @@ class HomeCenter extends Component {
         visible: false,
         loadingComments: false,
         visibleComments: false,
-        currentPostid: 2
+        currentPostid: null
     }
-    
+    componentDidMount(){
+        console.log('mount called in home center');
+        this.props.getPost();
+        
+    }
     showModal = () => {
         this.setState({
             visible: true
         });
     };
-    startModalComments = (id) =>{
-        this.setState({
-            visibleComments: true,
+    startModalComments = async (id) =>{
+        await this.setState({
             currentPostid:id
         });
-        console.log(id);
+        this.setState({
+            visibleComments:true
+        })
+        console.log('inside start modal comment '.id);
     }
     showModalComments = () => {
         this.setState({
@@ -68,9 +74,9 @@ class HomeCenter extends Component {
     handleCancelComments = () => {
         this.setState({ visibleComments: false });
     };
-    incrementLike = (id) =>{
+    incrementLike = (id,value) =>{
         //console.log(id)
-        this.props.changelike(id)
+        this.props.changelike(id,value)
     }
     render (){
         
@@ -94,15 +100,18 @@ class HomeCenter extends Component {
                 
             ):(<div>No images!</div>)
         }
+        const type = (liked) =>{
+            return liked? (<LikeFilled key="Like" style={{margin:"8px"}} />):(<LikeOutlined key="Like" style={{margin:"8px"}} />)
+        }
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={post.title} extra={<div>{post.user_name}<br></br>{post.date}</div>} style={{ width: 700 , margin:"8px"}} 
+                    <Card title={post.author} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
-                        <div><LikeOutlined key="Like" style={{margin:"8px"}} onClick={(id) =>this.incrementLike(post.id)}/>{post.likes}</div>,
-                        <div><ShareAltOutlined key="share" style={{margin:"8px"}}/>{post.shares}</div>,
-                        <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post.id)} key="Comment" style={{margin:"8px"}}/>20</div>,
-                        <div><GiftOutlined key="Award" style={{margin:"8px"}}/>20</div>,
+                        <div onClick={(id) =>this.incrementLike(post._id,post.liked)} >{type(post.liked)}{post.noOfLikes}</div>,
+                        <div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
+                        <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post._id)} key="Comment" style={{margin:"8px"}}/> </div>,
+                        <div><GiftOutlined key="Award" style={{margin:"8px"}}/> </div>,
                         ]} >
                         <p>{post.description}</p>
                         <Space>
@@ -130,10 +139,12 @@ class HomeCenter extends Component {
     }
 }
 const mapStateToProps = state => ({
-    posts: state.HomeCenterReducer.posts
+    posts: state.HomeCenterReducer.posts,
+    
 })
 const mapDispatchToProps = dispatch => ({
-    changelike: bindActionCreators(changelike, dispatch)
+    changelike: bindActionCreators(changelike, dispatch),
+    getPost: bindActionCreators(getPost,dispatch)
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(HomeCenter);

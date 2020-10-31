@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const donationSchema = new Schema({
-    donor: {
+    donorId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    receiver: {
+    receiverId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
     },

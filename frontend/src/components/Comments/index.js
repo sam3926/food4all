@@ -75,52 +75,60 @@ class Comments extends React.Component {
   };
 
   render() {
-    const { submitting, value } = this.state;
-    const comments = this.props.postComments.comments
-    return (
-      <>
-        <Modal
-          visible={this.props.visible}
-          title="Comments"
-          onOk={this.props.handleOk}
-          onCancel={this.props.handleCancel}
-          footer={[
-            <Button key="back" onClick={this.props.handleCancel}>
-              Return
-            </Button>,
-            <Button key="submit" type="primary" loading={this.props.loading} onClick={this.props.handleOk}>
-              DOne
-            </Button>,
-          ]}
-        >
-          {comments.length > 0 && <CommentList comments={comments} />}
-          <Comment
-            avatar={
-              <Avatar
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                alt="Han Solo"
-              />
-            }
-            content={
-              <Editor
-                onChange={this.handleChange}
-                onSubmit={this.handleSubmit}
-                submitting={submitting}
-                value={value}
-              />
-            }
-          />
-        </Modal>
-      </>
-    );
+    
+    if(this.props.id){
+      const { submitting, value } = this.state;
+    const { comments } = this.props.postComments[0];
+    console.log(this.props.id, this.props.postComments, comments);
+      return (
+        <>
+          <Modal
+            visible={this.props.visible}
+            title="Comments"
+            onOk={this.props.handleOk}
+            onCancel={this.props.handleCancel}
+            footer={[
+              <Button key="back" onClick={this.props.handleCancel}>
+                Return
+              </Button>,
+              <Button key="submit" type="primary" loading={this.props.loading} onClick={this.props.handleOk}>
+                DOne
+              </Button>,
+            ]}
+          >
+            {comments.length > 0 && <CommentList comments={comments} />}
+            <Comment
+              avatar={
+                <Avatar
+                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                  alt="Han Solo"
+                />
+              }
+              content={
+                <Editor
+                  onChange={this.handleChange}
+                  onSubmit={this.handleSubmit}
+                  submitting={submitting}
+                  value={value}
+                />
+              }
+            />
+          </Modal>
+        </>
+      );
+    }
+    else
+        return null;
   }
 }
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps
   const allcomments = state.HomeCenterReducer.postComments;
-
+  console.log('inside the commments');
+  console.log(id)
+  console.log(allcomments)
   return {
-    postComments: allcomments.find((comment) => comment.id == id)
+    postComments: allcomments.filter((comment) => comment.postId === id)
   }
 }
 const mapDispatchToProps = dispatch => ({

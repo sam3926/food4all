@@ -6,6 +6,7 @@ import "./styles.css";
 import { addPost } from './action';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
+import moment from 'moment';
 import axios from "axios"
 
 const normFile = e => {
@@ -20,7 +21,7 @@ const normFile = e => {
 
 class PostModal extends Component {
   state = {
-    user: 'Arpit',
+    user: this.props.name,
     description: '',
     files: []
   }
@@ -30,11 +31,12 @@ class PostModal extends Component {
     const imageUrl = dragger?.map(image => image.response.location);
 
     const post = {
-      user_name: this.state.user,
+      author:this.state.user,
       description: e.description,
       likes: [],
       liked: false,
-      shares: 0,
+      noOfLikes: 0,
+      DateTime: moment().format("HH:mm ll"),
       imageUrl
     };
 
@@ -102,8 +104,13 @@ class PostModal extends Component {
     )
   }
 }
-
+const mapStatetoProps = state => {
+  return {
+      name: state.LeftSidePanelReducer.profileDetails.name,
+  };
+  
+};
 const mapDispatchToProps = dispatch => ({
   addPost: bindActionCreators(addPost, dispatch)
 })
-export default connect(null, mapDispatchToProps)(PostModal);
+export default connect(mapStatetoProps, mapDispatchToProps)(PostModal);

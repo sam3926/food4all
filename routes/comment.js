@@ -24,11 +24,11 @@ router.get('/:id',isAuth,async (req,res,next)=>{
 })
 router.post('/add/:id',isAuth, async (req,res,next)=>{
     try {
-                const user = await User.findById(req.id);
+                const user = await User.findById(req.userId);
                 const utcDate = new Date(Date.now())
-                await Comment.updateOne({_id:req.params.id},{
+                await Comment.updateOne({postId:req.params.id},{
                     $push:{comments:{
-                        author:req.id,
+                        author:user.name,
                         avatar:user.avatar,
                         content:req.body.content,
                         datatime:utcDate.toUTCString()        

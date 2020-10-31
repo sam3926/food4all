@@ -52,7 +52,7 @@ class Navbar extends Component {
     if (auth.isAuthenticated)
       return (
         <div>
-          <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+          <Header style={{ position: 'fixed', zIndex: 100, width: '100%' }}>
             <Menu theme="dark" mode="horizontal" selectedKeys={[currentRoute, "logo"]} onSelect={(item) => { item.key == "logout" ? logoutUser() : setCurrentRoute(item.key) }}>
               <Menu.Item key="logo" className="customclasslogo" icon={<HeartFilled />} ><Link to="/home">NofoodWasted</Link></Menu.Item>
               <Button type="dashed" size={"large"} style={{ "marginRight": "8px", "marginLeft": "8px" }} onClick={this.showModal}>
@@ -65,7 +65,7 @@ class Navbar extends Component {
               <Menu.Item key="leaderboard" icon={<UsergroupDeleteOutlined />} ><Link to="/leaderboard">Leaderboard</Link></Menu.Item>
               <Menu.Item key="notifications" icon={<BellOutlined />}><Link to="/notifications">Notifications</Link></Menu.Item>
               <Menu.Item key="messages" icon={<MessageOutlined />} ><Link to="/messages">Messages</Link></Menu.Item>
-              <Menu.Item key="profile" icon={<UserOutlined />} ><Link to="/profile">Profile</Link></Menu.Item>
+              <Menu.Item key="profile" icon={<UserOutlined />} ><Link to={`/i/profile/${auth.user.userId}`}>Profile</Link></Menu.Item>
               <Menu.Item key="search">
                 <Search
                   placeholder="Search"

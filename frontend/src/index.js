@@ -22,11 +22,11 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <PersistGate persistor={persistor}>
-        <React.StrictMode>
-          <ThemeSwitcherProvider themeMap={themes} defaultTheme="light">
-            <App />
-          </ThemeSwitcherProvider>
-        </React.StrictMode>
+        {/* <React.StrictMode> */}
+        <ThemeSwitcherProvider themeMap={themes} defaultTheme="light">
+          <App />
+        </ThemeSwitcherProvider>
+        {/* </React.StrictMode> */}
       </PersistGate>
     </BrowserRouter>
   </Provider>,

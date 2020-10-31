@@ -3,16 +3,19 @@ import ReactDOM, { render } from 'react-dom';
 import 'antd/dist/antd.css';
 import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import ListModal from '../ListModal';
-import EditProfile from '../EditProfile';
+import EditProfile from './EditProfile';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab, getProfile, getPendingDonations, rejectDonation } from './action';
+import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation, editProfile } from './action';
 import moment from 'moment';
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
 import ProfilePic from './ProfilePic';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
 import "./styles.css"
+import FollowersList from './FollowersList';
+import { Link } from 'react-router-dom';
+import { setCurrentRoute } from '../Navbar/actions';
 const { Search } = Input;
 const { SubMenu } = Menu;
 
@@ -25,15 +28,14 @@ class Profile extends Component {
     // PendingDonations: [
     //   {donorname:'Arpit',posttime:'123',Description:'Brief description'}
     // ],
-    visible: false,
+    followersVisible: false,
+    followingVisible: false,
     loadingAccept: false,
     visibleAccept: false,
     visibleEdit: false,
     visibleProfilePic: false,
     loadingEdit: false,
-    ButtonTitle: 'Follow',
     clicked: false,
-    self: true,
   }
 
   showModal = () => {
@@ -87,11 +89,10 @@ class Profile extends Component {
     });
   };
 
-  handleOkEdit = () => {
+  handleOkEdit = async (user) => {
     this.setState({ loadingEdit: true });
-    setTimeout(() => {
-      this.setState({ loadingEdit: false, visibleEdit: false });
-    }, 1000);
+    await this.props.editProfile(user);
+    this.setState({ loadingEdit: false, visibleEdit: false })
   };
 
   handleCancelEdit = () => {
@@ -101,45 +102,32 @@ class Profile extends Component {
   callback = (key) => {
     console.log(key);
   }
-  
-  changeTitle = () => {
-    this.setState({ clicked: !this.state.clicked });
-    this.state.clicked ? (this.setState({ ButtonTitle: 'Following'}) ) : ( this.setState({ ButtonTitle: 'Follow' }) ) 
-  };
 
   componentDidMount() {
-    this.props.getProfile()
+    this.props.getProfile(this.props.match.params.id)
     this.props.getPendingDonations()
   }
   render() {
 
-    const { visible, loadingAccept, visibleAccept, visibleEdit, loadingEdit,  visibleProfilePic , ButtonTitle ,self } = this.state;
-    const { suggestedPages, PendingDonations , currentTab, changeTab, donations, timelinePost, posts, profileDetails } = this.props
-    const suffix = (
-      <AudioOutlined
-        style={{
-          fontSize: 16,
-          color: '#1890ff',
-        }}
-      />
-    )
+    const { followersVisible, followingVisible, loadingAccept, visibleAccept, visibleEdit, loadingEdit, visibleProfilePic } = this.state;
+    const { suggestedPages, PendingDonations, currentTab, changeTab, donations, timelinePost, posts, profileDetails, user, followUser, unfollowUser, getFollowers, getFollowing, followers, following } = this.props
 
     const imagelist = (images) => {
-      return images.length? (
-        images.map(image =>{
+      return images.length ? (
+        images.map(image => {
           return (
             <Image
-                        width={100}
-                        height={100}
-                        alt="example"
-                        src={image}
-                        />
+              width={100}
+              height={100}
+              alt="example"
+              src={image}
+            />
           )
         })
-        ):(<div> No images!</div>)
+      ) : (<div> No images!</div>)
     }
 
-   
+
     const Actions = [
       <div><LikeOutlined key="Like" style={{ margin: "8px" }} />20</div>,
       <div><ShareAltOutlined key="share" style={{ margin: "8px" }} />30</div>,
@@ -149,14 +137,14 @@ class Profile extends Component {
 
     const Demo = () => (
       <Tabs centered="true" size="large"
-        activeKey={currentTab}
-        onChange={changeTab}
+      // activeKey={currentTab}
+      // onChange={changeTab}
       >
 
         <TabPane tab="Timeline" key="timelinePost">
           <Timeline mode="alternate">
 
-            {timelinePost?.map(timelinepost => (
+            {profileDetails?.history?.map(timelinepost => (
               <Timeline.Item color={timelinepost?.color} dot={timelinepost?.dot == "clock" ? <ClockCircleOutlined /> : null}>{timelinepost.text}</Timeline.Item>
             ))}
 
@@ -169,14 +157,14 @@ class Profile extends Component {
           {
             //Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
           }
-          {donations.map(donation => (
-              <Card title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}}>
-                <p>{donation.description}</p>
-                <Space>
-                {imagelist(donation.images)}
-                </Space>
-              </Card>
-            )
+          {profileDetails?.donations?.map(donation => (
+            <Card title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
+              <p>{donation.description}</p>
+              <Space>
+                {imagelist(donation.imageurl)}
+              </Space>
+            </Card>
+          )
           )}
         </TabPane>
 
@@ -184,38 +172,37 @@ class Profile extends Component {
 
 
 
-          {posts?.map(post => (
-            <Card title={post.author} extra={post.DateTime} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}} actions={Actions}>
+          {profileDetails?.posts?.map(post => (
+            <Card title={post.author} extra={post.DateTime} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }} actions={Actions}>
               <p>{post.description}</p>
             </Card>
           ))}
         </TabPane>
-        <TabPane tab="Acheivements" key="achievements">
-          Content of Acheivements
+        <TabPane tab="Acheivements" key="achievements" >
+          <p style={{ fontSize: "20px", textAlign: "center" }}> Coming Soon!</p>
         </TabPane>
-      </Tabs>
+      </Tabs >
     );
 
-    const PendingDonationList = PendingDonations.length? (
-      PendingDonations.map(PendingDonation=>{
+    const PendingDonationList = PendingDonations.length ? (
+      PendingDonations.map(PendingDonation => {
         return (
-          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }} 
-          actions={[
-            <p classname="cardtext1" onClick={this.showModalAccept} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
-            <p onClick = {() => this.props.rejectDonation(PendingDonation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
-          ]}
+          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
+            actions={[
+              <p classname="cardtext1" onClick={this.showModalAccept} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
+              <p onClick={() => this.props.rejectDonation(PendingDonation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
+            ]}
           >
             <p>{PendingDonation.description}</p>
           </Card>
         )
       })
-    ):(
-      <div>No Donations are currently there!</div>
-    )
+    ) : (
+        <div>No Donations are currently there!</div>
+      )
 
     return (
-      <Layout className="layout" style={{ marginTop: "56px" }}>
-
+      <Layout key={this.props.match.params.id} className="layout" style={{ marginTop: "56px" }}>
         <Layout>
           <Sider width={250} style={{ padding: "20px" }}>
             <List
@@ -245,6 +232,7 @@ class Profile extends Component {
                 marginTop: 24,
                 minHeight: 280,
               }}
+              key={this.props.match.params.id}
             >
               <div style={{ display: "flex" }}>
                 <Image
@@ -267,29 +255,49 @@ class Profile extends Component {
                     <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
                   </div>
                   <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
-                    <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={this.showModal}>
+                    <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={() => {
+                      getFollowers(this.props.match.params.id);
+                      this.setState({ followersVisible: true })
+                    }}>
                       {profileDetails?.followers?.length} Followers
           </Button>
-                    <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={this.showModal}>
+                    <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={() => {
+                      getFollowing(this.props.match.params.id)
+                      this.setState({ followingVisible: true })
+                    }}>
                       {profileDetails?.following?.length} Following
           </Button>
-                    <ListModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} />
-                    
-                    {self ? (<span style={{ float: "right", marginTop: "6px" }}>
-                      <Button onClick={this.showModalEdit} type="primary" style={{ marginRight: "8px" }}  >
-                        <EditOutlined /> Edit Profile
-                  </Button>
-                      <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
-                      <ProfilePic visible={visibleProfilePic} handleCancel={this.handleCancelProfilePic} />
-                    </span>
-                    ) : (<span style={{ float: "right", marginTop: "6px" }}>
-                        <Button type="primary" style={{ marginRight: "14px" }} onClick={this.changeTitle} >
-                        <p> <TeamOutlined /> {ButtonTitle} </p>
+                    <FollowersList title="Followers" data={this.props.followers} handleCancel={() => this.setState({ followersVisible: false })} showModal={() => this.setState({ followersVisible: true })} visible={followersVisible} />
+                    <FollowersList title="Following" data={this.props.following} handleCancel={() => this.setState({ followingVisible: false })} showModal={() => this.setState({ followingVisible: true })} visible={followingVisible} />
+
+                    {user.userId === this.props.match.params.id ?
+                      (<span style={{ float: "right", marginTop: "6px" }}>
+                        <Button onClick={this.showModalEdit} type="primary" style={{ marginRight: "8px" }}  >
+                          <EditOutlined /> Edit Profile
+                      </Button>
+                        <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
+                        <ProfilePic visible={visibleProfilePic} handleCancel={this.handleCancelProfilePic} />
+                      </span>
+                      ) : (<span style={{ float: "right", marginTop: "6px" }}>
+                        <>
+                          {
+                            profileDetails?.followers.find(f => f == user.userId) ?
+                              <Button type="primary" style={{ marginRight: "14px" }} onClick={() => unfollowUser(this.props.match.params.id)} >
+                                <p> <TeamOutlined /> Following </p>
+                              </Button> :
+                              <Button type="primary" style={{ marginRight: "14px" }} onClick={() => followUser(this.props.match.params.id)}>
+                                <p> <TeamOutlined /> Follow </p>
+                              </Button>
+                          }
+                          <Link onClick={() => this.props.setCurrentRoute('messages')} to={{ pathname: '/messages', state: { user: this.props.match.params.id } }}>
+                            <Button type="primary" style={{ marginRight: "14px" }}>
+                              <SendOutlined /> Message
                         </Button>
-                        <Button type="primary" style={{ marginRight: "14px" }}>
-                        <SendOutlined /> Message
-                        </Button>
-                        </span> ) }
+                          </Link>
+
+                        </>
+
+                      </span>)}
                   </div>
 
                   <div style={{ marginTop: "8px" }}>
@@ -308,18 +316,20 @@ class Profile extends Component {
               <Demo />
 
             </Content>
-            <Sider width={300} style={{ padding: "20px" }}>
-              {
-                //add title div here 
-              }
+            {user.userId === this.props.match.params.id ?
+              <Sider width={300} style={{ padding: "20px" }}>
+                {
+                  //add title div here 
+                }
+                <div style={{ fontWeight: "bolder", paddingBottom: "15px", paddingTop: "15px", fontSize: "medium" }}>Pending Donations</div>
 
-              <div style={{ fontWeight: "bolder", paddingBottom: "15px", paddingTop: "15px", fontSize: "medium" }}>Pending Donations</div>
-              <div>
-                {PendingDonationList}
-              </div>
-            </Sider>
+                <div>
+                  {PendingDonationList}
+                </div>
+              </Sider>
+              : null}
           </Layout>
-        </Layout>
+        </Layout >
 
         <Modal
           visible={visibleAccept}
@@ -347,37 +357,56 @@ class Profile extends Component {
         </Modal>
 
 
-      </Layout>
+      </Layout >
     )
   };
 }
 
-const mapStateToProps = state => {
-  const getprofileDonation = (donation) =>{
-    const userId = state.authReducer.user.userId
-    return donation.donorId === userId
-  }
-  const getUserPost = (post) =>{
-    const userId = state.authReducer.user.userId
-    return post.authorId === userId
-  }
-  return {
-    suggestedPages: state.profileReducer.suggestedPages,
-    currentTab: state.profileReducer.currentTab,
-    donations: state.DiscoverReducer.Donations.filter(getprofileDonation),
-    timelinePost: state.profileReducer.timelinePost,
-    posts: state.HomeCenterReducer.posts.filter(getUserPost),
-    PendingDonations: state.profileReducer.Pending,
-    profileDetails: state.profileReducer.profileDetails
-  }
-}
+const mapStateToProps = state => ({
+  suggestedPages: state.profileReducer.suggestedPages,
+  currentTab: state.profileReducer.currentTab,
+  donations: state.profileReducer.donations,
+  timelinePost: state.profileReducer.timelinePost,
+  posts: state.profileReducer.posts,
+  PendingDonations: state.profileReducer.Pending,
+  profileDetails: state.profileReducer.profileDetails,
+  user: state.authReducer.user,
+  followers: state.profileReducer.followers,
+  following: state.profileReducer.following
+})
+
+// const mapStateToProps = state => {
+//   const getprofileDonation = (donation) =>{
+//     const userId = state.authReducer.user.userId
+//     return donation.donorId === userId
+//   }
+//   const getUserPost = (post) =>{
+//     const userId = state.authReducer.user.userId
+//     return post.authorId === userId
+//   }
+//   return {
+//     suggestedPages: state.profileReducer.suggestedPages,
+//     currentTab: state.profileReducer.currentTab,
+//     donations: state.DiscoverReducer.Donations.filter(getprofileDonation),
+//     timelinePost: state.profileReducer.timelinePost,
+//     posts: state.HomeCenterReducer.posts.filter(getUserPost),
+//     PendingDonations: state.profileReducer.Pending,
+//     profileDetails: state.profileReducer.profileDetails
+//   }
+// }
 
 const mapDispatchToProps = dispatch => ({
   getSomeData: bindActionCreators(getSomeData, dispatch),
   changeTab: bindActionCreators(changeTab, dispatch),
   getProfile: bindActionCreators(getProfile, dispatch),
-  rejectDonation: bindActionCreators(rejectDonation,dispatch),
-  getPendingDonations: bindActionCreators(getPendingDonations,dispatch)
+  followUser: bindActionCreators(followUser, dispatch),
+  unfollowUser: bindActionCreators(unfollowUser, dispatch),
+  getFollowers: bindActionCreators(getFollowers, dispatch),
+  getFollowing: bindActionCreators(getFollowing, dispatch),
+  setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch),
+  rejectDonation: bindActionCreators(rejectDonation, dispatch),
+  getPendingDonations: bindActionCreators(getPendingDonations, dispatch),
+  editProfile: bindActionCreators(editProfile, dispatch)
 })
 
 

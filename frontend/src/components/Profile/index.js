@@ -139,26 +139,7 @@ class Profile extends Component {
         ):(<div> No images!</div>)
     }
 
-    const menu = (
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-            1st menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-            2nd menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-            3rd menu item
-          </a>
-        </Menu.Item>
-      </Menu>
-    );
-
+   
     const Actions = [
       <div><LikeOutlined key="Like" style={{ margin: "8px" }} />20</div>,
       <div><ShareAltOutlined key="share" style={{ margin: "8px" }} />30</div>,
@@ -192,7 +173,7 @@ class Profile extends Component {
               <Card title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft:'75px', marginRight:'75px', marginTop: '8px'}}>
                 <p>{donation.description}</p>
                 <Space>
-                {imagelist(donation.imageurl)}
+                {imagelist(donation.images)}
                 </Space>
               </Card>
             )
@@ -371,15 +352,25 @@ class Profile extends Component {
   };
 }
 
-const mapStateToProps = state => ({
-  suggestedPages: state.profileReducer.suggestedPages,
-  currentTab: state.profileReducer.currentTab,
-  donations: state.profileReducer.donations,
-  timelinePost: state.profileReducer.timelinePost,
-  posts: state.profileReducer.posts,
-  PendingDonations: state.profileReducer.Pending,
-  profileDetails: state.profileReducer.profileDetails
-})
+const mapStateToProps = state => {
+  const getprofileDonation = (donation) =>{
+    const userId = state.authReducer.user.userId
+    return donation.donorId === userId
+  }
+  const getUserPost = (post) =>{
+    const userId = state.authReducer.user.userId
+    return post.authorId === userId
+  }
+  return {
+    suggestedPages: state.profileReducer.suggestedPages,
+    currentTab: state.profileReducer.currentTab,
+    donations: state.DiscoverReducer.Donations.filter(getprofileDonation),
+    timelinePost: state.profileReducer.timelinePost,
+    posts: state.HomeCenterReducer.posts.filter(getUserPost),
+    PendingDonations: state.profileReducer.Pending,
+    profileDetails: state.profileReducer.profileDetails
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   getSomeData: bindActionCreators(getSomeData, dispatch),

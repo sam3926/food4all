@@ -15,7 +15,7 @@ const donationSchema = new Schema({
         type: String,
         required:true
     },
-    postTime: {
+    expiryTime: {
         type: Schema.Types.Date,
         default: Date.now()
     },
@@ -45,6 +45,8 @@ const donationSchema = new Schema({
     }
     //ADDITIONAL FIELDS CAN BE ADDED BELOW
 
+},{
+    timestamps:true
 });
 
 donationSchema.index({ location: "2dsphere" })

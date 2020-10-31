@@ -36,6 +36,7 @@ class Discover extends Component{
       selectedMenuItem:'1',
       loading: false,
       visible: false,
+      filters:[]
     }
   componentDidMount(){
     this.props.getDonation();
@@ -74,8 +75,12 @@ class Discover extends Component{
       { label: 'Time', value: 'Time' },
     ];
     const onChange = (checkedValues) =>{
-      this.props.changeFilters(checkedValues)
-      //console.log(this.props)
+      // this.props.changeFilters(checkedValues)
+      console.log(checkedValues)
+      this.setState({
+        filters:[...checkedValues]
+      })
+      console.log(this.state.filters)
       //console.log('checked = ', checkedValues);
     }
 
@@ -108,15 +113,22 @@ class Discover extends Component{
       //console.log(donation.status.localeCompare("NotAccepted") === 0 )
       return donation.status.localeCompare("NotAccepted") === 0
     }
+    const action = (Donation) =>{
+      if (this.props.userType.localeCompare('donor')===0)
+        return [];  
+      const value = [
+          <p className="text" onClick={() => success(Donation.contact) } ><b> Contact Donor </b></p>,
+          <p className="text" onClick={() => addpending(Donation)} ><b> Interested </b></p>,
+        ]
+        
+        return value;
+    }
     const DonationList = (Donations.filter(checkvisibilty)).length? (
       Donations.map(Donation=> {
         return (
           <Card title={<a>{Donation.donorName}</a>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin:'8px'  }} 
-
-          actions={[
-            <p className="text" onClick={() => success(Donation.contact) } ><b> Contact Donor </b></p>,
-            <p className="text" onClick={() => addpending(Donation)} ><b> Interested </b></p>,
-          ]}
+        
+          actions={action(Donation)}
           >
             <p>{Donation.description}</p>
             <Space>
@@ -193,6 +205,7 @@ class Discover extends Component{
         }
       )
     }
+    
       return (
         <Layout>
             <Sider width={280} className="site-layout-background" 
@@ -209,7 +222,6 @@ class Discover extends Component{
                 defaultOpenKeys={['1']}
                 style={{ height: '100%', borderRight: 0 }}
                 onClick={(e) => onclick(e.key)} >
-
                 <SubMenu key="1" title="Donations" onTitleClick={(e) => onclick(e.key)} style={{fontSize: '16px'}}>
                     <div style={{"padding":"auto"}}>
                         <Checkbox.Group options={plainOptions} onChange={onChange} />
@@ -282,6 +294,8 @@ const mapStatetoProps = state => {
   }
   
   return {
+    userType:state.authReducer.user.userType,
+    currentfilter:state.DiscoverReducer.currentfilter,
     Donations: state.DiscoverReducer.Donations.filter(checkvisibilty),
     pendingDonations: state.DiscoverReducer.Donations.filter(pendingdonations),
     Organisations: state.DiscoverReducer.Organisations,

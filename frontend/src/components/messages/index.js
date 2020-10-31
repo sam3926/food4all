@@ -8,6 +8,7 @@ import axios from 'axios';
 import { MessageOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
 import './styles.css'
 import { bindActionCreators } from 'redux';
+import LoadingScreen from '../LoadingScreen';
 const { Content, Sider } = Layout;
 
 export class Messagepage extends Component {
@@ -16,21 +17,29 @@ export class Messagepage extends Component {
         currentThread: {},
         currentUser: {},
         you: {},
-        requiredUser: null
+        requiredUser: null,
+        loading: false
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        this.setState({
+            loading: true
+        })
 
         if (this.props.location.state) {
             console.log("from user", this.props.location.state.user)
             this.setState({ requiredUser: this.props.location.state.user })
         }
 
-        this.props.getThreads()
+        await this.props.getThreads();
+        this.setState({
+            loading: false
+        })
     }
 
     componentDidUpdate() {
-        this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
+        if (this.messagesEnd)
+            this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
     }
 
     openNotificationWithIcon = (type, message) => {
@@ -132,90 +141,96 @@ export class Messagepage extends Component {
     render() {
         return (
             <React.Fragment >
-                <Layout style={{ paddingTop: "64px" }}>
-                    <Layout>
-                        <Sider width={300} className="site-layout-background">
-                            <List
-                                itemLayout="horizontal"
-                                dataSource={this.props.threads}
-                                renderItem={item => {
-                                    const member = item.members.find(x => x._id != this.props.user.userId)
-                                    const you = item.members.find(x => x._id == this.props.user.userId)
-                                    return (
-                                        <List.Item key={item._id} onClick={() => this.setState({ currentThread: item, currentUser: member, you: you })}>
-                                            <List.Item.Meta
-                                                avatar={<Avatar src={member.avatar} />}
-                                                title={member.name}
-                                                description={item.messages.length ? item.messages[item.messages.length - 1].type == "text" ? item.messages[item.messages.length - 1].body : "Image" : ""}
-                                            //OR LAST MESSAGE
-                                            />
-                                        </List.Item>
-                                    )
-                                }}
-                            />
-                        </Sider>
-                        <Layout style={{ padding: "0 24px 24px" }}>
-                            <Content
-                                style={{
-                                    padding: 24,
-                                    margin: 0,
-                                }}
-                            >
-                                <div class="site-layout-background" style={{ marginLeft: '150px', maxWidth: '800px' }}>
-                                    <div className="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
-                                        {this.state.currentThread && (
-                                            this.renderCards()
-                                        )}
-                                        <div
-                                            ref={el => {
-                                                this.messagesEnd = el;
-                                            }}
-                                            style={{ float: "left", clear: "both" }}
-                                        />
-                                    </div>
+                {this.state.loading ? <LoadingScreen /> :
+                    <Layout style={{ paddingTop: "64px" }}>
+                        <Layout>
 
-                                    <Row >
-                                        <Form style={{ width: "100%" }} layout="inline" onSubmit={this.submitChatMessage}>
-                                            <Col span={16}>
-                                                <Input
-                                                    id="message"
-                                                    prefix={<MessageOutlined />
-                                                        // <Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }} />
-                                                    }
-                                                    placeholder="Let's start talking"
-                                                    type="text"
-                                                    value={this.state.chatMessage}
-                                                    onChange={this.hanleSearchChange}
+                            <Sider width={300} className="site-layout-background">
+                                <List
+                                    itemLayout="horizontal"
+                                    dataSource={this.props.threads}
+                                    renderItem={item => {
+                                        const member = item.members.find(x => x._id != this.props.user.userId)
+                                        const you = item.members.find(x => x._id == this.props.user.userId)
+                                        return (
+                                            <List.Item key={item._id} onClick={() => this.setState({ currentThread: item, currentUser: member, you: you })}>
+                                                <List.Item.Meta
+                                                    avatar={<Avatar src={member.avatar} />}
+                                                    title={member.name}
+                                                    description={item.messages.length ? item.messages[item.messages.length - 1].type == "text" ? item.messages[item.messages.length - 1].body : "Image" : ""}
+                                                //OR LAST MESSAGE
                                                 />
-                                            </Col>
-                                            <Col span={2}>
-                                                <Dropzone onDrop={this.onDrop}>
-                                                    {({ getRootProps, getInputProps }) => (
-                                                        <section>
-                                                            <div {...getRootProps()}>
-                                                                <input {...getInputProps()} />
-                                                                <Button>
-                                                                    <UploadOutlined />
-                                                                </Button>
-                                                            </div>
-                                                        </section>
-                                                    )}
-                                                </Dropzone>
-                                            </Col>
+                                            </List.Item>
+                                        )
+                                    }}
+                                />
+                            </Sider>
+                            <Layout style={{ padding: "0 24px 24px" }}>
+                                <Content
+                                    style={{
+                                        padding: 24,
+                                        margin: 0,
+                                    }}
+                                >
+                                    <div class="site-layout-background" style={{ marginLeft: '150px', maxWidth: '800px' }}>
+                                        <div className="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
+                                            {this.state.currentThread && (
+                                                this.renderCards()
+                                            )}
+                                            <div
+                                                ref={el => {
+                                                    this.messagesEnd = el;
+                                                }}
+                                                style={{ float: "left", clear: "both" }}
+                                            />
+                                        </div>
 
-                                            <Col span={2}>
-                                                <Button type="primary" style={{ width: '100%' }} onClick={this.submitChatMessage} htmlType="submit">
-                                                    {/* <Icon type="enter" /> */}
-                                                    <SendOutlined />
-                                                </Button>
-                                            </Col>
-                                        </Form>
-                                    </Row>
-                                </div>
-                            </Content>
+                                        <Row >
+                                            <Form style={{ width: "100%" }} layout="inline" onSubmit={this.submitChatMessage}>
+                                                <Col span={16}>
+                                                    <Input
+                                                        id="message"
+                                                        prefix={<MessageOutlined />
+                                                            // <Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }} />
+                                                        }
+                                                        placeholder="Let's start talking"
+                                                        type="text"
+                                                        value={this.state.chatMessage}
+                                                        onChange={this.hanleSearchChange}
+                                                    />
+                                                </Col>
+                                                <Col span={2}>
+                                                    <Dropzone onDrop={this.onDrop}>
+                                                        {({ getRootProps, getInputProps }) => (
+                                                            <section>
+                                                                <div {...getRootProps()}>
+                                                                    <input {...getInputProps()} />
+                                                                    <Button>
+                                                                        <UploadOutlined />
+                                                                    </Button>
+                                                                </div>
+                                                            </section>
+                                                        )}
+                                                    </Dropzone>
+                                                </Col>
+
+                                                <Col span={2}>
+                                                    <Button type="primary" style={{ width: '100%' }} onClick={this.submitChatMessage} htmlType="submit">
+                                                        {/* <Icon type="enter" /> */}
+                                                        <SendOutlined />
+                                                    </Button>
+                                                </Col>
+                                            </Form>
+                                        </Row>
+                                    </div>
+                                </Content>
+                            </Layout>
                         </Layout>
                     </Layout>
-                </Layout>
+                }
+
+
+
             </React.Fragment >
         )
     }

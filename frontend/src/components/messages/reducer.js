@@ -1,15 +1,27 @@
-import {
-    GET_CHATS,
-    AFTER_POST_MESSAGE
-} from './constants';
+import { ACTION } from './constants';
 
-export default function (state = {}, action) {
-    switch (action.type) {
-        case GET_CHATS:
-            return { ...state, chats: action.payload }
-        case AFTER_POST_MESSAGE:
-            return { ...state, chats: state.chats.concat(action.payload) }
-        default:
-            return state;
-    }
+const initialState = {
+    threads: [],
 }
+
+const messageReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case ACTION.GET_THREADS: {
+            state = { ...state, threads: [...action.payload] }
+            break;
+        }
+        case ACTION.UPDATE_THREAD: {
+            const updatedThreads = state.threads.filter(x => x._id != action.payload._id)
+            state = { ...state, threads: [action.payload, ...updatedThreads] }
+            break;
+        }
+        case 'LOGOUT': {
+            state = { ...initialState }
+            break;
+        }
+    }
+    return state
+}
+
+
+export default messageReducer;

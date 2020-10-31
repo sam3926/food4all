@@ -1,52 +1,43 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Row, Col, Layout, List, Avatar } from 'antd';
-import io from "socket.io-client";
+import { Form, Input, Button, Row, Col, Layout, List, Avatar, notification } from 'antd';
 import { connect } from "react-redux";
-import moment from "moment";
-import { getChats, afterPostMessage } from "./actions"
-import ChatCard from "./Sections/messageCard"
+import { getThreads, startThread, sendMessage, updateThread } from "./actions"
+import MessageCard from "./MessageCard"
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { MessageOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
 import './styles.css'
+import { bindActionCreators } from 'redux';
 const { Content, Sider } = Layout;
-
-const data = [
-    {
-        title: 'User 1',
-    },
-    {
-        title: 'User 2',
-    },
-    {
-        title: 'User 3',
-    },
-    {
-        title: 'User 4',
-    },
-];
 
 export class Messagepage extends Component {
     state = {
         chatMessage: "",
+        currentThread: {},
+        currentUser: {},
+        you: {},
+        requiredUser: null
     }
 
     componentDidMount() {
-        let server = "http://localhost:8000";
 
-        this.props.dispatch(getChats());
+        if (this.props.location.state) {
+            console.log("from user", this.props.location.state.user)
+            this.setState({ requiredUser: this.props.location.state.user })
+        }
 
-        this.socket = io(server);
-
-        this.socket.on("Output Chat Message", messageFromBackEnd => {
-            console.log(messageFromBackEnd)
-            this.props.dispatch(afterPostMessage(messageFromBackEnd));
-        })
+        this.props.getThreads()
     }
 
     componentDidUpdate() {
         this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
     }
+
+    openNotificationWithIcon = (type, message) => {
+        notification[type]({
+            message: message
+        });
+    };
 
     hanleSearchChange = (e) => {
         this.setState({
@@ -54,20 +45,52 @@ export class Messagepage extends Component {
         })
     }
 
-    renderCards = () =>
-        this.props.chats.chats
-        && this.props.chats.chats.map((chat) => (
-            <ChatCard key={chat._id}  {...chat} />
-        ));
+    componentWillReceiveProps(nextProps) {
+        console.log("nextProps", nextProps)
+        const currentThreadId = this.state.currentThread?._id;
+        if (currentThreadId) {
+            const req = nextProps.threads.find(x => x._id == currentThreadId);
+            if (req)
+                this.setState({ currentThread: req })
+        }
+        else if (this.state.requiredUser) {
+
+
+            const req = nextProps.threads.find(thread => {
+                if (thread?.members.find(m => m._id == this.state.requiredUser)) {
+                    return true;
+                }
+
+                return false
+            })
+            if (req) {
+                const member = req.members.find(x => x._id != this.props.user.userId)
+                const you = req.members.find(x => x._id == this.props.user.userId)
+                console.log("okayy the required user", req)
+                this.setState({ currentThread: req, requiredUser: null, currentUser: member, you: you })
+            } else {
+                console.log("not there, maybe new user")
+                this.props.startThread(this.state.requiredUser)
+            }
+        }
+
+    }
+
+    renderCards = () => {
+        return (
+            this.state.currentThread.messages
+            && this.state.currentThread.messages.map((message) => (
+                <MessageCard
+                    key={message._id}
+                    message={message}
+                    currentUser={this.state.currentUser}
+                    you={this.state.you}
+                />
+            )))
+    }
 
     onDrop = (files) => {
         console.log(files)
-
-
-        if (this.props.user && !this.props.isAuthenticated) {
-            return alert('Please Log in first');
-        }
-
 
 
         let formData = new FormData;
@@ -78,24 +101,16 @@ export class Messagepage extends Component {
 
         formData.append("file", files[0])
 
-        axios.post('api/chat/uploadfiles', formData, config)
-            .then(response => {
-                if (response.data.success) {
-                    let chatMessage = response.data.url;
-                    let userId = this.props.user.userData._id
-                    let userName = this.props.user.userData.name;
-                    let userImage = this.props.user.userData.image;
-                    let nowTime = moment();
-                    let type = "VideoOrImage"
-
-                    this.socket.emit("Input Chat Message", {
-                        chatMessage,
-                        userId,
-                        userName,
-                        userImage,
-                        nowTime,
-                        type
-                    });
+        axios.post('upload/messages', formData, config)
+            .then(res => {
+                if (res.data.success) {
+                    let chatMessage = res.data.location;
+                    let receiverID = this.state.currentThread?._id;
+                    if (receiverID) {
+                        this.props.sendMessage(receiverID, chatMessage, "image")
+                    } else {
+                        this.openNotificationWithIcon("warning", "Please select a user to send the message")
+                    }
                 }
             })
     }
@@ -103,50 +118,40 @@ export class Messagepage extends Component {
 
     submitChatMessage = (e) => {
         e.preventDefault();
-
-        if (this.props.user && !this.props.isAuthenticated) {
-            return alert('Please Log in first');
+        let chatMessage = this.state.chatMessage
+        let receiverID = this.state.currentThread?._id;
+        if (receiverID) {
+            this.props.sendMessage(receiverID, chatMessage, "text")
+            this.setState({ chatMessage: "" })
+        } else {
+            this.openNotificationWithIcon("warning", "Please select a user to send the message")
         }
 
-
-
-
-        let chatMessage = this.state.chatMessage
-        let userId = this.props.user.userData._id
-        let userName = this.props.user.userData.name;
-        let userImage = this.props.user.userData.image;
-        let nowTime = moment();
-        let type = "Text"
-
-        this.socket.emit("Input Chat Message", {
-            chatMessage,
-            userId,
-            userName,
-            userImage,
-            nowTime,
-            type
-        });
-        this.setState({ chatMessage: "" })
     }
 
     render() {
         return (
-            <React.Fragment>
-                <Layout >
+            <React.Fragment >
+                <Layout style={{ paddingTop: "64px" }}>
                     <Layout>
                         <Sider width={300} className="site-layout-background">
                             <List
                                 itemLayout="horizontal"
-                                dataSource={data}
-                                renderItem={item => (
-                                    <List.Item>
-                                        <List.Item.Meta
-                                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                            title={item.title}
-                                            description="xyz"
-                                        />
-                                    </List.Item>
-                                )}
+                                dataSource={this.props.threads}
+                                renderItem={item => {
+                                    const member = item.members.find(x => x._id != this.props.user.userId)
+                                    const you = item.members.find(x => x._id == this.props.user.userId)
+                                    return (
+                                        <List.Item key={item._id} onClick={() => this.setState({ currentThread: item, currentUser: member, you: you })}>
+                                            <List.Item.Meta
+                                                avatar={<Avatar src={member.avatar} />}
+                                                title={member.name}
+                                                description={item.messages.length ? item.messages[item.messages.length - 1].type == "text" ? item.messages[item.messages.length - 1].body : "Image" : ""}
+                                            //OR LAST MESSAGE
+                                            />
+                                        </List.Item>
+                                    )
+                                }}
                             />
                         </Sider>
                         <Layout style={{ padding: "0 24px 24px" }}>
@@ -158,7 +163,7 @@ export class Messagepage extends Component {
                             >
                                 <div class="site-layout-background" style={{ marginLeft: '150px', maxWidth: '800px' }}>
                                     <div className="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
-                                        {this.props.chats && (
+                                        {this.state.currentThread && (
                                             this.renderCards()
                                         )}
                                         <div
@@ -190,7 +195,6 @@ export class Messagepage extends Component {
                                                             <div {...getRootProps()}>
                                                                 <input {...getInputProps()} />
                                                                 <Button>
-                                                                    {/* <Icon type="upload" /> */}
                                                                     <UploadOutlined />
                                                                 </Button>
                                                             </div>
@@ -212,17 +216,23 @@ export class Messagepage extends Component {
                         </Layout>
                     </Layout>
                 </Layout>
-            </React.Fragment>
+            </React.Fragment >
         )
     }
 }
 
 const mapStateToProps = state => {
     return {
-        user: state.authReducer,
-        chats: state.messageReducer.chat
+        threads: state.messageReducer.threads,
+        user: state.authReducer.user
     }
 }
 
+const mapDispatchToProps = dispatch => ({
+    getThreads: bindActionCreators(getThreads, dispatch),
+    startThread: bindActionCreators(startThread, dispatch),
+    sendMessage: bindActionCreators(sendMessage, dispatch),
+    updateThread: bindActionCreators(updateThread, dispatch)
+})
 
-export default connect(mapStateToProps)(Messagepage);
+export default connect(mapStateToProps, mapDispatchToProps)(Messagepage);

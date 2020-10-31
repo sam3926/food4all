@@ -89,7 +89,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get('/profile/:id', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic avatar location')
+    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic avatar location history posts donations').populate('posts donations')
     if (user) {
       console.log(user)
       res.status(200).json(user)
@@ -112,11 +112,12 @@ router.get('/profile/:id', isAuth, async (req, res, next) => {
 
 //FOLLOW A USER
 //Can access requesting user's id throud through req.userId
-router.post('/follow/:id', isAuth, async (req, res, next) => {
+router.get('/follow/:id', isAuth, async (req, res, next) => {
   try {
     const { id } = req.params;
     const { following } = await User.findById(req.userId);
-    if (following.find(id)) {
+    console.log("following", following)
+    if (following.find(f => f == id)) {
       const err = new Error('You have already followed this user');
       err.statusCode = 403;
       throw err;
@@ -126,9 +127,9 @@ router.post('/follow/:id', isAuth, async (req, res, next) => {
       err.statusCode = 403;
       throw err;
     } else {
-      await User.findByIdAndUpdate(id, { $push: { followers: req.userId } })
-      const updatedUser = await User.findByIdAndUpdate(req.userId, { $push: { following: id } })
-      res.status(200).json({ user: updatedUser })
+      const user = await User.findByIdAndUpdate(id, { $push: { followers: req.userId } }, { new: true })
+      await User.findByIdAndUpdate(req.userId, { $push: { following: id } })
+      res.status(200).json(user)
     }
 
   } catch (err) {
@@ -139,15 +140,74 @@ router.post('/follow/:id', isAuth, async (req, res, next) => {
   }
 })
 
+//UNFOLLOW A USER
+//Can access requesting user's id throud through req.userId
+router.get('/unfollow/:id', isAuth, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { following } = await User.findById(req.userId);
+    if (!following.find(f => f == id)) {
+      const err = new Error('You have not followed this user');
+      err.statusCode = 403;
+      throw err;
+    }
+    else if (id == req.userId) {
+      const err = new Error('You cannot unfollow yourself');
+      err.statusCode = 403;
+      throw err;
+    } else {
+      const user = await User.findByIdAndUpdate(id, { $pull: { followers: req.userId } }, { new: true })
+      await User.findByIdAndUpdate(req.userId, { $pull: { following: id } })
+      res.status(200).json(user)
+    }
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
+
 //EDIT PROFILE
 //Access id only through req.userId, for protection, so other's can't access
 //pass the fields in req.body, find userby id and update those fields only
 //Editing should have name, contact, description, address ,location only
 router.post('/edit-profile', isAuth, async (req, res, next) => {
   try {
-    const { user } = req.body;
-    const updated_user = await User.findByIdAndUpdate(req.userId, user, { new: true });
-    res.status(200).json({ user: updated_user })
+    const user = await User.findByIdAndUpdate(req.userId, req.body.user, { new: true }).populate('donations posts');
+    res.status(200).json(user)
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
+router.get('/followers/:id', isAuth, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select('followers').populate('followers', 'name avatar description')
+    console.log(user)
+    const followers = user.followers;
+    res.status(200).json(followers)
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
+router.get('/following/:id', isAuth, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select('following').populate('following', 'name avatar description')
+    console.log(user)
+    const following = user.following;
+    res.status(200).json(following)
 
   } catch (err) {
     if (!err.statusCode) {

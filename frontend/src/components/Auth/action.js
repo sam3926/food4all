@@ -81,3 +81,10 @@ export const logoutUser = () => dispatch => {
         type: 'LOGOUT'
     })
 };
+
+
+export const clearErrors = () => dispatch => {
+    dispatch({
+        type: ACTION.CLEAR_ERRORS
+    })
+}

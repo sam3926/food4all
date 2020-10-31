@@ -43,6 +43,11 @@ router.post("/send", isAuth, async (req, res, next) => {
             model: 'User',
             select: 'name avatar description'
         })
+        if (!thread) {
+            const err = new Error("This thread does not exist")
+            err.statusCode = 404;
+            throw (err)
+        }
 
         let receiver = thread.members.find(x => x._id != req.userId)
         let onlineUsers = getOnlineUsers();

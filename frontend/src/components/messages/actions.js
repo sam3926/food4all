@@ -14,7 +14,10 @@ export const getThreads = () => async (dispatch) => {
         })
 
     } catch (err) {
-        console.log("error in getThreads")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 }
 
@@ -38,7 +41,10 @@ export const sendMessage = (threadId, body, type) => async dispatch => {
             payload: res.data
         })
     } catch (err) {
-        console.log("error in sendMessage")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 }
 
@@ -52,6 +58,9 @@ export const startThread = (receiver) => async dispatch => {
             payload: res.data
         })
     } catch (err) {
-        console.log("error in startThread")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 }

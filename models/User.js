@@ -83,6 +83,11 @@ const userSchema = new Schema({
     color: String,
     icon: String,
     text: String
+  }],
+
+  threads: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Thread'
   }]
 
 });

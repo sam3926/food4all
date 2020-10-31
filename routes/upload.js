@@ -83,6 +83,19 @@ const postsStorage = multer.diskStorage({
     }
 })
 
+const messagesStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const reqPath = path.join(__dirname, '..', 'images', 'messages')
+        if (!fs.existsSync(reqPath)) {
+            fs.mkdirSync(reqPath, { recursive: true })
+        }
+        cb(null, reqPath)
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+
 
 const uploadCertificates = multer({
     storage: certificatesStorage,
@@ -111,6 +124,14 @@ const uploadPosts = multer({
 
 const uploadDonations = multer({
     storage: donationsStorage,
+    limits: {
+        fieldSize: 3000000
+    },
+    fileFilter: imageFilter
+})
+
+const uploadMessages = multer({
+    storage: messagesStorage,
     limits: {
         fieldSize: 3000000
     },
@@ -158,6 +179,14 @@ router.post('/posts', uploadPosts.single('file'),
         })
     }
 
+)
+
+router.post('/messages', uploadMessages.single('file'),
+    (req, res) => {
+        res.json({
+            "location": `/images/messages/${req.file.filename}`, "success": true
+        })
+    }
 )
 
 module.exports = router;

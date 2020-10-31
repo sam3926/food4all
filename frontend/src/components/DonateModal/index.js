@@ -89,7 +89,7 @@ import moment from 'moment';
         const donation = {
           donorId: this.props.profileDetails._id,
           title: this.state.title,
-          postTime:this.state.Date,
+          expiryTime:this.state.Date,
           peopleFed: 0,
           status: 'NotAccepted',
           description:this.state.description,

@@ -11,7 +11,7 @@ import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-
 import { pendingDonation } from './action';
 import { getPendingDonations } from '../Profile/action';
 import { rejectDonation } from '../Profile/action';
-import _ from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { setCurrentRoute } from '../Navbar/actions';
 import { Link } from "react-router-dom"
 const { Content, Sider } = Layout;
@@ -117,14 +117,14 @@ class Discover extends Component {
       const filters = this.state.filters;
       console.log(filters);
       if(filters.find((value => value.localeCompare("Time")===0))){
-        const filterDonations = _.sortBy(Donations, (donation) =>{
+        const filterDonations = sortBy(Donations, (donation) =>{
           return new moment(donation.createdAt);
         });
         console.log(filterDonations)
         return filterDonations;
       }
       if(filters.find((value => value.localeCompare("Expiry Date")===0))){
-        const filterDonations = _.sortBy(Donations, (donation) =>{
+        const filterDonations = sortBy(Donations, (donation) =>{
           return new moment(donation.expiryTime);
         });
         console.log(filterDonations)

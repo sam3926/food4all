@@ -3,13 +3,14 @@ import 'antd/dist/antd.css';
 import '../../index.css';
 import './styles.css'
 import {connect} from 'react-redux'
-import {changeFilters} from './action'
+import {changeFilters,getDonation} from './action'
 import { bindActionCreators } from 'redux';
 import { Modal, Menu, Checkbox , Layout, Card , Button , Input , Space , Image } from 'antd';
-
+import moment from 'moment';
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { pendingDonation } from './action';
-
+import { getPendingDonations } from '../Profile/action';
+import { rejectDonation } from '../Profile/action';
 
 const { Content,Sider } = Layout;
 const { SubMenu } = Menu;
@@ -35,8 +36,11 @@ class Discover extends Component{
       selectedMenuItem:'1',
       loading: false,
       visible: false,
+      filters:[]
     }
-  
+  componentDidMount(){
+    this.props.getDonation();
+  }
     showModal = () => {
       this.setState({
         visible: true
@@ -62,28 +66,33 @@ class Discover extends Component{
    
   render () {
     const {  Events, selectedMenuItem , visible, loading} = this.state;
-    const {Organisations, Donations} = this.props
-    console.log(this.props);
+    const {Organisations, Donations,pendingDonations} = this.props
+    //console.log('this is  the dicover ',pendingDonations);
+
     const plainOptions = [
       { label: 'Location', value: 'Location' },
       { label: 'Expiry Date', value: 'Expiry Date' },
       { label: 'Time', value: 'Time' },
     ];
     const onChange = (checkedValues) =>{
-      this.props.changeFilters(checkedValues)
-      //console.log(this.props)
+      // this.props.changeFilters(checkedValues)
+      console.log(checkedValues)
+      this.setState({
+        filters:[...checkedValues]
+      })
+      console.log(this.state.filters)
       //console.log('checked = ', checkedValues);
     }
 
-    const addpending = (N,P,D) =>{
-      
+    const addpending = (Donation) =>{
+      const {_id,donorName,postTime,description} = Donation;
       const Pending = {
-        donorName: N,
-        postTime: P,
-        description: D
+        donorName: donorName,
+        postTime:postTime,
+        description: description
       };
 
-      this.props.pendingDonation(Pending);
+      this.props.pendingDonation(Donation);
     }
     
     const imagelist = (images) => {
@@ -100,20 +109,30 @@ class Discover extends Component{
         })
         ):(<div> No images!</div>)
     }
-    const DonationList = Donations.length? (
-      Donations.map(Donation=>{
+    const checkvisibilty =(donation) => {
+      //console.log(donation.status.localeCompare("NotAccepted") === 0 )
+      return donation.status.localeCompare("NotAccepted") === 0
+    }
+    const action = (Donation) =>{
+      if (this.props.userType.localeCompare('donor')===0)
+        return [];  
+      const value = [
+          <p className="text" onClick={() => success(Donation.contact) } ><b> Contact Donor </b></p>,
+          <p className="text" onClick={() => addpending(Donation)} ><b> Interested </b></p>,
+        ]
+        
+        return value;
+    }
+    const DonationList = (Donations.filter(checkvisibilty)).length? (
+      Donations.map(Donation=> {
         return (
-
-          <Card title={<a>{Donation.donorName}</a>} extra={<div>{Donation.postTime}</div>} style={{ width: 700, margin:'8px'  }} 
-
-          actions={[
-            <p className="text" onClick={() => success(Donation.contact) } ><b> Contact Donor </b></p>,
-            <p className="text" onClick={() => addpending(Donation.donorName,Donation.postTime,Donation.description)} ><b> Interested </b></p>,
-          ]}
+          <Card title={<a>{Donation.donorName}</a>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin:'8px'  }} 
+        
+          actions={action(Donation)}
           >
             <p>{Donation.description}</p>
             <Space>
-            {imagelist(Donation.imageurl)}
+            {imagelist(Donation.images)}
             </Space>
 
           </Card>
@@ -122,7 +141,23 @@ class Discover extends Component{
     ):(
       <div>No Donations are currently there!</div>
     )
-      
+    const pendingDonationList = pendingDonations.length? (
+      pendingDonations.map(Donation=> {
+        return (
+          <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }} 
+          actions={[
+            <p classname="cardtext1" ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
+            <p onClick = {() => this.props.rejectDonation(Donation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
+          ]}
+          >
+            <p>{Donation.description}</p>
+          </Card>
+        )
+      })
+    ):(
+      <div>No Donations are currently there!</div>
+    )
+       
     const OrganisationList = Organisations.length? (
       Organisations.map(Organisation=>{
         return (
@@ -170,6 +205,7 @@ class Discover extends Component{
         }
       )
     }
+    
       return (
         <Layout>
             <Sider width={280} className="site-layout-background" 
@@ -186,7 +222,6 @@ class Discover extends Component{
                 defaultOpenKeys={['1']}
                 style={{ height: '100%', borderRight: 0 }}
                 onClick={(e) => onclick(e.key)} >
-
                 <SubMenu key="1" title="Donations" onTitleClick={(e) => onclick(e.key)} style={{fontSize: '16px'}}>
                     <div style={{"padding":"auto"}}>
                         <Checkbox.Group options={plainOptions} onChange={onChange} />
@@ -208,14 +243,7 @@ class Discover extends Component{
               <Sider width={300} style={{ padding: "25px" }}>
               <div style={{ fontWeight: "bolder", paddingBottom: "15px", fontSize: "medium" }}>Pending Donations</div>	
               <div>	
-                <Card title="User Name" size="small" style={{ width: 250 }}	
-                  actions={[	
-                    <p onClick={this.showModal} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,	
-                    <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,	
-                  ]}	
-                >	
-                  <p>Card content</p>	
-                </Card>	
+                {pendingDonationList}
               </div>	
               </Sider>
 
@@ -254,16 +282,32 @@ class Discover extends Component{
 
 
 const mapStatetoProps = state => {
+  const checkvisibilty =(donation) => {
+    //console.log(donation.status.localeCompare("NotAccepted") === 0 )
+    return donation.status.localeCompare("NotAccepted") === 0
+  }
+  const pendingdonations =(donation) => {
+    const userId = state.authReducer.user.userId
+    //console.log(userId)
+    //console.log(donation.status.localeCompare("pending") === 0 )
+    return (donation.status.localeCompare("pending") == 0 && donation.receiverId == userId)
+  }
+  
   return {
-    Donations: state.DiscoverReducer.Donations,
+    userType:state.authReducer.user.userType,
+    currentfilter:state.DiscoverReducer.currentfilter,
+    Donations: state.DiscoverReducer.Donations.filter(checkvisibilty),
+    pendingDonations: state.DiscoverReducer.Donations.filter(pendingdonations),
     Organisations: state.DiscoverReducer.Organisations,
     Events: state.DiscoverReducer.Events
   };
   
 };
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch,getState) => ({
   changeFilters : bindActionCreators(changeFilters, dispatch),
-  pendingDonation : bindActionCreators(pendingDonation,dispatch)
+  pendingDonation : bindActionCreators(pendingDonation,dispatch),
+  rejectDonation: bindActionCreators(rejectDonation,dispatch),
+  getDonation : bindActionCreators(getDonation,dispatch)
 })
 
 export default connect(mapStatetoProps,mapDispatchToProps)(Discover);

@@ -7,8 +7,8 @@ import EditProfile from './EditProfile';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing } from './action';
-
+import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation } from './action';
+import moment from 'moment';
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
 import ProfilePic from './ProfilePic';
 // import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
@@ -106,6 +106,7 @@ class Profile extends Component {
 
   componentDidMount() {
     this.props.getProfile(this.props.match.params.id)
+    this.props.getPendingDonations()
   }
   render() {
 
@@ -127,25 +128,6 @@ class Profile extends Component {
       ) : (<div> No images!</div>)
     }
 
-    const menu = (
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-            1st menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-            2nd menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-            3rd menu item
-          </a>
-        </Menu.Item>
-      </Menu>
-    );
 
     const Actions = [
       <div><LikeOutlined key="Like" style={{ margin: "8px" }} />20</div>,
@@ -192,7 +174,7 @@ class Profile extends Component {
 
 
           {profileDetails?.posts?.map(post => (
-            <Card title={post.title} extra={<div>{post.user_name}<br></br>{post.date}</div>} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }} actions={Actions}>
+            <Card title={post.author} extra={post.DateTime} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }} actions={Actions}>
               <p>{post.description}</p>
             </Card>
           ))}
@@ -200,19 +182,19 @@ class Profile extends Component {
         <TabPane tab="Acheivements" key="achievements" >
           <p style={{ fontSize: "20px", textAlign: "center" }}> Coming Soon!</p>
         </TabPane>
-      </Tabs>
+      </Tabs >
     );
 
     const PendingDonationList = PendingDonations.length ? (
       PendingDonations.map(PendingDonation => {
         return (
-          <Card title={PendingDonation.donorname} extra={<p>{PendingDonation.posttime}</p>} size="small" style={{ width: 250 }}
+          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
             actions={[
               <p classname="cardtext1" onClick={this.showModalAccept} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
-              <p><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
+              <p onClick={() => this.props.rejectDonation(PendingDonation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
             ]}
           >
-            <p>{PendingDonation.Description}</p>
+            <p>{PendingDonation.description}</p>
           </Card>
         )
       })
@@ -394,6 +376,26 @@ const mapStateToProps = state => ({
   following: state.profileReducer.following
 })
 
+// const mapStateToProps = state => {
+//   const getprofileDonation = (donation) =>{
+//     const userId = state.authReducer.user.userId
+//     return donation.donorId === userId
+//   }
+//   const getUserPost = (post) =>{
+//     const userId = state.authReducer.user.userId
+//     return post.authorId === userId
+//   }
+//   return {
+//     suggestedPages: state.profileReducer.suggestedPages,
+//     currentTab: state.profileReducer.currentTab,
+//     donations: state.DiscoverReducer.Donations.filter(getprofileDonation),
+//     timelinePost: state.profileReducer.timelinePost,
+//     posts: state.HomeCenterReducer.posts.filter(getUserPost),
+//     PendingDonations: state.profileReducer.Pending,
+//     profileDetails: state.profileReducer.profileDetails
+//   }
+// }
+
 const mapDispatchToProps = dispatch => ({
   getSomeData: bindActionCreators(getSomeData, dispatch),
   changeTab: bindActionCreators(changeTab, dispatch),
@@ -402,7 +404,9 @@ const mapDispatchToProps = dispatch => ({
   unfollowUser: bindActionCreators(unfollowUser, dispatch),
   getFollowers: bindActionCreators(getFollowers, dispatch),
   getFollowing: bindActionCreators(getFollowing, dispatch),
-  setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch)
+  setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch),
+  rejectDonation: bindActionCreators(rejectDonation, dispatch),
+  getPendingDonations: bindActionCreators(getPendingDonations, dispatch)
 })
 
 

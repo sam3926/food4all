@@ -12,8 +12,8 @@ const uploadRoutes = require('./routes/upload')
 const postRoutes = require("./routes/posts")
 const commentRoutes = require("./routes/comment")
 const messageRoutes = require("./routes/message");
-const Thread = require('./models/Thread');
 const { initiateSocket } = require('./routes/utils');
+const donationRoutes = require("./routes/donation")
 const app = express();
 const server = require("http").createServer(app);
 // const io = require("socket.io")(server);
@@ -38,15 +38,16 @@ app.use('/upload', uploadRoutes)
 
 // Passport middleware
 // app.use(passport.initialize());
-
 // Passport config
 // require("./config/passport")(passport);
 
 // Routes
+
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/message", messageRoutes)
+app.use("/api/donation", donationRoutes);
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);

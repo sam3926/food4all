@@ -135,7 +135,7 @@ const profileReducer = (state = initialState, action) => {
             break;
         }
         case 'PENDING_DONATION': {
-            const { donorName, postTime, description } = action
+            const { donorName, postTime, description } = action.payload
             const PendingDonation = {
                 donorname: donorName,
                 Description: description,
@@ -146,6 +146,14 @@ const profileReducer = (state = initialState, action) => {
         case 'LOGOUT': {
             state = { ...initialState }
             break;
+        }
+        case 'GET_PENDING_DONATION': {
+            console.log(action.payload)
+            return { ...state, Pending: action.payload }
+
+        }
+        case 'REJECT_DONATION': {
+            return { ...state, Pending: state.Pending.filter(pending => pending._id !== action.id) }
         }
     }
     return state;

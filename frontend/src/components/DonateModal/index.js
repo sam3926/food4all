@@ -7,7 +7,8 @@ import MapComp from "../MapComp";
 import { addDonation } from './action';
 import { bindActionCreators } from 'redux'
 import {connect} from 'react-redux'
-
+import axios from "axios"
+import moment from 'moment';
   const formItemLayout = {
       labelCol: {
       span: 6,
@@ -39,8 +40,7 @@ import {connect} from 'react-redux'
   
   class DonateModal extends Component {
     state = {
-      user:'Arpit',
-
+      user:'Name',
     }
     constructor() {
       super();
@@ -65,6 +65,11 @@ import {connect} from 'react-redux'
           Date: dateString
         })
     }
+    disabledDate = (current) => {
+      // Can not select days before today and today
+      return current && current < moment().endOf('day');
+    }
+    
     render() {
       const onFieldsChange = (changedFields,allFields) =>{
         console.log(allFields)
@@ -72,15 +77,35 @@ import {connect} from 'react-redux'
           title: allFields[0].value,
           description:allFields[1].value,
           //Date:allFields[2].value==undefined? (null):(allFields[2].value.getDate),
-          files: allFields[3].value ==undefined? ([]):([allFields[3].value])
+          //files: allFields[3].value ==undefined? ([]):([allFields[3].value])
         })
       }
-      const createPost = () =>{
+      const createPost = (e) =>{
         console.log(this.state)
         this.props.handleOk()
-        this.props.addDonation(this.state)
+        const { dragger } = e;
+        const imageUrl = dragger?.map(image => image.response.location);
+        console.log('this is to create the post',imageUrl);
+        const donation = {
+          donorId: this.props.profileDetails._id,
+          title: this.state.title,
+          expiryTime:this.state.Date,
+          peopleFed: 0,
+          status: 'NotAccepted',
+          description:this.state.description,
+          location: {type: "Point", coordinates :[this.state.latlng.lng,this.state.latlng.lat]},
+          images:this.state.files,
+          donorName:this.props.profileDetails.name
+        }
+        this.props.addDonation(donation,this.props.profileDetails.contact)
       }
       const { latlng } = this.state;
+      const addpost = (imagelist) =>{
+        this.setState({
+          files: [...this.state.files,imagelist.location]
+        })
+        console.log('When the form is finished',this.state.files);
+      }
       return(
         <>
         <Modal
@@ -100,6 +125,7 @@ import {connect} from 'react-redux'
           <Form
             name="validate_other"
             onFieldsChange = {onFieldsChange}
+            onFinish={addpost}
             {...formItemLayout}
           >
             <Form.Item
@@ -126,7 +152,7 @@ import {connect} from 'react-redux'
             </Form.Item>
 
             <Form.Item name="date-picker" label="Enter expiry date" {...config}>
-              <DatePicker onChange={this.onChange} format="YYYY-MM-DD HH:mm" />
+              <DatePicker onChange={this.onChange} disabledDate={this.disabledDate} format="HH:mm ll" />
             </Form.Item>
 
             <Form.Item label="Address" 
@@ -148,13 +174,26 @@ import {connect} from 'react-redux'
             
             <Form.Item label="Dragger">
               <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-                <Upload.Dragger name="files" action="/upload.do">
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
+              <Upload.Dragger multiple={false} name="file"
+              customRequest={async ({ file, onSuccess, onError }) => {
+                let formData = new FormData()
+                formData.append('file', file)
+                await axios.post('/upload/donations', formData).then(res => {
+                  onSuccess(res.data)
+                  console.log(res.data)
+                  addpost(res.data)
+                }).catch(err => { console.log("error in uploading"); onError("Error in uploading.Try again") })
+              }} >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
                   </p>
-                  <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                  <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-                </Upload.Dragger>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload.
+                  </p>
+            </Upload.Dragger>
               </Form.Item>
             </Form.Item>
           </Form> 
@@ -171,7 +210,14 @@ import {connect} from 'react-redux'
       )
     }
   }
+
 const mapDispatchToProps = dispatch => ({
   addDonation : bindActionCreators(addDonation,dispatch)
 })
-export default connect(null,mapDispatchToProps)(DonateModal);
+const mapStatetoProps = state => {
+  return {
+      profileDetails: state.LeftSidePanelReducer.profileDetails,
+  };
+  
+}
+export default connect(mapStatetoProps ,mapDispatchToProps)(DonateModal);

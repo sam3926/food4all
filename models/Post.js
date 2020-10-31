@@ -7,16 +7,18 @@ const postSchema = new Schema({
         ref: 'User',
         required: true
     },
+    author:{
+        type:String,
+        required:true
+    },
     DateTime: {
         type: String,
-        default: Date.now
+        default: Date.now(),
+        required: true
     },
     description: {
         type: String,
         required: true
-    },
-    title: {
-        type: String
     },
     imageUrl: [{
         type: String
@@ -30,6 +32,10 @@ const postSchema = new Schema({
         ref: 'User',
         required: true
     }],
+    liked: {
+        type: Boolean,
+        default:false
+    },
     commentId: {
         type: Schema.Types.ObjectId,
         ref: 'Comment',

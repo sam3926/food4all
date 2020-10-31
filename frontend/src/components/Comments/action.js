@@ -1,5 +1,8 @@
+import axios from 'axios';
 export const addComment = (id,comment) => async (dispatch) => {
-    // const res = await axios.get("/some-api-route");
+    const postId = id;
+    await axios.post(`/api/comment/add/${id}`,{content:comment.content});
+
      dispatch({
          type: 'ADD_COMMENT',
          id:id,

@@ -17,7 +17,7 @@ router.post("/register", async (req, res, next) => {
   if (!checkExistingUser) {
     try {
       const hashedPw = await bcrypt.hash(password, 12);
-      
+
       const user = new User({
         email: email,
         password: hashedPw,
@@ -89,7 +89,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get('/profile/:id', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findById(req.userId).select('name description contact address userType followers following noFed noDonations profilePic location')
+    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic avatar location history posts donations').populate('posts donations')
     if (user) {
       console.log(user)
       res.status(200).json(user)
@@ -108,13 +108,47 @@ router.get('/profile/:id', isAuth, async (req, res, next) => {
   }
 })
 
+router.get('/left-details', isAuth, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId).select('name avatar following followers donations').populate('following', 'name avatar').populate('followers', 'name avatar').populate('donations', 'title')
+    if (user) {
+      res.status(200).json(user)
+    } else {
+      const err = new Error('Profile does not exist!')
+      err.statusCode = 404;
+      throw err;
+    }
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
 //TODOS
 
 //FOLLOW A USER
 //Can access requesting user's id throud through req.userId
-router.post('/follow/:id', isAuth, async (req, res, next) => {
+router.get('/follow/:id', isAuth, async (req, res, next) => {
   try {
-          
+    const { id } = req.params;
+    const { following } = await User.findById(req.userId);
+    console.log("following", following)
+    if (following.find(f => f == id)) {
+      const err = new Error('You have already followed this user');
+      err.statusCode = 403;
+      throw err;
+    }
+    else if (id == req.userId) {
+      const err = new Error('You cannot follow yourself');
+      err.statusCode = 403;
+      throw err;
+    } else {
+      const user = await User.findByIdAndUpdate(id, { $push: { followers: req.userId } }, { new: true })
+      await User.findByIdAndUpdate(req.userId, { $push: { following: id } })
+      res.status(200).json(user)
+    }
 
   } catch (err) {
     if (!err.statusCode) {
@@ -123,6 +157,36 @@ router.post('/follow/:id', isAuth, async (req, res, next) => {
     next(err)
   }
 })
+
+//UNFOLLOW A USER
+//Can access requesting user's id throud through req.userId
+router.get('/unfollow/:id', isAuth, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { following } = await User.findById(req.userId);
+    if (!following.find(f => f == id)) {
+      const err = new Error('You have not followed this user');
+      err.statusCode = 403;
+      throw err;
+    }
+    else if (id == req.userId) {
+      const err = new Error('You cannot unfollow yourself');
+      err.statusCode = 403;
+      throw err;
+    } else {
+      const user = await User.findByIdAndUpdate(id, { $pull: { followers: req.userId } }, { new: true })
+      await User.findByIdAndUpdate(req.userId, { $pull: { following: id } })
+      res.status(200).json(user)
+    }
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
 
 //EDIT PROFILE
 //Access id only through req.userId, for protection, so other's can't access
@@ -130,13 +194,9 @@ router.post('/follow/:id', isAuth, async (req, res, next) => {
 //Editing should have name, contact, description, address ,location only
 router.post('/edit-profile', isAuth, async (req, res, next) => {
   try {
-         const user =  await User.find({_id:req.id})
-         user = {...user,...req.body.updates}
-         await user.save();
-         console.log(user)
-         
-         res.status(200).json(user)
-         
+    const user = await User.findByIdAndUpdate(req.userId, req.body.user, { new: true }).populate('donations posts');
+    res.status(200).json(user)
+
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500
@@ -145,10 +205,12 @@ router.post('/edit-profile', isAuth, async (req, res, next) => {
   }
 })
 
-//CHANGE PROFILE PIC
-
-router.post('/change-pic', isAuth, async (req, res, next) => {
+router.get('/followers/:id', isAuth, async (req, res, next) => {
   try {
+    const user = await User.findById(req.params.id).select('followers').populate('followers', 'name avatar description')
+    console.log(user)
+    const followers = user.followers;
+    res.status(200).json(followers)
 
   } catch (err) {
     if (!err.statusCode) {
@@ -157,6 +219,22 @@ router.post('/change-pic', isAuth, async (req, res, next) => {
     next(err)
   }
 })
+
+router.get('/following/:id', isAuth, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select('following').populate('following', 'name avatar description')
+    console.log(user)
+    const following = user.following;
+    res.status(200).json(following)
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
 
 
 //FETCH USER's donations
@@ -189,16 +267,16 @@ router.get('/posts/:id', isAuth, async (req, res, next) => {
 //FETCH user's history/timeline
 router.get('/history/:id', isAuth, async (req, res, next) => {
   try {
-        const user = await User.findById(req.params.id).select('history')
-        if (user) {
-          console.log(user)
-          res.status(200).json(user)
-        }
-        else {
-          const err = new Error('Profile does not exist!')
-          err.statusCode = 404;
-          throw err
-        }
+    const user = await User.findById(req.params.id).select('history')
+    if (user) {
+      console.log(user)
+      res.status(200).json(user)
+    }
+    else {
+      const err = new Error('Profile does not exist!')
+      err.statusCode = 404;
+      throw err
+    }
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500

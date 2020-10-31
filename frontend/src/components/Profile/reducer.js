@@ -16,81 +16,88 @@ const initialState = {
         }
     ],
     profileDetails: {
-        profilePic: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        name: "Krishnendu Sudheesh",
-        description: "Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted",
-        contact: "9373321987",
-        address: "777 Brockton Avenue, Abington MA 2351",
+        profilePic: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=400",
+        avatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=50",
+        name: "",
+        description: "",
+        contact: "",
+        address: "",
         followers: [],
         following: [],
+        donations: [],
+        history: [],
+        posts: [],
         noFed: 0,
         noDonations: 0
     },
 
-    donations: [
-        
-        {
-            title: "34 kg food",
-            description: "Create a services site 2015-09-01",
-            status: "active, posted on 29-10-2020",
-            imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]        },
-            {
-                title: "food",
-                description: "Create a services site 2015-09-01",
-                status: "accepted by XXX on 28-10-20",
-                imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
-            },
-            {
-                title: "food",
-                description: "food doof food",
-                status: "accepted by XYXY on 26-10-20",
-                imageurl:["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
-            },
-    ],
+    // donations: [
 
-    timelinePost: [
-        {
-            color: "green",
-            text: "Create a services site 2015-09-01",
-            dot: "clock"
-        },
-        {
-            text: "Solve initial network problems 2015-09-01",
-            dot: "clock"
-        },
-        {
-            color: "green",
-            text: "Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted",
-            dor: "clock"
-        },
-        {
-            color: "red",
-            text: "Network problems being solved 2015-09-01",
-            dot: "clock"
-        },
-        {
-            text: "Create a services site 2015-09-01",
-        },
-        {
-            color: "green",
-            text: "Technical testing 2015-09-01",
-            dot: "clock"
-        },
+    //     {
+    //         title: "34 kg food",
+    //         description: "Create a services site 2015-09-01",
+    //         status: "active, posted on 29-10-2020",
+    //         imageurl: ["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
+    //     },
+    //     {
+    //         title: "food",
+    //         description: "Create a services site 2015-09-01",
+    //         status: "accepted by XXX on 28-10-20",
+    //         imageurl: ["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
+    //     },
+    //     {
+    //         title: "food",
+    //         description: "food doof food",
+    //         status: "accepted by XYXY on 26-10-20",
+    //         imageurl: ["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
+    //     },
+    // ],
 
-    ],
+    // timelinePost: [
+    //     {
+    //         color: "green",
+    //         text: "Create a services site 2015-09-01",
+    //         dot: "clock"
+    //     },
+    //     {
+    //         text: "Solve initial network problems 2015-09-01",
+    //         dot: "clock"
+    //     },
+    //     {
+    //         color: "green",
+    //         text: "Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted",
+    //         dor: "clock"
+    //     },
+    //     {
+    //         color: "red",
+    //         text: "Network problems being solved 2015-09-01",
+    //         dot: "clock"
+    //     },
+    //     {
+    //         text: "Create a services site 2015-09-01",
+    //     },
+    //     {
+    //         color: "green",
+    //         text: "Technical testing 2015-09-01",
+    //         dot: "clock"
+    //     },
 
-    posts: [
-        { author: 'Arpit', title: 'Felt so good to finally do something good in my life', DateTime: '28-10-20', description: 'Card Content', id: 1, likes: 20, liked: false, shares: 30 },
-        { author: 'Dinkar', title: 'Vote for me in coming election', DateTime: '28-10-20', description: 'Card Content', id: 2, likes: 30, liked: false, shares: 17 },
-        { author: 'Sudheesh', title: 'Feeding someone is so fulfilling!', DateTime: '28-10-20', description: 'Card Content', id: 3, likes: 34, liked: false, shares: 16 },
-        { author: 'Shreyansh', title: 'What am i doing here?', DateTime: '28-10-20', description: 'Card Content', id: 4, likes: 31, liked: false, shares: 14 }
-    ],
+    // ],
+
+    // posts: [
+    //     { user_name: 'Arpit', title: 'Felt so good to finally do something good in my life', date: '28-10-20', description: 'Card Content', id: 1, likes: 20, liked: false, shares: 30 },
+    //     { user_name: 'Dinkar', title: 'Vote for me in coming election', date: '28-10-20', description: 'Card Content', id: 2, likes: 30, liked: false, shares: 17 },
+    //     { user_name: 'Sudheesh', title: 'Feeding someone is so fulfilling!', date: '28-10-20', description: 'Card Content', id: 3, likes: 34, liked: false, shares: 16 },
+    //     { user_name: 'Shreyansh', title: 'What am i doing here?', date: '28-10-20', description: 'Card Content', id: 4, likes: 31, liked: false, shares: 14 }
+    // ],
 
     Pending: [
-        {donorname:'Arpit1',posttime:'000',Description:'Brief description'}
+        { donorname: 'Arpit1', posttime: '000', Description: 'Brief description' }
     ],
 
-    currentTab: "timelinePost"
+    currentTab: "timelinePost",
+    followers: [],
+    following: []
 
 }
 
@@ -111,30 +118,42 @@ const profileReducer = (state = initialState, action) => {
         }
 
         case ACTION.GET_PROFILE: {
-            state = { ...state, profileDetails: action.payload }
+            state = { ...state, profileDetails: { ...action.payload, followers: [...action.payload.followers], following: [...action.payload.following] } }
             break;
         }
 
         case ACTION.UPDATE_PROFILE_PIC: {
-            state = { ...state, profileDetails: { ...state.profileDetails, profilePic: action.payload } }
+            state = { ...state, profileDetails: { ...state.profileDetails, ...action.payload } }
+            break;
+        }
+        case ACTION.GET_FOLLOWERS: {
+            state = { ...state, followers: [...action.payload] }
+            break;
+        }
+        case ACTION.GET_FOLLOWING: {
+            state = { ...state, following: [...action.payload] }
             break;
         }
         case 'PENDING_DONATION': {
-            const {donorName, postTime, description} = action.payload
+            const { donorName, postTime, description } = action.payload
             const PendingDonation = {
                 donorname: donorName,
                 Description: description,
                 posttime: postTime
             }
-            return { ...state,Pending: [...state.Pending,PendingDonation]}
+            return { ...state, Pending: [...state.Pending, PendingDonation] }
         }
-        case 'GET_PENDING_DONATION':{
+        case 'LOGOUT': {
+            state = { ...initialState }
+            break;
+        }
+        case 'GET_PENDING_DONATION': {
             console.log(action.payload)
-            return {...state,Pending:action.payload}
-            
+            return { ...state, Pending: action.payload }
+
         }
-        case 'REJECT_DONATION':{
-            return {...state,Pending:state.Pending.filter( pending => pending._id !== action.id)}
+        case 'REJECT_DONATION': {
+            return { ...state, Pending: state.Pending.filter(pending => pending._id !== action.id) }
         }
     }
     return state;

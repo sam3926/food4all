@@ -68,7 +68,7 @@ const userSchema = new Schema({
   },
   avatar: {
     type: String,
-    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"
+    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=50"
 
   },
   posts: [{
@@ -83,6 +83,11 @@ const userSchema = new Schema({
     color: String,
     icon: String,
     text: String
+  }],
+
+  threads: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Thread'
   }]
 
 });

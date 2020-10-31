@@ -9,9 +9,9 @@ export const getSomeData = (data) => async (dispatch) => {
     });
 };
 
-export const getProfile = () => async (dispatch, getState) => {
-    const userId = getState().authReducer.user.userId
-    const res = await axios.get(`/api/users/profile/${userId}`)
+export const getProfile = (id) => async (dispatch, getState) => {
+    // const userId = getState().authReducer.user.userId
+    const res = await axios.get(`/api/users/profile/${id}`)
     // const res = await axios.get('/api/test')
     console.log(res.data)
     dispatch({
@@ -27,11 +27,11 @@ export const getSuggestedPages = () => async (dispatch) => {
         payload: res.data
     })
 }
-export const getPendingDonations = () => async (dispatch,getState) =>{
+export const getPendingDonations = () => async (dispatch, getState) => {
     const userId = getState().authReducer.user.userId
-    const checkvisibilty =(donation) => {
+    const checkvisibilty = (donation) => {
         return (donation.status.localeCompare("pending") == 0 && donation.receiverId == userId)
-      }
+    }
     const donations = getState().DiscoverReducer.Donations.filter(checkvisibilty);
     //console.log(donations);
     dispatch({
@@ -50,17 +50,87 @@ export const changeTab = tab => (dispatch) => {
     })
 }
 
-export const uploadProfilePic = profilePic => (dispatch) => {
+export const uploadProfilePic = (profilePic, avatar) => (dispatch) => {
     dispatch({
         type: ACTION.UPDATE_PROFILE_PIC,
-        payload: profilePic
+        payload: { profilePic, avatar }
     })
 }
-export const rejectDonation = (id) => async(dispatch) =>{
-    const res = await axios.post('api/donation/reject',{_id:id})
-    console.log(res.data);
-    dispatch({
-        type:'REJECT_DONATION',
-        id:id
-    })
+
+
+export const followUser = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/follow/${id}`);
+        dispatch({
+            type: ACTION.GET_PROFILE,
+            payload: res.data
+        })
+    } catch (err) {
+        console.log("error in followUser")
+    }
+
+}
+
+export const unfollowUser = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/unfollow/${id}`);
+        dispatch({
+            type: ACTION.GET_PROFILE,
+            payload: res.data
+        })
+    } catch (err) {
+        console.log("error in unfollowUser")
+    }
+}
+
+export const getFollowers = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/followers/${id}`)
+        dispatch({
+            type: ACTION.GET_FOLLOWERS,
+            payload: res.data
+        })
+
+    } catch (err) {
+        console.log("error in getFollowers")
+    }
+}
+
+export const getFollowing = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/following/${id}`)
+        dispatch({
+            type: ACTION.GET_FOLLOWING,
+            payload: res.data
+        })
+
+    } catch (err) {
+        console.log("error in getFollowing")
+    }
+}
+
+export const rejectDonation = (id) => async (dispatch) => {
+    try {
+        const res = await axios.post('api/donation/reject', { _id: id })
+        console.log(res.data);
+        dispatch({
+            type: 'REJECT_DONATION',
+            id: id
+        })
+    } catch (err) {
+        console.log("error in getFollowing")
+    }
+
+}
+
+export const editProfile = (user) => async dispatch => {
+    try {
+        const res = await axios.post('/api/users/edit-profile', { user });
+        dispatch({
+            type: ACTION.GET_PROFILE,
+            payload: res.data
+        })
+    } catch (err) {
+        console.log("error in editProfile")
+    }
 }

@@ -175,8 +175,8 @@ export class Messagepage extends Component {
                                     </div>
 
                                     <Row >
-                                        <Form layout="inline" onSubmit={this.submitChatMessage}>
-                                            <Col span={18}>
+                                        <Form style={{ width: "100%" }} layout="inline" onSubmit={this.submitChatMessage}>
+                                            <Col span={16}>
                                                 <Input
                                                     id="message"
                                                     prefix={<MessageOutlined />
@@ -203,7 +203,7 @@ export class Messagepage extends Component {
                                                 </Dropzone>
                                             </Col>
 
-                                            <Col span={4}>
+                                            <Col span={2}>
                                                 <Button type="primary" style={{ width: '100%' }} onClick={this.submitChatMessage} htmlType="submit">
                                                     {/* <Icon type="enter" /> */}
                                                     <SendOutlined />

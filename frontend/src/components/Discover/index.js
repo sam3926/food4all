@@ -11,6 +11,7 @@ import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-
 import { pendingDonation } from './action';
 import { getPendingDonations } from '../Profile/action';
 import { rejectDonation } from '../Profile/action';
+import _ from 'lodash';
 
 const { Content,Sider } = Layout;
 const { SubMenu } = Menu;
@@ -80,7 +81,8 @@ class Discover extends Component{
       this.setState({
         filters:[...checkedValues]
       })
-      console.log(this.state.filters)
+      //console.log(this.state.filters)
+      //return checkedValues;
       //console.log('checked = ', checkedValues);
     }
 
@@ -109,9 +111,24 @@ class Discover extends Component{
         })
         ):(<div> No images!</div>)
     }
-    const checkvisibilty =(donation) => {
-      //console.log(donation.status.localeCompare("NotAccepted") === 0 )
-      return donation.status.localeCompare("NotAccepted") === 0
+    const filteredDonation =(Donations) => {
+      const filters = this.state.filters;
+      console.log(filters);
+      if(filters.find((value => value.localeCompare("Time")===0))){
+        const filterDonations = _.sortBy(Donations, (donation) =>{
+          return new moment(donation.createdAt);
+        });
+        console.log(filterDonations)
+        return filterDonations;
+      }
+      if(filters.find((value => value.localeCompare("Expiry Date")===0))){
+        const filterDonations = _.sortBy(Donations, (donation) =>{
+          return new moment(donation.expiryTime);
+        });
+        console.log(filterDonations)
+        return filterDonations;
+      }
+      return Donations
     }
     const action = (Donation) =>{
       if (this.props.userType.localeCompare('donor')===0)
@@ -123,8 +140,10 @@ class Discover extends Component{
         
         return value;
     }
-    const DonationList = (Donations.filter(checkvisibilty)).length? (
-      Donations.map(Donation=> {
+    const filterDonations = filteredDonation(Donations);
+    
+    const DonationList = (Donations).length? (
+      filterDonations.map(Donation=> {
         return (
           <Card title={<a>{Donation.donorName}</a>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin:'8px'  }} 
         
@@ -141,6 +160,7 @@ class Discover extends Component{
     ):(
       <div>No Donations are currently there!</div>
     )
+    
     const pendingDonationList = pendingDonations.length? (
       pendingDonations.map(Donation=> {
         return (

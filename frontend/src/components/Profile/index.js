@@ -7,7 +7,7 @@ import EditProfile from './EditProfile';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation } from './action';
+import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation, editProfile } from './action';
 import moment from 'moment';
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
 import ProfilePic from './ProfilePic';
@@ -89,11 +89,10 @@ class Profile extends Component {
     });
   };
 
-  handleOkEdit = () => {
+  handleOkEdit = async (user) => {
     this.setState({ loadingEdit: true });
-    setTimeout(() => {
-      this.setState({ loadingEdit: false, visibleEdit: false });
-    }, 1000);
+    await this.props.editProfile(user);
+    this.setState({ loadingEdit: false, visibleEdit: false })
   };
 
   handleCancelEdit = () => {
@@ -406,7 +405,8 @@ const mapDispatchToProps = dispatch => ({
   getFollowing: bindActionCreators(getFollowing, dispatch),
   setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch),
   rejectDonation: bindActionCreators(rejectDonation, dispatch),
-  getPendingDonations: bindActionCreators(getPendingDonations, dispatch)
+  getPendingDonations: bindActionCreators(getPendingDonations, dispatch),
+  editProfile: bindActionCreators(editProfile, dispatch)
 })
 
 

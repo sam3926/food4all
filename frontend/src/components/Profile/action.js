@@ -122,3 +122,15 @@ export const rejectDonation = (id) => async (dispatch) => {
     }
 
 }
+
+export const editProfile = (user) => async dispatch => {
+    try {
+        const res = await axios.post('/api/users/edit-profile', { user });
+        dispatch({
+            type: ACTION.GET_PROFILE,
+            payload: res.data
+        })
+    } catch (err) {
+        console.log("error in editProfile")
+    }
+}

@@ -103,9 +103,10 @@ class Discover extends Component{
         ):(<div> No images!</div>)
     }
     const checkvisibilty =(donation) => {
-      return donation.status.localeCompare("NotAccepted") == 0
+      console.log(donation.status.localeCompare("NotAccepted") === 0 )
+      return donation.status.localeCompare("NotAccepted") === 0
     }
-    const DonationList = Donations.filter(checkvisibilty).length? (
+    const DonationList = (Donations.filter(checkvisibilty)).length? (
       Donations.map(Donation=> {
         return (
           <Card title={<a>{Donation.donorName}</a>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin:'8px'  }} 
@@ -258,8 +259,12 @@ class Discover extends Component{
 
 
 const mapStatetoProps = state => {
+  const checkvisibilty =(donation) => {
+    console.log(donation.status.localeCompare("NotAccepted") === 0 )
+    return donation.status.localeCompare("NotAccepted") === 0
+  }
   return {
-    Donations: state.DiscoverReducer.Donations,
+    Donations: state.DiscoverReducer.Donations.filter(checkvisibilty),
     Organisations: state.DiscoverReducer.Organisations,
     Events: state.DiscoverReducer.Events
   };

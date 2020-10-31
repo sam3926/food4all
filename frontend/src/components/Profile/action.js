@@ -30,7 +30,7 @@ export const getSuggestedPages = () => async (dispatch) => {
 export const getPendingDonations = () => async (dispatch,getState) =>{
     const userId = getState().authReducer.user.userId
     const checkvisibilty =(donation) => {
-        return (donation.status.localeCompare("pending") == 0 && donation.donorId == userId)
+        return (donation.status.localeCompare("pending") == 0 && donation.receiverId == userId)
       }
     const donations = getState().DiscoverReducer.Donations.filter(checkvisibilty);
     //console.log(donations);

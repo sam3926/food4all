@@ -153,7 +153,7 @@ class Discover extends Component {
     const DonationList = (Donations).length? (
       filterDonations.map(Donation=> {
         return (
-          <Card title={<a>{Donation.donorName}</a>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin: '8px' }}
+          <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Donation.donorId}`}>{Donation.donorName}</Link>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin: '8px' }}
 
             actions={action(Donation)}
           >
@@ -358,6 +358,7 @@ const mapDispatchToProps = (dispatch, getState) => ({
   pendingDonation: bindActionCreators(pendingDonation, dispatch),
   rejectDonation: bindActionCreators(rejectDonation, dispatch),
   getDonation: bindActionCreators(getDonation, dispatch),
+  setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch),
   setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch)
 })
 

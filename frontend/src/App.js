@@ -25,6 +25,7 @@ import { setCurrentUser, logoutUser } from './components/Auth/action';
 import { store } from "./store"
 import ComingSoon from './components/ComingSoon';
 import Messages from './components/Messages';
+import { startConnection } from './utils/common';
 
 
 
@@ -37,6 +38,7 @@ if (localStorage.jwtToken) {
   const decoded = jwt_decode(token);
   // Set user and isAuthenticated
   store.dispatch(setCurrentUser(decoded));
+  console.log("the main guyYYY")
   // Check for expired token
   const currentTime = Date.now() / 1000; // to get in milliseconds
   if (decoded.exp < currentTime) {
@@ -46,6 +48,13 @@ if (localStorage.jwtToken) {
     // Redirect to login
     window.location.href = "./login";
   }
+
+
+  //START SOCKET HERE..................
+
+  startConnection()
+
+
 }
 
 const App = () => {
@@ -75,7 +84,8 @@ const App = () => {
 
         <RouterSwitch>
           <PrivateRoute exact path='/home' component={Home} />
-          <PrivateRoute exact path='/profile' component={Profile} />
+          <PrivateRoute exact path='/i/profile/:id' component={Profile} my={true} />
+          <PrivateRoute exact path='/profile/:id' component={Profile} />
           <PrivateRoute exact path="/discover" component={Discover} />
           <PrivateRoute exact path="/messages" component={Messages} />
           <Route path="/" component={ComingSoon} />

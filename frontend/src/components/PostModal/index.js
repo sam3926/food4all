@@ -1,13 +1,15 @@
 import React, { Component } from "react";
-import "antd/dist/antd.css";
-import { Card, Form, Upload, Row, Col, Input, Modal, DatePicker, Button } from "antd";
-import { UploadOutlined, InboxOutlined, AimOutlined } from "@ant-design/icons";
-import "./styles.css";
-import { addPost } from './action';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import moment from 'moment';
 import axios from "axios"
+
+import "antd/dist/antd.css";
+import { Form, Upload, Input, Modal, Button } from "antd";
+import { InboxOutlined, } from "@ant-design/icons";
+import "./styles.css";
+
+import { addPost } from './action';
 import {addHistory} from '../Profile/action';
 
 const normFile = e => {
@@ -91,7 +93,6 @@ class PostModal extends Component {
                 formData.append('file', file)
                 await axios.post('/upload/posts', formData).then(res => {
                   onSuccess(res.data)
-                  console.log(res.data)
                 }).catch(err => { console.log("error in uploading"); onError("Error in uploading.Try again") })
               }} >
               <p className="ant-upload-drag-icon">

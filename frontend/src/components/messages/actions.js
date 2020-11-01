@@ -1,9 +1,5 @@
 import axios from 'axios';
-import {
-    GET_CHATS,
-    AFTER_POST_MESSAGE,
-    ACTION
-} from './constants';
+import { ACTION } from './constants';
 
 export const getThreads = () => async (dispatch) => {
     try {

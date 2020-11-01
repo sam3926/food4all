@@ -1,20 +1,7 @@
 import { ACTION } from "./constants";
 
 const initialState = {
-    suggestedPages: [
-        {
-            title: 'User 1',
-        },
-        {
-            title: 'User 2',
-        },
-        {
-            title: 'User 3',
-        },
-        {
-            title: 'User 4',
-        }
-    ],
+    suggestedPages: [],
     profileDetails: {
         profilePic: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=400",
         avatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=50",
@@ -31,9 +18,7 @@ const initialState = {
         noDonations: 0
     },
 
-    Pending: [
-        { donorname: 'Arpit1', posttime: '000', Description: 'Brief description' }
-    ],
+    Pending: [],
 
     currentTab: "timelinePost",
     followers: [],
@@ -88,7 +73,6 @@ const profileReducer = (state = initialState, action) => {
             break;
         }
         case 'GET_PENDING_DONATION': {
-            console.log(action.payload)
             return { ...state, Pending: action.payload }
 
         }
@@ -99,8 +83,6 @@ const profileReducer = (state = initialState, action) => {
             return {...state,Pending: state.Pending.filter(pending => pending._id !==action.payload._id)}
         }
         case 'ADD_HISTORY':{
-            console.log('reciveved from the donate')
-            console.log(action.payload)
             return {...state,profileDetails:action.payload}
         }
     }

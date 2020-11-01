@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { changeFilters, getLeftDetails, initialiseState } from './action'
-
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
+
 import 'antd/dist/antd.css';
 import '../../index.css';
-import { Layout, Menu, Checkbox, Avatar, Button, Space } from 'antd';
+import { Layout, Menu, Checkbox, Avatar, Space } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+
 import { setCurrentRoute } from '../Navbar/actions';
+import { changeFilters, getLeftDetails } from './action'
 
 
 const { Sider } = Layout;
@@ -22,8 +23,6 @@ class LeftSidePanel extends Component {
     }
     render() {
         const { following, followers, achievements, donations, name, avatar } = this.props.profileDetails
-        console.log('donations ', donations)
-
         const plainOptions = [
             { label: 'Donations', value: 'Donations' },
             { label: 'Events', value: 'Events' },
@@ -31,7 +30,6 @@ class LeftSidePanel extends Component {
         ];
         const onChange = (checkedValues) => {
             this.props.changeFilters(checkedValues)
-            //console.log('checked = ', checkedValues);
         }
 
         const followerList = followers.length ? (

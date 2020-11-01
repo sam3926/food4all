@@ -1,15 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux'
+
 import 'antd/dist/antd.css';
-import { Button, Modal, Form, Input, Radio } from 'antd';
-import { UserOutlined, PhoneOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
+import { Button, Modal, Form, Input } from 'antd';
+import { UserOutlined, PhoneOutlined } from '@ant-design/icons';
 
 class EditProfile extends React.Component {
     render() {
         const { data } = this.props
-        console.log(this.props)
-        //const Uname = data.name;
         return (
             <>
 
@@ -90,5 +88,3 @@ const mapStatetoProps = state => {
 
 };
 export default connect(mapStatetoProps)(EditProfile);
-
-//export default EditProfile;

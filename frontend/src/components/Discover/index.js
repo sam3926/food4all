@@ -3,9 +3,9 @@ import 'antd/dist/antd.css';
 import '../../index.css';
 import './styles.css'
 import { connect } from 'react-redux'
-import { changeFilters, getDonation } from './action'
+import { changeFilters, getDonation, getOrganisation } from './action'
 import { bindActionCreators } from 'redux';
-import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image } from 'antd';
+import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image,Avatar } from 'antd';
 import moment from 'moment';
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { pendingDonation } from './action';
@@ -41,6 +41,8 @@ class Discover extends Component {
     filters: []
   }
   componentDidMount() {
+    console.log(this.props.getOrganisation);
+    this.props.getOrganisation();
     this.props.getDonation();
   }
   showModal = (data) => {
@@ -207,7 +209,14 @@ class Discover extends Component {
       Organisations.map(Organisation => {
         return (
 
-          <Card title={<a>{Organisation.organisationName}</a>} extra={<p>People fed {Organisation.peoplefed}</p>} style={{ width: 700, margin: '8px' }}>
+          <Card title={<div> {
+            <Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Organisation._id}`}>
+            <Avatar
+              src={Organisation.avatar}
+              alt="Han Solo"
+            />
+            </Link>
+          } <a>{Organisation.name}</a> </div>} extra={<p>People fed {Organisation?.noFed}</p>} style={{ width: 700, margin: '8px' }}>
             <p><PhoneOutlined /> : {Organisation.contact} <HomeOutlined /> : {Organisation.address} </p>
 
             <p>{Organisation.description}</p>
@@ -356,6 +365,7 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch, getState) => ({
+  getOrganisation: bindActionCreators(getOrganisation,dispatch),
   acceptdonation: bindActionCreators(acceptdonation,dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),
   pendingDonation: bindActionCreators(pendingDonation, dispatch),

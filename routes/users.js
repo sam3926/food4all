@@ -85,8 +85,21 @@ router.post("/login", async (req, res, next) => {
   }
 
 })
-
-
+router.get('/organisations',isAuth, async(req,res,next) =>{
+  try{
+      const organisation = await User.find({userType:'organisation'}).select('name noFed contact address avatar _id')
+      console.log('this is the organsaiton get ')
+      console.log(organisation)
+      res.json({
+          'organisations': organisation
+      })
+  } catch(err){
+      if(!err.statusCode){
+          err.statusCode=500
+      }
+      next(err)
+  }
+})
 router.get('/profile/:id', isAuth, async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic avatar location history posts donations').populate('posts donations')
@@ -285,7 +298,18 @@ router.get('/history/:id', isAuth, async (req, res, next) => {
     next(err)
   }
 })
+router.post('/addhistory',isAuth, async(req,res,next) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.userId, { $push: {history:req.body.history} }, { new: true }).populate('donations posts');
+    res.status(200).json(user)
 
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
 //FETCH Suggested pages to be shown in the profile page
 router.get('/suggested-pages', isAuth, async (req, res, next) => {
   try {

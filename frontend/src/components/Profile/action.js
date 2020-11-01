@@ -15,7 +15,14 @@ export const getSomeData = (data) => async (dispatch) => {
         payload: data,
     });
 };
-
+export const addHistory =(history) => async(dispatch) =>{
+    console.log('add history',history)
+    const res = await axios.post('/api/users/addhistory', { history: history })
+    dispatch({
+        type:'ADD_HISTORY',
+        payload: res.data 
+    })
+}
 export const getProfile = (id) => async (dispatch) => {
     try {
         const res = await axios.get(`/api/users/profile/${id}`)

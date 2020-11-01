@@ -82,22 +82,29 @@ import moment from 'moment';
       }
       const createPost = (e) =>{
         console.log(this.state)
-        this.props.handleOk()
-        const { dragger } = e;
-        const imageUrl = dragger?.map(image => image.response.location);
-        console.log('this is to create the post',imageUrl);
-        const donation = {
-          donorId: this.props.profileDetails._id,
-          title: this.state.title,
-          expiryTime:this.state.Date,
-          peopleFed: 0,
-          status: 'NotAccepted',
-          description:this.state.description,
-          location: {type: "Point", coordinates :[this.state.latlng.lng,this.state.latlng.lat]},
-          images:this.state.files,
-          donorName:this.props.profileDetails.name
-        }
-        this.props.addDonation(donation,this.props.profileDetails.contact)
+        if(this.state.latlng !== undefined){
+          this.props.handleOk()
+          const { dragger } = e;
+          const imageUrl = dragger?.map(image => image.response.location);
+          console.log('this is to create the post',imageUrl);
+          const donation = {
+            donorId: this.props.profileDetails._id,
+            title: this.state.title,
+            expiryTime:this.state.Date,
+            peopleFed: 0,
+            status: 'NotAccepted',
+            description:this.state.description,
+            location: {type: "Point", coordinates :[this.state.latlng.lng,this.state.latlng.lat]},
+            images:this.state.files,
+            donorName:this.props.profileDetails.name
+          }
+          this.props.addDonation(donation,this.props.profileDetails.contact)
+          this.setState({
+            latlng:null,
+            files:[]
+          })
+        } 
+        
       }
       const { latlng } = this.state;
       const addpost = (imagelist) =>{
@@ -109,6 +116,7 @@ import moment from 'moment';
       return(
         <>
         <Modal
+          destroyOnClose
           visible={this.props.visible}
           title="Donation Details"
           onOk={this.props.handleOk}
@@ -117,15 +125,16 @@ import moment from 'moment';
             <Button key="back" onClick={this.props.handleCancel}>
               Return
             </Button>,
-            <Button key="submit" type="primary" loading={this.props.loading} onClick={createPost}>
+            <Button key="submit" type="primary" loading={this.props.loading} form = 'donateform' htmlType = 'submit'>
               Submit
             </Button>,
           ]}
         >
           <Form
+            id = 'donateform'
             name="validate_other"
             onFieldsChange = {onFieldsChange}
-            onFinish={addpost}
+            onFinish={createPost}
             {...formItemLayout}
           >
             <Form.Item

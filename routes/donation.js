@@ -6,12 +6,16 @@ const Donation = require('../models/Donation');
 const { route } = require('./users');
 const router = express.Router();
 
-router.post('/create', async (req,res) => {
+router.post('/create',isAuth, async (req,res) => {
     const {donation} = req.body;
     console.log(donation);
     const d = new Donation(donation);
     const result = await d.save();
-    console.log('result',result);
+    await Users.updateOne({_id:req.userId},{
+        $push: {donations:d._id}
+    })
+    const user = await Users.findById(req.userId);
+    console.log('result',user);
     res.status(200).json({
        donation:donation 
     })
@@ -73,6 +77,22 @@ router.post('/changeStatus',isAuth,async(req,res,next) =>{
         await Donations.updateOne({_id:_id},{
             status:status,
             receiverId:req.userId
+        });   
+        
+        res.status(200).json({'message':'changed successfully'})
+    } catch(err){
+        if(!err.statusCode){
+            err.statusCode=500
+        }
+        next(err)
+    }
+})
+router.post('/accept',isAuth, async(req,res,next) =>{
+    try{
+        console.log('inside the accept')
+        const { _id} = req.body
+        await Donations.updateOne({_id:_id},{
+            status:'Accepted',
         });   
         
         res.status(200).json({'message':'changed successfully'})

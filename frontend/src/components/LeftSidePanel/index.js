@@ -84,6 +84,7 @@ class LeftSidePanel extends Component {
 
         const donationList = donations?.length ? (
             donations.map(donation => {
+                console.log('inside the donation list',donation)
                 return (
                     <Menu.Item key={donation._id}>{donation.title}</Menu.Item>
                 )

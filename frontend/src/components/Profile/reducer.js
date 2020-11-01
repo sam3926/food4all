@@ -155,6 +155,9 @@ const profileReducer = (state = initialState, action) => {
         case 'REJECT_DONATION': {
             return { ...state, Pending: state.Pending.filter(pending => pending._id !== action.id) }
         }
+        case 'ACCEPT_DONATION':{
+            return {...state,Pending: state.Pending.filter(pending => pending._id !==action.payload._id)}
+        }
     }
     return state;
 }

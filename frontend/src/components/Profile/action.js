@@ -1,6 +1,13 @@
 import { ACTION } from "./constants";
 import axios from "axios";
-
+export const acceptdonation = (data) => async(dispatch) =>{
+    await axios.post('../../api/donation/accept', { _id: data._id })
+    console.log('inside the reducer')
+    dispatch({
+        type:'ACCEPT_DONATION',
+        payload:data
+    })
+}
 export const getSomeData = (data) => async (dispatch) => {
     const res = await axios.get("/some-api-route");
     dispatch({

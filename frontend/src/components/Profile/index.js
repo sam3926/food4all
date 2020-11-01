@@ -140,7 +140,7 @@ class Profile extends Component {
         })
       ) : (<div> No images!</div>)
     }
-
+    
     const Demo = () => (
       <Tabs centered="true" size="large"
       // activeKey={currentTab}
@@ -391,19 +391,25 @@ class Profile extends Component {
   };
 }
 
-const mapStateToProps = state => ({
-  suggestedPages: state.profileReducer.suggestedPages,
-  currentTab: state.profileReducer.currentTab,
-  donations: state.profileReducer.donations,
-  timelinePost: state.profileReducer.timelinePost,
-  posts: state.profileReducer.posts,
-  PendingDonations: state.profileReducer.Pending,
-  profileDetails: state.profileReducer.profileDetails,
-  user: state.authReducer.user,
-  followers: state.profileReducer.followers,
-  following: state.profileReducer.following
-})
-
+const mapStateToProps = state => {
+  console.log(state.profileReducer.profileDetails)
+  return ({
+    suggestedPages: state.profileReducer.suggestedPages,
+    currentTab: state.profileReducer.currentTab,
+    donations: state.profileReducer.donations,
+    timelinePost: state.profileReducer.profileDetails.history,
+    posts: state.profileReducer.posts,
+    PendingDonations: state.profileReducer.Pending,
+    profileDetails: state.profileReducer.profileDetails,
+    user: state.authReducer.user,
+    followers: state.profileReducer.followers,
+    following: state.profileReducer.following
+  })
+  
+}
+  
+  
+  
 const mapDispatchToProps = dispatch => ({
   acceptdonation: bindActionCreators(acceptdonation,dispatch),
   getSomeData: bindActionCreators(getSomeData, dispatch),

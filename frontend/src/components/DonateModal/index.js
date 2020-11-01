@@ -9,6 +9,8 @@ import { bindActionCreators } from 'redux'
 import {connect} from 'react-redux'
 import axios from "axios"
 import moment from 'moment';
+import {addHistory} from '../Profile/action';
+
   const formItemLayout = {
       labelCol: {
       span: 6,
@@ -72,7 +74,7 @@ import moment from 'moment';
     
     render() {
       const onFieldsChange = (changedFields,allFields) =>{
-        console.log(allFields)
+        //console.log(allFields)
         this.setState({
           title: allFields[0].value,
           description:allFields[1].value,
@@ -81,7 +83,7 @@ import moment from 'moment';
         })
       }
       const createPost = (e) =>{
-        console.log(this.state)
+        //console.log(this.state)
         if(this.state.latlng !== undefined){
           this.props.handleOk()
           const { dragger } = e;
@@ -99,6 +101,12 @@ import moment from 'moment';
             donorName:this.props.profileDetails.name
           }
           this.props.addDonation(donation,this.props.profileDetails.contact)
+          this.props.addHistory({
+            color: 'green',
+            icon: 'dot',
+            text: donation.title + ' ( Donation expires on ' + donation.expiryTime + ' )'
+          });
+          
           this.setState({
             latlng:null,
             files:[]
@@ -221,6 +229,7 @@ import moment from 'moment';
   }
 
 const mapDispatchToProps = dispatch => ({
+  addHistory: bindActionCreators(addHistory,dispatch),
   addDonation : bindActionCreators(addDonation,dispatch)
 })
 const mapStatetoProps = state => {

@@ -298,7 +298,18 @@ router.get('/history/:id', isAuth, async (req, res, next) => {
     next(err)
   }
 })
+router.post('/addhistory',isAuth, async(req,res,next) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.userId, { $push: {history:req.body.history} }, { new: true }).populate('donations posts');
+    res.status(200).json(user)
 
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
 //FETCH Suggested pages to be shown in the profile page
 router.get('/suggested-pages', isAuth, async (req, res, next) => {
   try {

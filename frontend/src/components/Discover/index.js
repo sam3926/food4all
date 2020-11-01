@@ -68,7 +68,7 @@ class Discover extends Component {
 
   render() {
     const { Events, selectedMenuItem, visible, loading } = this.state;
-    const { Organisations, Donations, pendingDonations,pendingDonorDonation } = this.props
+    const { Organisations, Donations, pendingDonations, pendingDonorDonation } = this.props
     //console.log('this is  the dicover ',pendingDonations);
 
     const plainOptions = [
@@ -113,18 +113,18 @@ class Discover extends Component {
       ) : (<div> No images!</div>)
     }
 
-    const filteredDonation =(Donations) => {
+    const filteredDonation = (Donations) => {
       const filters = this.state.filters;
       console.log(filters);
-      if(filters.find((value => value.localeCompare("Time")===0))){
-        const filterDonations = sortBy(Donations, (donation) =>{
+      if (filters.find((value => value.localeCompare("Time") === 0))) {
+        const filterDonations = sortBy(Donations, (donation) => {
           return new moment(donation.createdAt);
         });
         console.log(filterDonations)
         return filterDonations;
       }
-      if(filters.find((value => value.localeCompare("Expiry Date")===0))){
-        const filterDonations = sortBy(Donations, (donation) =>{
+      if (filters.find((value => value.localeCompare("Expiry Date") === 0))) {
+        const filterDonations = sortBy(Donations, (donation) => {
           return new moment(donation.expiryTime);
         });
         console.log(filterDonations)
@@ -140,6 +140,7 @@ class Discover extends Component {
           pathname: "/messages",
           state: {
             //PUT DONOR_ID
+            user: Donation.donorId
           }
         }}>
           <p className="text" onClick={() => { this.props.setCurrentRoute('messages') }} ><b> Contact Donor </b></p>
@@ -149,9 +150,9 @@ class Discover extends Component {
 
       return value;
     }
-    const filterDonations = filteredDonation(Donations);    
-    const DonationList = (Donations).length? (
-      filterDonations.map(Donation=> {
+    const filterDonations = filteredDonation(Donations);
+    const DonationList = (Donations).length ? (
+      filterDonations.map(Donation => {
         return (
           <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Donation.donorId}`}>{Donation.donorName}</Link>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin: '8px' }}
 
@@ -165,19 +166,19 @@ class Discover extends Component {
           </Card>
         )
       })
-    ):(
-      <div>No Donations are currently there!</div>
-    )
-    
-    const pendingDonationList = pendingDonations.length? (
-      pendingDonations.map(Donation=> {
+    ) : (
+        <div>No Donations are currently there!</div>
+      )
+
+    const pendingDonationList = pendingDonations.length ? (
+      pendingDonations.map(Donation => {
 
         return (
-          <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }} 
-          actions={[
-            <p classname="cardtext1" onClick={this.showModal} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
-            <p onClick = {() => this.props.rejectDonation(Donation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
-          ]}
+          <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
+            actions={[
+              <p classname="cardtext1" onClick={this.showModal} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
+              <p onClick={() => this.props.rejectDonation(Donation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
+            ]}
           >
             <p>{Donation.description}</p>
           </Card>
@@ -186,21 +187,21 @@ class Discover extends Component {
     ) : (
         <div>No Donations are currently there!</div>
       )
-      const pendingDonorDonationList = pendingDonorDonation.length? (
-        pendingDonorDonation.map(Donation=> {
-  
-          return (
-            <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
-            
-            >
-              <p>{Donation.description}</p>
-            </Card>
-          )
-        })
-      ) : (
-          <div>No Donations are currently there!</div>
+    const pendingDonorDonationList = pendingDonorDonation.length ? (
+      pendingDonorDonation.map(Donation => {
+
+        return (
+          <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
+
+          >
+            <p>{Donation.description}</p>
+          </Card>
         )
-  
+      })
+    ) : (
+        <div>No Donations are currently there!</div>
+      )
+
     const OrganisationList = Organisations.length ? (
       Organisations.map(Organisation => {
         return (
@@ -286,7 +287,7 @@ class Discover extends Component {
           <Sider width={300} style={{ padding: "25px" }}>
             <div style={{ fontWeight: "bolder", paddingBottom: "15px", fontSize: "medium" }}>Pending Donations</div>
             <div>
-              {this.props.userType.localeCompare('donor') === 0? pendingDonorDonationList:pendingDonationList}
+              {this.props.userType.localeCompare('donor') === 0 ? pendingDonorDonationList : pendingDonationList}
             </div>
           </Sider>
 

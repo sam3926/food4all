@@ -84,7 +84,7 @@ class LeftSidePanel extends Component {
 
         const donationList = donations?.length ? (
             donations.map(donation => {
-                console.log('inside the donation list',donation)
+                console.log('inside the donation list', donation)
                 return (
                     <Menu.Item key={donation._id}>{donation.title}</Menu.Item>
                 )
@@ -126,6 +126,8 @@ class LeftSidePanel extends Component {
                 >
 
                     <Menu.Item key="Sub1" style={{ fontSize: '16px', marginBlock: '10px' }}>
+                        <Link to={`/profile/${this.props.profileDetails._id}`}>
+                        </Link>
                         <Space>
                             <Avatar size={36}
                                 src={avatar}

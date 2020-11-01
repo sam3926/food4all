@@ -5,13 +5,57 @@ import { getSomeData } from './action';
 import 'antd/dist/antd.css';
 import '../../index.css';
 import { BulbOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Layout, List, Avatar, Card,Space, Typography, Divider, Button } from 'antd';
+import { Layout, List, Avatar, Card,Space, Typography, Divider, Button , Modal} from 'antd';
 import "./styles.css";
 
 import LeftSidePanel from '../LeftSidePanel';
 import HomeCenter from '../HomeCenter';
 
 const { Sider } = Layout;
+
+function info() {
+    Modal.info({
+      title: 'Coming soon',
+      onOk() {},
+    });
+  }
+
+  function about() {
+    Modal.info({
+      title: 'Food4all',
+      content: (
+        <div>
+          <p>A new community-led platform to highlight local food security programs and connect donors 
+              to them, making the process convenient.
+          </p>
+        </div>
+      ),
+      onOk() {},
+    });
+  }
+
+
+  function help() {
+    Modal.info({
+      title: 'Please refer to Documentation',
+      onOk() {},
+    });
+  }
+
+  function contact() {
+    Modal.info({
+      title: 'Reach out to us at any of the below email address :',
+      content: (
+        <div>
+          <p>Dinkar     - cs18b010@iittp.ac.in</p>
+          <p>Arpit      - cs18b003@iittp.ac.in</p>
+          <p>Sudheesh    - cs18b020@iittp.ac.in</p>
+          <p>Shreyansh  - cs18b042@iittp.ac.in</p>
+        </div>
+      ),
+      onOk() {},
+    });
+  }
 
 class Home extends Component {
 
@@ -59,8 +103,8 @@ class Home extends Component {
 
                         <Card size="small" style={{ width: 200 , marginLeft: 25}} bodyStyle={{color: '#97033e', fontWeight:'bold'}} bordered={false}
                             actions={[
-                                <p><BulbOutlined hoverable={true} key="learnMoreAwards" /> Learn more </p>,
-                                <p><ShoppingCartOutlined hoverable={true} key="buyAwards" /> Buy now! </p>,
+                                <p onClick={info}><BulbOutlined hoverable={true} key="learnMoreAwards" /> Learn more </p>,
+                                <p onClick={info}><ShoppingCartOutlined hoverable={true} key="buyAwards" /> Buy now! </p>,
                             ]}
                             >
                             <p>
@@ -77,9 +121,9 @@ class Home extends Component {
 
                      <div style={{marginTop:'64px', marginLeft:0}}>
                      <Space split={<Divider type="vertical" style={{color: 'black', paddingLeft: '5px'}} />}>
-                        <Button type="link">About</Button>
-                        <Button type="link">Help</Button>
-                        <Button type="link">Contact us</Button>
+                        <Button onClick={about} type="link">About</Button>
+                        <Button onClick={help} type="link">Help</Button>
+                        <Button onClick={contact} type="link">Contact us</Button>
 
                     </Space>
                     {

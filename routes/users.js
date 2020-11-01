@@ -146,7 +146,7 @@ router.get('/follow/:id', isAuth, async (req, res, next) => {
       err.statusCode = 403;
       throw err;
     } else {
-      const user = await User.findByIdAndUpdate(id, { $push: { followers: req.userId } }, { new: true })
+      const user = await User.findByIdAndUpdate(id, { $push: { followers: req.userId } }, { new: true }).populate('donations posts')
       await User.findByIdAndUpdate(req.userId, { $push: { following: id } })
       res.status(200).json(user)
     }
@@ -175,7 +175,7 @@ router.get('/unfollow/:id', isAuth, async (req, res, next) => {
       err.statusCode = 403;
       throw err;
     } else {
-      const user = await User.findByIdAndUpdate(id, { $pull: { followers: req.userId } }, { new: true })
+      const user = await User.findByIdAndUpdate(id, { $pull: { followers: req.userId } }, { new: true }).populate('donations posts')
       await User.findByIdAndUpdate(req.userId, { $pull: { following: id } })
       res.status(200).json(user)
     }

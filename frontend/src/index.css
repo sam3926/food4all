@@ -32,6 +32,10 @@ profileRightPaneHeading {
   float: left;
 }
 
+.infinite-container{
+  background: white !important;
+}
+
 .site-layout-background {
   background: #f2f2f2 !important ;
 }

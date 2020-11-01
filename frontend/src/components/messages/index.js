@@ -142,11 +142,12 @@ export class Messagepage extends Component {
         return (
             <React.Fragment >
                 {this.state.loading ? <LoadingScreen /> :
-                    <Layout style={{ paddingTop: "64px" }}>
-                        <Layout>
+                    <Layout style={{ paddingTop: "64px", paddingLeft: "24px" }}>
+                        <Layout style={{}}>
 
-                            <Sider width={300} className="site-layout-background">
+                            <Sider width={300}  className="site-layout-background">
                                 <List
+                                    style={{paddingLeft: "10px"}}
                                     itemLayout="horizontal"
                                     dataSource={this.props.threads}
                                     renderItem={item => {
@@ -168,12 +169,12 @@ export class Messagepage extends Component {
                             <Layout style={{ padding: "0 24px 24px" }}>
                                 <Content
                                     style={{
-                                        padding: 24,
+                                        //padding: 24,
                                         margin: 0,
                                     }}
                                 >
-                                    <div class="site-layout-background" style={{ marginLeft: '150px', maxWidth: '800px' }}>
-                                        <div className="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
+                                    <div class="site-layout-background" style={{ paddingLeft: '0px', maxWidth: '860px' }}>
+                                        <div className="infinite-container" style={{ height: '570px', overflowY: 'scroll' }}>
                                             {this.state.currentThread && (
                                                 this.renderCards()
                                             )}
@@ -181,13 +182,13 @@ export class Messagepage extends Component {
                                                 ref={el => {
                                                     this.messagesEnd = el;
                                                 }}
-                                                style={{ float: "left", clear: "both" }}
+                                                style={{ float: "left", clear: "both", paddingLeft: '30px' }}
                                             />
                                         </div>
 
-                                        <Row >
-                                            <Form style={{ width: "100%" }} layout="inline" onSubmit={this.submitChatMessage}>
-                                                <Col span={16}>
+                                        <Row gutter={12}>
+                                            <Form style={{ width: "100%", marginTop: "10px", marginBottom: '12px', marginLeft: '10px' }} layout="inline" onSubmit={this.submitChatMessage}>
+                                                <Col span={18}>
                                                     <Input
                                                         id="message"
                                                         prefix={<MessageOutlined />
@@ -205,7 +206,7 @@ export class Messagepage extends Component {
                                                             <section>
                                                                 <div {...getRootProps()}>
                                                                     <input {...getInputProps()} />
-                                                                    <Button>
+                                                                    <Button  style={{ width: '100%' }}>
                                                                         <UploadOutlined />
                                                                     </Button>
                                                                 </div>
@@ -214,7 +215,7 @@ export class Messagepage extends Component {
                                                     </Dropzone>
                                                 </Col>
 
-                                                <Col span={2}>
+                                                <Col span={3}>
                                                     <Button type="primary" style={{ width: '100%' }} onClick={this.submitChatMessage} htmlType="submit">
                                                         {/* <Icon type="enter" /> */}
                                                         <SendOutlined />

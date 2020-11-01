@@ -5,7 +5,7 @@ import { Comment, Tooltip, Avatar, Image } from 'antd';
 function MessageCard({ message, currentUser, you }) {
     const { sender, time, body, type } = message
     return (
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '100%' , paddingLeft: '10px'}}>
             <Comment
                 author={sender === you?._id ? you.name : currentUser.name}
                 avatar={

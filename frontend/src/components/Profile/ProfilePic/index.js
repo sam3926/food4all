@@ -1,9 +1,11 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Upload } from 'antd';
-import { UploadOutlined, PhoneOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import { Button, Modal,Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+
 import { uploadProfilePic } from '../action';
 
 class ProfilePic extends React.Component {

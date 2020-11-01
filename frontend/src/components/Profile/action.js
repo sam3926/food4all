@@ -2,21 +2,19 @@ import { ACTION } from "./constants";
 import axios from "axios";
 export const acceptdonation = (data) => async(dispatch) =>{
     await axios.post('../../api/donation/accept', { _id: data._id })
-    console.log('inside the reducer')
     dispatch({
         type:'ACCEPT_DONATION',
         payload:data
     })
 }
 export const getSomeData = (data) => async (dispatch) => {
-    const res = await axios.get("/some-api-route");
+    await axios.get("/some-api-route");
     dispatch({
         type: ACTION.GET_SOME_DATA,
         payload: data,
     });
 };
 export const addHistory =(history) => async(dispatch) =>{
-    console.log('add history',history)
     const res = await axios.post('/api/users/addhistory', { history: history })
     dispatch({
         type:'ADD_HISTORY',
@@ -26,7 +24,6 @@ export const addHistory =(history) => async(dispatch) =>{
 export const getProfile = (id) => async (dispatch) => {
     try {
         const res = await axios.get(`/api/users/profile/${id}`)
-        console.log(res.data)
         dispatch({
             type: ACTION.GET_PROFILE,
             payload: res.data
@@ -54,7 +51,6 @@ export const getPendingDonations = () => async (dispatch, getState) => {
         return (donation.status.localeCompare("pending") == 0 && donation.receiverId == userId)
     }
     const donations = getState().DiscoverReducer.Donations.filter(checkvisibilty);
-    //console.log(donations);
     dispatch({
         type: 'GET_PENDING_DONATION',
         payload: donations

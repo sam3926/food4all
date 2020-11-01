@@ -1,11 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { Modal, Button } from 'antd';
 import { List, Avatar } from 'antd';
-
-import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
-import { getFollowers } from '../action';
 
 class FollowersList extends React.Component {
 

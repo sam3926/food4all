@@ -50,7 +50,7 @@ app.use("/api/comment", commentRoutes);
 app.use("/api/message", messageRoutes)
 app.use("/api/donation", donationRoutes);
 
-app.get("/*", (req, res) => {
+app.get("*", (req, res) => {
     console.log("hereee")
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
 })

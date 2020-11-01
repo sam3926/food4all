@@ -39,7 +39,8 @@ class Register extends Component {
             value: 1,
             mapOpen: false,
             latlng: null,
-            certificates: []
+            certificates: [],
+            loading: false
         };
     }
 
@@ -70,7 +71,7 @@ class Register extends Component {
             message: message
         });
     };
-    onSubmit = values => {
+    onSubmit = async values => {
         console.log(values)
         if (values.password != values.password2)
             this.openNotificationWithIcon('warning', 'Passwords are not matching')
@@ -82,7 +83,13 @@ class Register extends Component {
         else {
             console.log("everythhing okay", { ...values, location: this.state.latlng })
             console.log(this.state.certificates, values.userType)
-            this.props.registerUser({ ...values, certificates: this.state.certificates, location: { type: "Point", coordinates: [this.state.latlng.lng, this.state.latlng.lat] } }, this.props.history);
+            this.setState({
+                loading: true
+            })
+            await this.props.registerUser({ ...values, certificates: this.state.certificates, location: { type: "Point", coordinates: [this.state.latlng.lng, this.state.latlng.lat] } }, this.props.history);
+            this.setState({
+                loading: false
+            })
         }
 
     };

@@ -6,9 +6,9 @@ import { ACTION } from "./constants";
 import { startConnection } from "../../utils/common";
 
 // Register User
-export const registerUser = (userData, history) => dispatch => {
+export const registerUser = (userData, history) => async dispatch => {
     console.log(userData)
-    axios
+    await axios
         .post("/api/users/register", userData)
         .then(res => history.push("/login"))
         .catch(err =>
@@ -20,8 +20,8 @@ export const registerUser = (userData, history) => dispatch => {
 };
 
 // Login - get user token
-export const loginUser = userData => dispatch => {
-    axios
+export const loginUser = userData => async dispatch => {
+    await axios
         .post("/api/users/login", userData)
         .then(res => {
             // Save to localStorage
@@ -81,3 +81,10 @@ export const logoutUser = () => dispatch => {
         type: 'LOGOUT'
     })
 };
+
+
+export const clearErrors = () => dispatch => {
+    dispatch({
+        type: ACTION.CLEAR_ERRORS
+    })
+}

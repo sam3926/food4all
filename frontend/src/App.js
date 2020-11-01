@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch as RouterSwitch } from "react-router-dom";
 import 'antd/dist/antd.css';
 
@@ -7,7 +7,7 @@ import Home from "./components/Home";
 import Navbar from './components/Navbar';
 import Profile from './components/Profile';
 import Discover from './components/Discover';
-import { Layout, Button } from 'antd';
+import { Layout, Button, notification } from 'antd';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 
 import { FireFilled } from "@ant-design/icons"
@@ -21,11 +21,13 @@ import Register from "./components/Auth/Register"
 import Login from "./components/Auth/Login"
 import Landing from "./components/Landing"
 
-import { setCurrentUser, logoutUser } from './components/Auth/action';
+import { setCurrentUser, logoutUser, clearErrors } from './components/Auth/action';
 import { store } from "./store"
 import ComingSoon from './components/ComingSoon';
 import Messages from './components/messages';
 import { startConnection } from './utils/common';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 
 
@@ -57,7 +59,7 @@ if (localStorage.jwtToken) {
 
 }
 
-const App = () => {
+const App = (props) => {
 
   const [isDarkMode, setIsDarkMode] = React.useState();
   const { switcher, status, themes } = useThemeSwitcher();
@@ -66,6 +68,20 @@ const App = () => {
     setIsDarkMode(isChecked);
     switcher({ theme: isChecked ? themes.dark : themes.light });
   };
+
+  const openNotificationWithIcon = (type, message) => {
+    notification[type]({
+      message: message
+    });
+  };
+
+  useEffect(() => {
+    if (props.errors?.message) {
+      openNotificationWithIcon("error", props.errors.message)
+      props.clearErrors()
+    }
+  }, [props.errors])
+
 
   // Avoid theme change flicker
   if (status === "loading") {
@@ -102,5 +118,13 @@ const App = () => {
   )
 }
 
-export default App;
+const mapStateToProps = state => ({
+  errors: state.authReducer.errors
+})
+
+const mapDispatchToProps = dispatch => ({
+  clearErrors: bindActionCreators(clearErrors, dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 

@@ -9,7 +9,10 @@ export const getLeftDetails = () => async (dispatch) => {
             payload: res.data
         })
     } catch (err) {
-        console.log("error in getLeftDetails")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 
 }

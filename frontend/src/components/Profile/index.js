@@ -7,7 +7,7 @@ import EditProfile from './EditProfile';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation } from './action';
+import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation, editProfile } from './action';
 import moment from 'moment';
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
 import ProfilePic from './ProfilePic';
@@ -16,6 +16,7 @@ import "./styles.css"
 import FollowersList from './FollowersList';
 import { Link } from 'react-router-dom';
 import { setCurrentRoute } from '../Navbar/actions';
+import LoadingScreen from '../LoadingScreen';
 const { Search } = Input;
 const { SubMenu } = Menu;
 
@@ -36,6 +37,11 @@ class Profile extends Component {
     visibleProfilePic: false,
     loadingEdit: false,
     clicked: false,
+    followLoading: false,
+    unfollowLoading: false,
+    followListLoading: false,
+    profilePageLoading: false,
+    followingText: "Following"
   }
 
   showModal = () => {
@@ -89,11 +95,10 @@ class Profile extends Component {
     });
   };
 
-  handleOkEdit = () => {
+  handleOkEdit = async (user) => {
     this.setState({ loadingEdit: true });
-    setTimeout(() => {
-      this.setState({ loadingEdit: false, visibleEdit: false });
-    }, 1000);
+    await this.props.editProfile(user);
+    this.setState({ loadingEdit: false, visibleEdit: false })
   };
 
   handleCancelEdit = () => {
@@ -104,9 +109,15 @@ class Profile extends Component {
     console.log(key);
   }
 
-  componentDidMount() {
-    this.props.getProfile(this.props.match.params.id)
+  async componentDidMount() {
+    this.setState({
+      profilePageLoading: true
+    })
+    await this.props.getProfile(this.props.match.params.id)
     this.props.getPendingDonations()
+    this.setState({
+      profilePageLoading: false
+    })
   }
   render() {
 
@@ -203,162 +214,185 @@ class Profile extends Component {
       )
 
     return (
-      <Layout key={this.props.match.params.id} className="layout" style={{ marginTop: "56px" }}>
-        <Layout>
-          <Sider width={250} style={{ padding: "20px" }}>
-            <List
-              itemLayout="horizontal"
-              //dataSource={suggestedPages}
-              header={
-                <div style={{ fontWeight: "bolder", padding: "5px", fontSize: "medium" }}>
-                  Suggested pages
+      this.state.profilePageLoading ? <LoadingScreen /> :
+        <Layout key={this.props.match.params.id} className="layout" style={{ marginTop: "56px" }}>
+          <Layout>
+            <Sider width={250} style={{ padding: "20px" }}>
+              <List
+                itemLayout="horizontal"
+                //dataSource={suggestedPages}
+                header={
+                  <div style={{ fontWeight: "bolder", padding: "5px", fontSize: "medium" }}>
+                    Suggested pages
                 </div>
-              }
-              renderItem={item => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                    title={<a href="https://www.google.com/">{item.title}</a>}
-                    description="brief description"
+                }
+                renderItem={item => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                      title={<a href="https://www.google.com/">{item.title}</a>}
+                      description="brief description"
+                    />
+                  </List.Item>
+                )}
+              />
+            </Sider>
+            <Layout >
+              <Content
+                // className="site-layout-background"
+                style={{
+                  padding: 24,
+                  marginTop: 24,
+                  minHeight: 280,
+                }}
+                key={this.props.match.params.id}
+              >
+                <div style={{ display: "flex" }}>
+                  <Image
+                    width={250}
+                    src={profileDetails?.profilePic}
                   />
-                </List.Item>
-              )}
-            />
-          </Sider>
-          <Layout >
-            <Content
-              // className="site-layout-background"
-              style={{
-                padding: 24,
-                marginTop: 24,
-                minHeight: 280,
-              }}
-              key={this.props.match.params.id}
-            >
-              <div style={{ display: "flex" }}>
-                <Image
-                  width={250}
-                  src={profileDetails?.profilePic}
-                />
-                <Button
-                  shape="circle"
-                  style={{ marginLeft: "-15px", zIndex: "10" }}
-                  onClick={() => this.setState({ visibleProfilePic: true })}>
-                  <EditOutlined />
-                </Button>
-                <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-                  <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
+                  <Button
+                    shape="circle"
+                    style={{ marginLeft: "-15px", zIndex: "10" }}
+                    onClick={() => this.setState({ visibleProfilePic: true })}>
+                    <EditOutlined />
+                  </Button>
+                  <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                    <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
 
-                  <div>
-                    <p>{profileDetails?.description}</p>
+                    <div>
+                      <p>{profileDetails?.description}</p>
 
-                    <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
-                    <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
-                  </div>
-                  <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
-                    <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={() => {
-                      getFollowers(this.props.match.params.id);
-                      this.setState({ followersVisible: true })
-                    }}>
-                      {profileDetails?.followers?.length} Followers
+                      <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
+                      <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
+                    </div>
+                    <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
+                      <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={
+                        async () => {
+                          this.setState({ followersVisible: true, followListLoading: true })
+                          await getFollowers(this.props.match.params.id);
+                          this.setState({ followListLoading: false })
+                        }}>
+                        {profileDetails?.followers?.length} Followers
           </Button>
-                    <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={() => {
-                      getFollowing(this.props.match.params.id)
-                      this.setState({ followingVisible: true })
-                    }}>
-                      {profileDetails?.following?.length} Following
+                      <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={
+                        async () => {
+                          this.setState({ followingVisible: true, followListLoading: true })
+                          await getFollowing(this.props.match.params.id)
+                          this.setState({ followListLoading: false })
+                        }}>
+                        {profileDetails?.following?.length} Following
           </Button>
-                    <FollowersList title="Followers" data={this.props.followers} handleCancel={() => this.setState({ followersVisible: false })} showModal={() => this.setState({ followersVisible: true })} visible={followersVisible} />
-                    <FollowersList title="Following" data={this.props.following} handleCancel={() => this.setState({ followingVisible: false })} showModal={() => this.setState({ followingVisible: true })} visible={followingVisible} />
+                      <FollowersList title="Followers" data={this.props.followers} handleCancel={() => this.setState({ followersVisible: false })} showModal={() => this.setState({ followersVisible: true })} visible={followersVisible} loading={this.state.followListLoading} />
+                      <FollowersList title="Following" data={this.props.following} handleCancel={() => this.setState({ followingVisible: false })} showModal={() => this.setState({ followingVisible: true })} visible={followingVisible} loading={this.state.followListLoading} />
 
-                    {user.userId === this.props.match.params.id ?
-                      (<span style={{ float: "right", marginTop: "6px" }}>
-                        <Button onClick={this.showModalEdit} type="primary" style={{ marginRight: "8px" }}  >
-                          <EditOutlined /> Edit Profile
+                      {user.userId === this.props.match.params.id ?
+                        (<span style={{ float: "right", marginTop: "6px" }}>
+                          <Button onClick={this.showModalEdit} type="primary" style={{ marginRight: "8px" }}  >
+                            <EditOutlined /> Edit Profile
                       </Button>
-                        <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
-                        <ProfilePic visible={visibleProfilePic} handleCancel={this.handleCancelProfilePic} />
-                      </span>
-                      ) : (<span style={{ float: "right", marginTop: "6px" }}>
-                        <>
-                          {
-                            profileDetails?.followers.find(f => f == user.userId) ?
-                              <Button type="primary" style={{ marginRight: "14px" }} onClick={() => unfollowUser(this.props.match.params.id)} >
-                                <p> <TeamOutlined /> Following </p>
-                              </Button> :
-                              <Button type="primary" style={{ marginRight: "14px" }} onClick={() => followUser(this.props.match.params.id)}>
-                                <p> <TeamOutlined /> Follow </p>
-                              </Button>
-                          }
-                          <Link onClick={() => this.props.setCurrentRoute('messages')} to={{ pathname: '/messages', state: { user: this.props.match.params.id } }}>
-                            <Button type="primary" style={{ marginRight: "14px" }}>
-                              <SendOutlined /> Message
+                          <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
+                          <ProfilePic visible={visibleProfilePic} handleCancel={this.handleCancelProfilePic} />
+                        </span>
+                        ) : (<span style={{ float: "right", marginTop: "6px" }}>
+                          <>
+                            {
+                              profileDetails?.followers.find(f => f == user.userId) ?
+                                <Button onMouseOver={() => {
+                                  this.setState({
+                                    followingText: "Unfollow"
+                                  })
+                                }
+                                } onMouseLeave={() => {
+                                  this.setState({
+                                    followingText: "Following"
+                                  })
+                                }} loading={this.state.unfollowLoading} type={this.state.followingText == "Unfollow" ? "danger" : "primary"} style={{ marginRight: "14px" }} onClick={async () => {
+                                  this.setState({ unfollowLoading: true })
+                                  await unfollowUser(this.props.match.params.id)
+                                  this.setState({ unfollowLoading: false })
+                                }} >
+                                  <p> <TeamOutlined /> {this.state.followingText}</p>
+                                </Button> :
+                                <Button loading={this.state.followLoading} type="primary" style={{ marginRight: "14px" }} onClick={async () => {
+                                  this.setState({ followLoading: true })
+                                  await followUser(this.props.match.params.id)
+                                  this.setState({ followLoading: false })
+
+                                }}>
+                                  <p> <TeamOutlined /> Follow </p>
+                                </Button>
+                            }
+                            <Link onClick={() => this.props.setCurrentRoute('messages')} to={{ pathname: '/messages', state: { user: this.props.match.params.id } }}>
+                              <Button type="primary" style={{ marginRight: "14px" }}>
+                                <SendOutlined /> Message
                         </Button>
-                          </Link>
+                            </Link>
 
-                        </>
+                          </>
 
-                      </span>)}
-                  </div>
+                        </span>)}
+                    </div>
 
-                  <div style={{ marginTop: "8px" }}>
-                    <p style={{ fontWeight: 600 }}>
-                      <span >{profileDetails?.name} has fed {profileDetails?.noFed} people and made {profileDetails?.noDonations} donations overall!</span>
-                    </p>
+                    <div style={{ marginTop: "8px" }}>
+                      <p style={{ fontWeight: 600 }}>
+                        <span >{profileDetails?.name} has fed {profileDetails?.noFed} people and made {profileDetails?.noDonations} donations overall!</span>
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/*
+                {/*
               <div>
                 <p style={{ fontWeight: 600 }}>User has fed 324 No. of people since last month.</p>
               </div>
               */}
-              <Divider style={{ "background": "rgba(151,3,62, 0.2)" }} />
-              <Demo />
+                <Divider style={{ "background": "rgba(151,3,62, 0.2)" }} />
+                <Demo />
 
-            </Content>
-            {user.userId === this.props.match.params.id ?
-              <Sider width={300} style={{ padding: "20px" }}>
-                {
-                  //add title div here 
-                }
-                <div style={{ fontWeight: "bolder", paddingBottom: "15px", paddingTop: "15px", fontSize: "medium" }}>Pending Donations</div>
+              </Content>
+              {user.userId === this.props.match.params.id ?
+                <Sider width={300} style={{ padding: "20px" }}>
+                  {
+                    //add title div here 
+                  }
+                  <div style={{ fontWeight: "bolder", paddingBottom: "15px", paddingTop: "15px", fontSize: "medium" }}>Pending Donations</div>
 
-                <div>
-                  {PendingDonationList}
-                </div>
-              </Sider>
-              : null}
-          </Layout>
-        </Layout >
+                  <div>
+                    {PendingDonationList}
+                  </div>
+                </Sider>
+                : null}
+            </Layout>
+          </Layout >
 
-        <Modal
-          visible={visibleAccept}
-          title="Accept Donation"
-          onOk={this.handleOkAccept}
-          onCancel={this.handleCancelAccept}
-          footer={[
-            <Button key="back" onClick={this.handleCancelAccept}>
-              Say Thanks
+          <Modal
+            visible={visibleAccept}
+            title="Accept Donation"
+            onOk={this.handleOkAccept}
+            onCancel={this.handleCancelAccept}
+            footer={[
+              <Button key="back" onClick={this.handleCancelAccept}>
+                Say Thanks
                   </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              loading={loadingAccept}
-              onClick={this.handleOkAccept}
-            >
-              Share Donation
+              <Button
+                key="submit"
+                type="primary"
+                loading={loadingAccept}
+                onClick={this.handleOkAccept}
+              >
+                Share Donation
                   </Button>
-          ]}
-        >
-          <b> Enter No of people will be fed from this donation ?</b>
-          <Input placeholder="Input Number Here" />
-          <b> Rate the User</b>
-          <Input placeholder="Rate Between 1 to 5" />
-        </Modal>
+            ]}
+          >
+            <b> Enter No of people will be fed from this donation ?</b>
+            <Input placeholder="Input Number Here" />
+            <b> Rate the User</b>
+            <Input placeholder="Rate Between 1 to 5" />
+          </Modal>
 
 
-      </Layout >
+        </Layout >
     )
   };
 }
@@ -406,7 +440,8 @@ const mapDispatchToProps = dispatch => ({
   getFollowing: bindActionCreators(getFollowing, dispatch),
   setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch),
   rejectDonation: bindActionCreators(rejectDonation, dispatch),
-  getPendingDonations: bindActionCreators(getPendingDonations, dispatch)
+  getPendingDonations: bindActionCreators(getPendingDonations, dispatch),
+  editProfile: bindActionCreators(editProfile, dispatch)
 })
 
 

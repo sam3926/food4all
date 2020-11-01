@@ -1,24 +1,20 @@
 import { ACTION } from "./constants";
-import axios from 'axios';
 
-const initialstate = () => {
-    const initialState = {
-        profileDetails: {
-            name: "Krishnendu Sudheesh",
-            avatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=50",
-            followers: [],
-            following: [],
-            donations: [],
-            achievements: []
-        },
-        currentfilter: []
-    }
-
-
-    return initialState;
+const initialState = {
+    profileDetails: {
+        name: "Krishnendu Sudheesh",
+        avatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=50",
+        followers: [],
+        following: [],
+        donations: [],
+        achievements: []
+    },
+    currentfilter: []
 }
 
-const LeftSidePanelReducer = (state = initialstate(), action) => {
+
+
+const LeftSidePanelReducer = (state = initialState, action) => {
     switch (action.type) {
         case ACTION.CHANGE_FILTERS: {
             //console.log('hahaha')
@@ -27,6 +23,10 @@ const LeftSidePanelReducer = (state = initialstate(), action) => {
         }
         case ACTION.GET_LEFT_DETAILS: {
             state = { ...state, profileDetails: action.payload }
+            break;
+        }
+        case 'LOGOUT': {
+            state = { ...initialState }
             break;
         }
     }

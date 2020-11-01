@@ -9,15 +9,22 @@ export const getSomeData = (data) => async (dispatch) => {
     });
 };
 
-export const getProfile = (id) => async (dispatch, getState) => {
-    // const userId = getState().authReducer.user.userId
-    const res = await axios.get(`/api/users/profile/${id}`)
-    // const res = await axios.get('/api/test')
-    console.log(res.data)
-    dispatch({
-        type: ACTION.GET_PROFILE,
-        payload: res.data
-    })
+export const getProfile = (id) => async (dispatch) => {
+    try {
+        const res = await axios.get(`/api/users/profile/${id}`)
+        console.log(res.data)
+        dispatch({
+            type: ACTION.GET_PROFILE,
+            payload: res.data
+        })
+
+    } catch (err) {
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
+    }
+
 }
 
 export const getSuggestedPages = () => async (dispatch) => {
@@ -66,7 +73,10 @@ export const followUser = (id) => async (dispatch) => {
             payload: res.data
         })
     } catch (err) {
-        console.log("error in followUser")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 
 }
@@ -79,7 +89,10 @@ export const unfollowUser = (id) => async (dispatch) => {
             payload: res.data
         })
     } catch (err) {
-        console.log("error in unfollowUser")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 }
 
@@ -92,7 +105,10 @@ export const getFollowers = (id) => async (dispatch) => {
         })
 
     } catch (err) {
-        console.log("error in getFollowers")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 }
 
@@ -105,7 +121,10 @@ export const getFollowing = (id) => async (dispatch) => {
         })
 
     } catch (err) {
-        console.log("error in getFollowing")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 }
 
@@ -118,7 +137,25 @@ export const rejectDonation = (id) => async (dispatch) => {
             id: id
         })
     } catch (err) {
-        console.log("error in getFollowing")
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
     }
 
+}
+
+export const editProfile = (user) => async dispatch => {
+    try {
+        const res = await axios.post('/api/users/edit-profile', { user });
+        dispatch({
+            type: ACTION.GET_PROFILE,
+            payload: res.data
+        })
+    } catch (err) {
+        dispatch({
+            type: 'GET_ERRORS',
+            payload: err.response.data
+        })
+    }
 }

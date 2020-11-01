@@ -173,19 +173,11 @@ class Discover extends Component {
       pendingDonations.map(Donation=> {
 
         return (
-<<<<<<< HEAD
           <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }} 
           actions={[
             <p classname="cardtext1" onClick={this.showModal} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
             <p onClick = {() => this.props.rejectDonation(Donation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
           ]}
-=======
-          <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
-            actions={[
-              <p classname="cardtext1" ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
-              <p onClick={() => this.props.rejectDonation(Donation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
-            ]}
->>>>>>> bbbb735e929d25d54665a5e29e41176570bc0f10
           >
             <p>{Donation.description}</p>
           </Card>

@@ -7,7 +7,8 @@ export const getPost = () => async (dispatch) => {
     dispatch({
         type:'GET_POST',
         payload: res.data.posts,
-        allcomments: res.data.allcomments
+        allcomments: res.data.allcomments,
+        avatars: res.data.avatars
     })
 }
 export const changelike = (id,value) => async (dispatch) => {

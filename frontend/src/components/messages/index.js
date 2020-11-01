@@ -183,31 +183,6 @@ export class Messagepage extends Component {
                                                 }}
                                                 style={{ float: "left", clear: "both" }}
                                             />
-<<<<<<< HEAD
-                                        </List.Item>
-                                    )
-                                }}
-                            />
-                        </Sider>
-                        <Layout style={{ padding: "0 24px 24px" }}>
-                            <Content
-                                style={{
-                                    padding: 24,
-                                    margin: 0,
-                                }}
-                            >
-                                <div class="site-layout-background" style={{ marginLeft: '150px', maxWidth: '800px' }}>
-                                    <div class="site-layout-background" lassName="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
-                                        {this.state.currentThread && (
-                                            this.renderCards()
-                                        )}
-                                        <div
-                                            ref={el => {
-                                                this.messagesEnd = el;
-                                            }}
-                                            style={{ float: "left", clear: "both" }}
-                                        />
-=======
                                         </div>
 
                                         <Row >
@@ -247,7 +222,6 @@ export class Messagepage extends Component {
                                                 </Col>
                                             </Form>
                                         </Row>
->>>>>>> bbbb735e929d25d54665a5e29e41176570bc0f10
                                     </div>
                                 </Content>
                             </Layout>

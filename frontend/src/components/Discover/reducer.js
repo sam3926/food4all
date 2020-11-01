@@ -92,6 +92,9 @@ const DiscoverReducer = (state = initialState, action) => {
             //console.log('lets check the donations',action.donations)
             return {...state,Donations: action.donations}
         }
+        case 'GET_ORGANISATION':{
+            return {...state,Organisations:action.organisations}
+        }
         case ACTION.CHANGE_FILTERS: {
             //console.log('hahaha')
             return { ...state, currentfilter: action.selectedfilters }

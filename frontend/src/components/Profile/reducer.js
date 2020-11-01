@@ -31,66 +31,6 @@ const initialState = {
         noDonations: 0
     },
 
-    // donations: [
-
-    //     {
-    //         title: "34 kg food",
-    //         description: "Create a services site 2015-09-01",
-    //         status: "active, posted on 29-10-2020",
-    //         imageurl: ["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
-    //     },
-    //     {
-    //         title: "food",
-    //         description: "Create a services site 2015-09-01",
-    //         status: "accepted by XXX on 28-10-20",
-    //         imageurl: ["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
-    //     },
-    //     {
-    //         title: "food",
-    //         description: "food doof food",
-    //         status: "accepted by XYXY on 26-10-20",
-    //         imageurl: ["https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"]
-    //     },
-    // ],
-
-    // timelinePost: [
-    //     {
-    //         color: "green",
-    //         text: "Create a services site 2015-09-01",
-    //         dot: "clock"
-    //     },
-    //     {
-    //         text: "Solve initial network problems 2015-09-01",
-    //         dot: "clock"
-    //     },
-    //     {
-    //         color: "green",
-    //         text: "Developer, nofoodwasted | IIT Tirupati | wants to live in a world where no food is wasted",
-    //         dor: "clock"
-    //     },
-    //     {
-    //         color: "red",
-    //         text: "Network problems being solved 2015-09-01",
-    //         dot: "clock"
-    //     },
-    //     {
-    //         text: "Create a services site 2015-09-01",
-    //     },
-    //     {
-    //         color: "green",
-    //         text: "Technical testing 2015-09-01",
-    //         dot: "clock"
-    //     },
-
-    // ],
-
-    // posts: [
-    //     { user_name: 'Arpit', title: 'Felt so good to finally do something good in my life', date: '28-10-20', description: 'Card Content', id: 1, likes: 20, liked: false, shares: 30 },
-    //     { user_name: 'Dinkar', title: 'Vote for me in coming election', date: '28-10-20', description: 'Card Content', id: 2, likes: 30, liked: false, shares: 17 },
-    //     { user_name: 'Sudheesh', title: 'Feeding someone is so fulfilling!', date: '28-10-20', description: 'Card Content', id: 3, likes: 34, liked: false, shares: 16 },
-    //     { user_name: 'Shreyansh', title: 'What am i doing here?', date: '28-10-20', description: 'Card Content', id: 4, likes: 31, liked: false, shares: 14 }
-    // ],
-
     Pending: [
         { donorname: 'Arpit1', posttime: '000', Description: 'Brief description' }
     ],
@@ -157,6 +97,11 @@ const profileReducer = (state = initialState, action) => {
         }
         case 'ACCEPT_DONATION':{
             return {...state,Pending: state.Pending.filter(pending => pending._id !==action.payload._id)}
+        }
+        case 'ADD_HISTORY':{
+            console.log('reciveved from the donate')
+            console.log(action.payload)
+            return {...state,profileDetails:action.payload}
         }
     }
     return state;

@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import moment from 'moment';
 import axios from "axios"
+import {addHistory} from '../Profile/action';
 
 const normFile = e => {
   console.log("Upload event:", e);
@@ -41,6 +42,12 @@ class PostModal extends Component {
     };
 
     this.props.addPost(post);
+    const history = {
+      color: 'blue',
+      icon: 'dot',
+      text: post.description + ' ( Posted on ' + post.DateTime + ' )'
+    };
+    this.props.addHistory(history);
   }
 
   render() {
@@ -111,6 +118,7 @@ const mapStatetoProps = state => {
   
 };
 const mapDispatchToProps = dispatch => ({
+  addHistory: bindActionCreators(addHistory,dispatch),
   addPost: bindActionCreators(addPost, dispatch)
 })
 export default connect(mapStatetoProps, mapDispatchToProps)(PostModal);

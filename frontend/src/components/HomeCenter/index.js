@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 import './styles.css'
 
-import { Layout, Card, Space ,Image } from 'antd';
+import { Layout, Card, Space ,Image, Avatar } from 'antd';
 import {
     CommentOutlined,LikeFilled, LikeOutlined,
     GiftOutlined, ShareAltOutlined, EditOutlined
@@ -107,7 +107,13 @@ class HomeCenter extends Component {
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${post.authorId}`}>{post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
+                    <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${post.authorId._id}`}>
+                        <Avatar
+                          src={post.authorId.avatar}
+                          alt="Han Solo"
+                          style={{margin:'8px'}}
+                        />
+                       {post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
                         <div onClick={(id) =>this.incrementLike(post._id,post.liked)} >{type(post.liked)}{post.noOfLikes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,

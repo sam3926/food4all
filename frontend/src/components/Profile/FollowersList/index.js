@@ -12,7 +12,7 @@ class FollowersList extends React.Component {
 
 
     render() {
-        const { data, title } = this.props
+        const { data, title, loading } = this.props
         return (
             <>
 
@@ -30,6 +30,7 @@ class FollowersList extends React.Component {
                     <List
                         itemLayout="horizontal"
                         dataSource={data}
+                        loading={loading}
                         renderItem={item => (
                             <List.Item>
                                 <List.Item.Meta

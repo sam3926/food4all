@@ -12,7 +12,8 @@ class Login extends Component {
     constructor() {
         super();
         this.state = {
-            errors: {}
+            errors: {},
+            loading: false
         };
     }
 
@@ -36,8 +37,14 @@ class Login extends Component {
     }
 
 
-    onSubmit = values => {
-        this.props.loginUser(values);
+    onSubmit = async values => {
+        this.setState({
+            loading: true
+        })
+        await this.props.loginUser(values);
+        this.setState({
+            loading: false
+        })
     };
 
     render() {
@@ -73,7 +80,7 @@ class Login extends Component {
                         <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">
+                        <Button loading={this.state.loading} type="primary" htmlType="submit">
                             Log in
                         </Button>
                         {" "}Or <Link to="/register">Register now!</Link>

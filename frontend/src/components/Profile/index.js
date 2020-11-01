@@ -7,7 +7,7 @@ import EditProfile from './EditProfile';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation, editProfile } from './action';
+import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation, editProfile,acceptdonation } from './action';
 import moment from 'moment';
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
 import ProfilePic from './ProfilePic';
@@ -64,7 +64,9 @@ class Profile extends Component {
     });
   };
 
-  showModalAccept = () => {
+  showModalAccept = (data) => {
+    console.log('inside the show modal accept')
+    this.props.acceptdonation(data)
     this.setState({
       visibleAccept: true
     });
@@ -139,14 +141,6 @@ class Profile extends Component {
       ) : (<div> No images!</div>)
     }
 
-
-    const Actions = [
-      <div><LikeOutlined key="Like" style={{ margin: "8px" }} />20</div>,
-      <div><ShareAltOutlined key="share" style={{ margin: "8px" }} />30</div>,
-      <div onClick={this.showModalComments} ><CommentOutlined hoverable={true} key="Comment" style={{ margin: "8px" }} />20</div>,
-      <div><GiftOutlined key="Award" style={{ margin: "8px" }} />20</div>,
-    ]
-
     const Demo = () => (
       <Tabs centered="true" size="large"
       // activeKey={currentTab}
@@ -173,7 +167,7 @@ class Profile extends Component {
             <Card title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
               <p>{donation.description}</p>
               <Space>
-                {imagelist(donation.imageurl)}
+                {imagelist(donation.images)}
               </Space>
             </Card>
           )
@@ -185,7 +179,7 @@ class Profile extends Component {
 
 
           {profileDetails?.posts?.map(post => (
-            <Card title={post.author} extra={post.DateTime} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }} actions={Actions}>
+            <Card title={post.author} extra={post.DateTime} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
               <p>{post.description}</p>
             </Card>
           ))}
@@ -201,7 +195,7 @@ class Profile extends Component {
         return (
           <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
             actions={[
-              <p classname="cardtext1" onClick={this.showModalAccept} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
+              <p classname="cardtext1" onClick={() => this.showModalAccept(PendingDonation)} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
               <p onClick={() => this.props.rejectDonation(PendingDonation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
             ]}
           >
@@ -410,27 +404,8 @@ const mapStateToProps = state => ({
   following: state.profileReducer.following
 })
 
-// const mapStateToProps = state => {
-//   const getprofileDonation = (donation) =>{
-//     const userId = state.authReducer.user.userId
-//     return donation.donorId === userId
-//   }
-//   const getUserPost = (post) =>{
-//     const userId = state.authReducer.user.userId
-//     return post.authorId === userId
-//   }
-//   return {
-//     suggestedPages: state.profileReducer.suggestedPages,
-//     currentTab: state.profileReducer.currentTab,
-//     donations: state.DiscoverReducer.Donations.filter(getprofileDonation),
-//     timelinePost: state.profileReducer.timelinePost,
-//     posts: state.HomeCenterReducer.posts.filter(getUserPost),
-//     PendingDonations: state.profileReducer.Pending,
-//     profileDetails: state.profileReducer.profileDetails
-//   }
-// }
-
 const mapDispatchToProps = dispatch => ({
+  acceptdonation: bindActionCreators(acceptdonation,dispatch),
   getSomeData: bindActionCreators(getSomeData, dispatch),
   changeTab: bindActionCreators(changeTab, dispatch),
   getProfile: bindActionCreators(getProfile, dispatch),

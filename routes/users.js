@@ -112,6 +112,7 @@ router.get('/left-details', isAuth, async (req, res, next) => {
   try {
     const user = await User.findById(req.userId).select('name avatar following followers donations').populate('following', 'name avatar').populate('followers', 'name avatar').populate('donations', 'title')
     if (user) {
+      console.log(user)
       res.status(200).json(user)
     } else {
       const err = new Error('Profile does not exist!')

@@ -52,8 +52,8 @@ app.use("/api/donation", donationRoutes);
 
 app.get("*", (req, res) => {
     console.log("hereee")
-    // res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-    res.sendFile('index.html')
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+    // res.sendFile('index.html')
 })
 
 app.use((error, req, res, next) => {// Error Handling

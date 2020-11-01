@@ -25,6 +25,7 @@ const PORT = process.env.PORT || 8000
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
+app.use(express.static(path.join(__dirname, "frontend", "build")))
 app.use('/images', express.static(path.join(__dirname, 'images')));//statically serving images
 
 app.use(cors())//Enabling CORS
@@ -48,6 +49,11 @@ app.use("/api/posts", postRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/message", messageRoutes)
 app.use("/api/donation", donationRoutes);
+
+app.get("/*", (req, res) => {
+    console.log("hereee")
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+})
 
 app.use((error, req, res, next) => {// Error Handling
     console.log(error);

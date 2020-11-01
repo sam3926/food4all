@@ -1,7 +1,8 @@
 import io from "socket.io-client";
 import { updateThread } from "../components/messages/actions";
 import { store } from "../store";
-let server = "http://localhost:8000";
+// let server = "http://localhost:8000";
+let server = "/"
 
 let socket;
 

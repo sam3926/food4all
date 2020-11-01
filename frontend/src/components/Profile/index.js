@@ -7,7 +7,7 @@ import EditProfile from './EditProfile';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing, getPendingDonations, rejectDonation, editProfile,acceptdonation } from './action';
+import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing,addHistory, getPendingDonations, rejectDonation, editProfile,acceptdonation } from './action';
 import moment from 'moment';
 import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
 import ProfilePic from './ProfilePic';
@@ -19,7 +19,6 @@ import { setCurrentRoute } from '../Navbar/actions';
 import LoadingScreen from '../LoadingScreen';
 const { Search } = Input;
 const { SubMenu } = Menu;
-
 const { TabPane } = Tabs;
 const { Header, Content, Sider } = Layout;
 
@@ -67,6 +66,12 @@ class Profile extends Component {
   showModalAccept = (data) => {
     console.log('inside the show modal accept')
     this.props.acceptdonation(data)
+    this.props.addHistory({
+      color: 'green',
+      icon: 'dot',
+      text: data.title + ' ( Donation accepted on ' + moment().format("HH:mm ll") + ' )'
+    });
+    
     this.setState({
       visibleAccept: true
     });
@@ -151,7 +156,7 @@ class Profile extends Component {
           <Timeline mode="alternate">
 
             {profileDetails?.history?.map(timelinepost => (
-              <Timeline.Item color={timelinepost?.color} dot={timelinepost?.dot == "clock" ? <ClockCircleOutlined /> : null}>{timelinepost.text}</Timeline.Item>
+              <Timeline.Item color={timelinepost?.color} dot={timelinepost?.icon === 'clock' ? <ClockCircleOutlined /> : null}>{timelinepost.text}</Timeline.Item>
             ))}
 
           </Timeline>
@@ -411,6 +416,7 @@ const mapStateToProps = state => {
   
   
 const mapDispatchToProps = dispatch => ({
+  addHistory:bindActionCreators(addHistory,dispatch),
   acceptdonation: bindActionCreators(acceptdonation,dispatch),
   getSomeData: bindActionCreators(getSomeData, dispatch),
   changeTab: bindActionCreators(changeTab, dispatch),

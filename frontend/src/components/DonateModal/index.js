@@ -102,8 +102,8 @@ import {addHistory} from '../Profile/action';
           }
           this.props.addDonation(donation,this.props.profileDetails.contact)
           this.props.addHistory({
-            color: 'green',
-            icon: 'dot',
+            color: 'blue',
+            icon: 'clock',
             text: donation.title + ' ( Donation expires on ' + donation.expiryTime + ' )'
           });
           

@@ -1,49 +1,45 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom"
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+import moment from 'moment';
+import sortBy from 'lodash/sortBy';
+
 import 'antd/dist/antd.css';
 import '../../index.css';
 import './styles.css'
-import { connect } from 'react-redux'
-import { changeFilters, getDonation, getOrganisation } from './action'
-import { bindActionCreators } from 'redux';
 import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image,Avatar } from 'antd';
-import moment from 'moment';
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { pendingDonation } from './action';
-import { acceptdonation } from '../Profile/action';
-import { rejectDonation } from '../Profile/action';
-import sortBy from 'lodash/sortBy';
+
+import { pendingDonation, changeFilters, getDonation, getOrganisation } from './action';
+import { rejectDonation, acceptdonation } from '../Profile/action';
 import { setCurrentRoute } from '../Navbar/actions';
-import { Link } from "react-router-dom"
+import LoadingScreen from '../LoadingScreen';
+
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
-
-function success(contact) {
-  Modal.success({
-    title: 'Donor Notified',
-    content: 'You can contact Donor on ' + contact
-  });
-}
-
 class Discover extends Component {
   state = {
-    Organisations: [
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' },
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' },
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' },
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' },
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' }
-    ],
+    Organisations: [],
     Events: [],
     selectedMenuItem: '1',
     loading: false,
     visible: false,
     filters: []
   }
-  componentDidMount() {
-    console.log(this.props.getOrganisation);
-    this.props.getOrganisation();
+  async componentDidMount() {
+    this.setState({
+      profilePageLoading: true
+    })
+    
+    await this.props.getOrganisation();
     this.props.getDonation();
+    
+    this.setState({
+      profilePageLoading: false
+    })
+    
   }
   showModal = (data) => {
     this.props.acceptdonation(data)
@@ -66,38 +62,22 @@ class Discover extends Component {
     this.setState({ visible: false });
   };
 
-
-
-
   render() {
     const { Events, selectedMenuItem, visible, loading } = this.state;
     const { Organisations, Donations, pendingDonations, pendingDonorDonation } = this.props
-    //console.log('this is  the dicover ',pendingDonations);
-
+  
     const plainOptions = [
       { label: 'Location', value: 'Location' },
       { label: 'Expiry Date', value: 'Expiry Date' },
       { label: 'Time', value: 'Time' },
     ];
     const onChange = (checkedValues) => {
-      // this.props.changeFilters(checkedValues)
-      console.log(checkedValues)
       this.setState({
         filters: [...checkedValues]
       })
-      //console.log(this.state.filters)
-      //return checkedValues;
-      //console.log('checked = ', checkedValues);
     }
 
     const addpending = (Donation) => {
-      const { _id, donorName, postTime, description } = Donation;
-      const Pending = {
-        donorName: donorName,
-        postTime: postTime,
-        description: description
-      };
-
       this.props.pendingDonation(Donation);
     }
 
@@ -118,7 +98,6 @@ class Discover extends Component {
 
     const filteredDonation = (Donations) => {
       const filters = this.state.filters;
-      console.log(filters);
       if (filters.find((value => value.localeCompare("Time") === 0))) {
         const filterDonations = sortBy(Donations, (donation) => {
           return new moment(donation.createdAt);
@@ -175,7 +154,6 @@ class Discover extends Component {
 
     const pendingDonationList = pendingDonations.length ? (
       pendingDonations.map(Donation => {
-
         return (
           <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
             actions={[
@@ -188,7 +166,7 @@ class Discover extends Component {
         )
       })
     ) : (
-        <div>No Donations are currently there!</div>
+        <div>No Pending donations are currently there!</div>
       )
     const pendingDonorDonationList = pendingDonorDonation.length ? (
       pendingDonorDonation.map(Donation => {
@@ -208,7 +186,6 @@ class Discover extends Component {
     const OrganisationList = Organisations.length ? (
       Organisations.map(Organisation => {
         return (
-
           <Card title={<div> {
             <Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Organisation._id}`}>
             <Avatar
@@ -261,6 +238,7 @@ class Discover extends Component {
     }
 
     return (
+      this.state.profilePageLoading ? <LoadingScreen /> :
       <Layout>
         <Sider width={280} className="site-layout-background"
           style={{
@@ -289,7 +267,7 @@ class Discover extends Component {
         <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>
           <Content className="site-layout-background"
             style={{
-              paddingLeft: 120,
+              paddingLeft: 270,
               minHeight: 280,
             }}>
             {componentsSwitch(selectedMenuItem)}
@@ -337,19 +315,14 @@ class Discover extends Component {
 
 const mapStatetoProps = state => {
   const checkvisibilty = (donation) => {
-    //console.log(donation.status.localeCompare("NotAccepted") === 0 )
     return donation.status.localeCompare("NotAccepted") === 0
   }
   const pendingdonations = (donation) => {
     const userId = state.authReducer.user.userId
-    //console.log(userId)
-    //console.log(donation.status.localeCompare("pending") === 0 )
     return (donation.status.localeCompare("pending") == 0 && donation.receiverId == userId)
   }
   const pendingdonordonations = (donation) => {
     const userId = state.authReducer.user.userId
-    //console.log(userId)
-    //console.log(donation.status.localeCompare("pending") === 0 )
     return (donation.status.localeCompare("pending") == 0 && donation.donorId == userId)
   }
 

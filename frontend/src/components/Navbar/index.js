@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom'
-import { Layout, Menu, Button, Input, Space, Modal } from 'antd';
+import { connect } from "react-redux";
+
+import { Layout, Menu, Button, Input, Modal } from 'antd';
 import {
   HeartFilled, LogoutOutlined, HomeOutlined, BellOutlined, TrophyOutlined,
   UsergroupDeleteOutlined, BulbOutlined, UserOutlined,
   MessageOutlined
 } from '@ant-design/icons';
 import "./styles.css"
+
 import { setCurrentRoute } from './actions';
-import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { logoutUser } from '../Auth/action';
-
-import "./styles.css"
 import DonateModal from '../DonateModal';
 
 const { Header } = Layout;

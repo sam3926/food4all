@@ -1,33 +1,28 @@
 import React, { Component } from 'react';
-import ReactDOM, { render } from 'react-dom';
-import 'antd/dist/antd.css';
-import { AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined, PhoneOutlined, MoreOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import ListModal from '../ListModal';
-import EditProfile from './EditProfile';
-
+import moment from 'moment';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers, getFollowing,addHistory, getPendingDonations, rejectDonation, editProfile,acceptdonation } from './action';
-import moment from 'moment';
-import { Layout, Menu, Modal, Image, Input, Card, Tabs, Timeline, Checkbox, List, Avatar, Button, Dropdown, Divider, Space, InputNumber } from 'antd';
-import ProfilePic from './ProfilePic';
-// import { CheckOutlined, CloseOutlined, AudioOutlined, LogoutOutlined, CommentOutlined, HomeOutlined, BellOutlined, TrophyOutlined, UsergroupDeleteOutlined, BulbOutlined, EditOutlined, EllipsisOutlined, LikeOutlined, MessageOutlined, GiftOutlined, ShareAltOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
-import "./styles.css"
-import FollowersList from './FollowersList';
 import { Link } from 'react-router-dom';
+
+import 'antd/dist/antd.css';
+import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { Layout, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space } from 'antd';
+import "./styles.css"
+
+import FollowersList from './FollowersList';
 import { setCurrentRoute } from '../Navbar/actions';
 import LoadingScreen from '../LoadingScreen';
-const { Search } = Input;
-const { SubMenu } = Menu;
+import EditProfile from './EditProfile';
+import ProfilePic from './ProfilePic';
+import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
+   getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation } from './action';
+
 const { TabPane } = Tabs;
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 class Profile extends Component {
 
   state = {
-    // PendingDonations: [
-    //   {donorname:'Arpit',posttime:'123',Description:'Brief description'}
-    // ],
     followersVisible: false,
     followingVisible: false,
     loadingAccept: false,
@@ -64,7 +59,6 @@ class Profile extends Component {
   };
 
   showModalAccept = (data) => {
-    console.log('inside the show modal accept')
     this.props.acceptdonation(data)
     this.props.addHistory({
       color: 'green',
@@ -75,7 +69,6 @@ class Profile extends Component {
     this.setState({
       visibleAccept: true
     });
-    //console.log(this.state.visibleAccept);
   };
 
   handleOkAccept = () => {
@@ -121,7 +114,7 @@ class Profile extends Component {
       profilePageLoading: true
     })
     await this.props.getProfile(this.props.match.params.id)
-    this.props.getPendingDonations()
+    await this.props.getPendingDonations()
     this.setState({
       profilePageLoading: false
     })
@@ -129,7 +122,7 @@ class Profile extends Component {
   render() {
 
     const { followersVisible, followingVisible, loadingAccept, visibleAccept, visibleEdit, loadingEdit, visibleProfilePic } = this.state;
-    const { suggestedPages, PendingDonations, currentTab, changeTab, donations, timelinePost, posts, profileDetails, user, followUser, unfollowUser, getFollowers, getFollowing, followers, following } = this.props
+    const { PendingDonations, profileDetails, user, followUser, unfollowUser, getFollowers, getFollowing } = this.props
 
     const imagelist = (images) => {
       return images.length ? (
@@ -148,8 +141,6 @@ class Profile extends Component {
     
     const Demo = () => (
       <Tabs centered="true" size="large"
-      // activeKey={currentTab}
-      // onChange={changeTab}
       >
 
         <TabPane tab="Timeline" key="timelinePost">

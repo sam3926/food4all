@@ -1,11 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
+import moment from 'moment';
 import { Modal, Button } from 'antd';
 import { Comment, Avatar, Form, List, Input } from 'antd';
-import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
 import { addComment } from './action'
 
 const { TextArea } = Input;
@@ -42,9 +42,7 @@ class Comments extends React.Component {
     if (!this.state.value) {
       return;
     }
-    console.log('inside comments', this.props.postComments, this.props.id)
     const value = this.state.value
-    console.log(value)
     this.setState({
       submitting: true,
     });
@@ -68,7 +66,6 @@ class Comments extends React.Component {
   };
 
   handleChange = e => {
-    console.log(e.target.value);
     this.setState({
       value: e.target.value,
     });
@@ -78,8 +75,7 @@ class Comments extends React.Component {
     
     if(this.props.id){
       const { submitting, value } = this.state;
-    const { comments } = this.props.postComments[0];
-    console.log(this.props.id, this.props.postComments, comments);
+      const { comments } = this.props.postComments[0];
       return (
         <>
           <Modal
@@ -124,9 +120,6 @@ class Comments extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps
   const allcomments = state.HomeCenterReducer.postComments;
-  console.log('inside the commments');
-  console.log(id)
-  console.log(allcomments)
   return {
     postComments: allcomments.filter((comment) => comment.postId === id)
   }

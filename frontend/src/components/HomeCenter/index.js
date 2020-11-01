@@ -8,7 +8,8 @@ import {
     CommentOutlined,LikeFilled, LikeOutlined,
     GiftOutlined, ShareAltOutlined, EditOutlined
 } from '@ant-design/icons';
-
+import { Link } from "react-router-dom"
+import { setCurrentRoute } from '../Navbar/actions';
 import { Modal } from 'antd';
 import PostModal from '../PostModal';
 import Comments from '../Comments';
@@ -106,7 +107,7 @@ class HomeCenter extends Component {
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={post.author} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
+                    <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${post.authorId}`}>{post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
                         <div onClick={(id) =>this.incrementLike(post._id,post.liked)} >{type(post.liked)}{post.noOfLikes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
@@ -144,7 +145,8 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => ({
     changelike: bindActionCreators(changelike, dispatch),
-    getPost: bindActionCreators(getPost,dispatch)
+    getPost: bindActionCreators(getPost,dispatch),
+    setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch)
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(HomeCenter);

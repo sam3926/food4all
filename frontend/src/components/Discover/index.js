@@ -9,7 +9,7 @@ import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image } from
 import moment from 'moment';
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { pendingDonation } from './action';
-import { getPendingDonations } from '../Profile/action';
+import { acceptdonation } from '../Profile/action';
 import { rejectDonation } from '../Profile/action';
 import sortBy from 'lodash/sortBy';
 import { setCurrentRoute } from '../Navbar/actions';
@@ -43,7 +43,8 @@ class Discover extends Component {
   componentDidMount() {
     this.props.getDonation();
   }
-  showModal = () => {
+  showModal = (data) => {
+    this.props.acceptdonation(data)
     this.setState({
       visible: true
     });
@@ -176,7 +177,7 @@ class Discover extends Component {
         return (
           <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
             actions={[
-              <p classname="cardtext1" onClick={this.showModal} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
+              <p classname="cardtext1" onClick={() => this.showModal(Donation)} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
               <p onClick={() => this.props.rejectDonation(Donation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
             ]}
           >
@@ -355,11 +356,11 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch, getState) => ({
+  acceptdonation: bindActionCreators(acceptdonation,dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),
   pendingDonation: bindActionCreators(pendingDonation, dispatch),
   rejectDonation: bindActionCreators(rejectDonation, dispatch),
   getDonation: bindActionCreators(getDonation, dispatch),
-  setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch),
   setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch)
 })
 

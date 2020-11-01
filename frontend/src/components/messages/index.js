@@ -162,7 +162,7 @@ export class Messagepage extends Component {
                                 }}
                             >
                                 <div class="site-layout-background" style={{ marginLeft: '150px', maxWidth: '800px' }}>
-                                    <div className="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
+                                    <div class="site-layout-background" lassName="infinite-container" style={{ height: '500px', overflowY: 'scroll' }}>
                                         {this.state.currentThread && (
                                             this.renderCards()
                                         )}

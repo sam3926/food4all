@@ -12,7 +12,8 @@ router.post('/create',isAuth, async (req,res) => {
     const d = new Donation(donation);
     const result = await d.save();
     await Users.updateOne({_id:req.userId},{
-        $push: {donations:d._id}
+        $push: {donations:d._id},
+        $inc: {noDonations:1}
     })
     const user = await Users.findById(req.userId);
     console.log('result',user);

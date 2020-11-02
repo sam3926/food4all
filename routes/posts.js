@@ -47,7 +47,9 @@ router.post('/create', isAuth, async (req, res, next) => {
         const c = new Comment({postId: p._id});
         const commentResult = await c.save();
         p.commentId = c._id;
-        const result  = await p.save();
+        await p.save();
+        const result = await Post.findById(p._id).populate('authorId','avatar');
+        
         const user = await User.findById(req.userId)
         console.log(user)
         //console.log(result,commentResult)

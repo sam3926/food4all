@@ -14,7 +14,7 @@ import { setCurrentRoute } from '../Navbar/actions';
 import LoadingScreen from '../LoadingScreen';
 import EditProfile from './EditProfile';
 import ProfilePic from './ProfilePic';
-import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
+import { addFed, getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
    getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation } from './action';
 
 const { TabPane } = Tabs;
@@ -220,7 +220,8 @@ class Profile extends Component {
       )
 
       const onFinish = (values) => {
-        console.log('Success:', values);
+        this.props.addFed(values.peoplefed)
+
       };
     
       const onFinishFailed = (errorInfo) => {
@@ -381,6 +382,7 @@ class Profile extends Component {
           </Layout >
 
           <Modal
+            destroyOnClose
             visible={visibleAccept}
             title="Accept Donation"
             onOk={this.handleOkAccept}
@@ -394,12 +396,15 @@ class Profile extends Component {
                 type="primary"
                 loading={loadingAccept}
                 onClick={this.handleOkAccept}
+                form = 'acceptform'
+                htmlType = 'submit'
               >
-                Share Donation
+                Submit
                   </Button>
             ]}
           >
           <Form
+            id = 'acceptform'
             {...layout}
             name="basic"
             onFinish={onFinish}
@@ -415,7 +420,7 @@ class Profile extends Component {
               },
             ]}
             >
-              <Input placeholder="Input Number Here" />
+              <Input type='number' placeholder="Input Number Here" />
             </Form.Item>
 
             <Form.Item
@@ -428,13 +433,7 @@ class Profile extends Component {
               },
             ]}
             >
-              <Input placeholder="Rate Between 1 to 5" />
-            </Form.Item>
-
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
+              <Input type='number' placeholder="Rate Between 1 to 5" />
             </Form.Item>
           </Form>
           </Modal>
@@ -465,6 +464,7 @@ const mapStateToProps = state => {
   
   
 const mapDispatchToProps = dispatch => ({
+  addFed:bindActionCreators(addFed,dispatch),
   addHistory:bindActionCreators(addHistory,dispatch),
   acceptdonation: bindActionCreators(acceptdonation,dispatch),
   getSomeData: bindActionCreators(getSomeData, dispatch),

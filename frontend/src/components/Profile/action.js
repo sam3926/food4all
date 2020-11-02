@@ -37,7 +37,13 @@ export const getProfile = (id) => async (dispatch) => {
     }
 
 }
-
+export const addFed = (value) => async (dispatch) =>{
+    const res = await axios.post('/api/users/addfed',{value:value})
+    dispatch({
+        type:'ADD_FED',
+        payload:res.data
+    })
+}
 export const getSuggestedPages = () => async (dispatch) => {
     const res = await axios.get("/api/path/to/sugPage");
     dispatch({

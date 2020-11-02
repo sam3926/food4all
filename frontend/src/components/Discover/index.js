@@ -12,7 +12,7 @@ import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image, Form,
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { pendingDonation, changeFilters, getDonation, getOrganisation } from './action';
-import { rejectDonation, acceptdonation } from '../Profile/action';
+import { addFed, addHistory, rejectDonation, acceptdonation } from '../Profile/action';
 import { setCurrentRoute } from '../Navbar/actions';
 import LoadingScreen from '../LoadingScreen';
 
@@ -65,6 +65,12 @@ class Discover extends Component {
   }
   showModal = (data) => {
     this.props.acceptdonation(data)
+    this.props.addHistory({
+      color: 'green',
+      icon: 'dot',
+      text: data.title + ' ( Donation accepted on ' + moment().format("HH:mm ll") + ' )'
+    });
+    
     this.setState({
       visible: true
     });
@@ -263,7 +269,7 @@ class Discover extends Component {
     }
 
     const onFinish = (values) => {
-      console.log('Success:', values);
+      this.props.addFed(values.peoplefed)
     };
   
     const onFinishFailed = (errorInfo) => {
@@ -315,6 +321,7 @@ class Discover extends Component {
         </Layout>
 
         <Modal
+          destroyOnClose
           visible={visible}
           title="Accept Donation"
           onOk={this.handleOk}
@@ -328,12 +335,15 @@ class Discover extends Component {
               type="primary"
               loading={loading}
               onClick={this.handleOk}
+              form = 'acceptform'
+              htmlType = 'submit'
             >
-              Share Donation
+              Submit
               </Button>
           ]}
         >
           <Form
+            id = 'acceptform'
             {...layout}
             name="basic"
             onFinish={onFinish}
@@ -349,7 +359,7 @@ class Discover extends Component {
               },
             ]}
             >
-              <Input placeholder="Input Number Here" />
+              <Input type='number' placeholder="Input Number Here" />
             </Form.Item>
 
             <Form.Item
@@ -362,14 +372,9 @@ class Discover extends Component {
               },
             ]}
             >
-              <Input placeholder="Rate Between 1 to 5" />
+              <Input type='number' placeholder="Rate Between 1 to 5" />
             </Form.Item>
 
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-            </Form.Item>
           </Form>
         </Modal>
 
@@ -406,6 +411,8 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch, getState) => ({
+  addFed:bindActionCreators(addFed,dispatch),
+  addHistory:bindActionCreators(addHistory,dispatch),
   getOrganisation: bindActionCreators(getOrganisation,dispatch),
   acceptdonation: bindActionCreators(acceptdonation,dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),

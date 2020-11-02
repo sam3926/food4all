@@ -115,8 +115,11 @@ class Discover extends Component {
       return Donations
     }
     const action = (Donation) => {
-      if (this.props.userType.localeCompare('donor') === 0)
+      if(this.props.userType.localeCompare('donor') === 0)
         return [];
+      if(this.props.userId == Donation.donorId)
+        return [];
+
       const value = [
         <Link to={{
           pathname: "/messages",
@@ -329,6 +332,7 @@ const mapStatetoProps = state => {
   return {
     pendingDonorDonation: state.DiscoverReducer.Donations.filter(pendingdonordonations),
     userType: state.authReducer.user.userType,
+    userId: state.authReducer.user.userId,
     currentfilter: state.DiscoverReducer.currentfilter,
     Donations: state.DiscoverReducer.Donations.filter(checkvisibilty),
     pendingDonations: state.DiscoverReducer.Donations.filter(pendingdonations),

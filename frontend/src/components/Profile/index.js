@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
 import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Layout, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space } from 'antd';
+import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space } from 'antd';
 import "./styles.css"
 
 import FollowersList from './FollowersList';
@@ -19,6 +19,22 @@ import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollow
 
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
+
+const layout = {
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 8,
+    span: 16,
+  },
+};
 
 class Profile extends Component {
 
@@ -203,6 +219,14 @@ class Profile extends Component {
         <div>No Donations are currently there!</div>
       )
 
+      const onFinish = (values) => {
+        console.log('Success:', values);
+      };
+    
+      const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+      };
+
     return (
       this.state.profilePageLoading ? <LoadingScreen /> :
         <Layout key={this.props.match.params.id} className="layout" style={{ marginTop: "56px" }}>
@@ -375,10 +399,44 @@ class Profile extends Component {
                   </Button>
             ]}
           >
-            <b> Enter No of people will be fed from this donation ?</b>
-            <Input placeholder="Input Number Here" />
-            <b> Rate the User</b>
-            <Input placeholder="Rate Between 1 to 5" />
+          <Form
+            {...layout}
+            name="basic"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            >
+            <Form.Item
+            label="No of people fed ?"
+            name="peoplefed"
+            rules={[
+              {
+              required: true,
+              message: 'Please input peoplefed',
+              },
+            ]}
+            >
+              <Input placeholder="Input Number Here" />
+            </Form.Item>
+
+            <Form.Item
+            label="Rate the User"
+            name="rating"
+            rules={[
+              {
+              required: true,
+              message: 'Please rate the user',
+              },
+            ]}
+            >
+              <Input placeholder="Rate Between 1 to 5" />
+            </Form.Item>
+
+            <Form.Item {...tailLayout}>
+              <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            </Form.Item>
+          </Form>
           </Modal>
 
 

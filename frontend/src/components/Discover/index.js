@@ -54,14 +54,14 @@ class Discover extends Component {
     this.setState({
       profilePageLoading: true
     })
-    
+
     await this.props.getOrganisation();
     this.props.getDonation();
-    
+
     this.setState({
       profilePageLoading: false
     })
-    
+
   }
   showModal = (data) => {
     this.props.acceptdonation(data)
@@ -70,7 +70,7 @@ class Discover extends Component {
       icon: 'dot',
       text: data.title + ' ( Donation accepted on ' + moment().format("HH:mm ll") + ' )'
     });
-    
+
     this.setState({
       visible: true
     });
@@ -93,7 +93,7 @@ class Discover extends Component {
   render() {
     const { Events, selectedMenuItem, visible, loading } = this.state;
     const { Organisations, Donations, pendingDonations, pendingDonorDonation } = this.props
-  
+
     const plainOptions = [
       { label: 'Location', value: 'Location' },
       { label: 'Expiry Date', value: 'Expiry Date' },
@@ -143,9 +143,9 @@ class Discover extends Component {
       return Donations
     }
     const action = (Donation) => {
-      if(this.props.userType.localeCompare('donor') === 0)
+      if (this.props.userType.localeCompare('donor') === 0)
         return [];
-      if(this.props.userId == Donation.donorId)
+      if (this.props.userId == Donation.donorId)
         return [];
 
       const value = [
@@ -217,18 +217,20 @@ class Discover extends Component {
     const OrganisationList = Organisations.length ? (
       Organisations.map(Organisation => {
         return (
-          <Card title={<div> {
-            <Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Organisation._id}`}>
-            <Avatar
-              src={Organisation.avatar}
-              alt="Han Solo"
-            />
-            </Link>
-          } <a>{Organisation.name}</a> </div>} extra={<p>People fed {Organisation?.noFed}</p>} style={{ width: 700, margin: '8px' }}>
-            <p><PhoneOutlined /> : {Organisation.contact} <HomeOutlined /> : {Organisation.address} </p>
+          <Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Organisation._id}`}>
 
-            <p>{Organisation.description}</p>
-          </Card>
+            <Card title={<div> {
+              <Avatar
+                src={Organisation.avatar}
+                alt="Han Solo"
+              />
+            } <a>{Organisation.name}</a> </div>} extra={<p>People fed {Organisation?.noFed}</p>} style={{ width: 700, margin: '8px' }}>
+              <p><PhoneOutlined /> : {Organisation.contact} <HomeOutlined /> : {Organisation.address} </p>
+
+              <p>{Organisation.description}</p>
+            </Card>
+          </Link>
+
         )
       })
     ) : (
@@ -271,115 +273,115 @@ class Discover extends Component {
     const onFinish = (values) => {
       this.props.addFed(values.peoplefed)
     };
-  
+
     const onFinishFailed = (errorInfo) => {
       console.log('Failed:', errorInfo);
     };
 
     return (
       this.state.profilePageLoading ? <LoadingScreen /> :
-      <Layout>
-        <Sider width={280} className="site-layout-background"
-          style={{
-            overflow: 'auto',
-            height: '100vh',
-            position: 'fixed',
-            left: 0,
-            marginTop: '64px',
-          }} >
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['1']}
-            style={{ height: '100%', borderRight: 0 }}
-            onClick={(e) => onclick(e.key)} >
-            <SubMenu key="1" title="Donations" onTitleClick={(e) => onclick(e.key)} style={{ fontSize: '16px' }}>
-              <div style={{ "padding": "auto" }}>
-                <Checkbox.Group options={plainOptions} onChange={onChange} />
-              </div>
-            </SubMenu>
-            <Menu.Item key="2">Nearby Organisations</Menu.Item>
-            <Menu.Item key="3">Nearby Events/Activities</Menu.Item>
-          </Menu>
-        </Sider>
-
-        <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>
-          <Content className="site-layout-background"
+        <Layout>
+          <Sider width={280} className="site-layout-background"
             style={{
-              paddingLeft:125,
-              minHeight: 280,
-            }}>
-            {componentsSwitch(selectedMenuItem)}
-          </Content>
-          <Sider width={300} style={{ padding: "25px" }}>
-            <div style={{ fontWeight: "bolder", paddingBottom: "15px", fontSize: "medium" }}>Pending Donations</div>
-            <div>
-              {this.props.userType.localeCompare('donor') === 0 ? pendingDonorDonationList : pendingDonationList}
-            </div>
+              overflow: 'auto',
+              height: '100vh',
+              position: 'fixed',
+              left: 0,
+              marginTop: '64px',
+            }} >
+            <Menu
+              mode="inline"
+              defaultSelectedKeys={['1']}
+              defaultOpenKeys={['1']}
+              style={{ height: '100%', borderRight: 0 }}
+              onClick={(e) => onclick(e.key)} >
+              <SubMenu key="1" title="Donations" onTitleClick={(e) => onclick(e.key)} style={{ fontSize: '16px' }}>
+                <div style={{ "padding": "auto" }}>
+                  <Checkbox.Group options={plainOptions} onChange={onChange} />
+                </div>
+              </SubMenu>
+              <Menu.Item key="2">Nearby Organisations</Menu.Item>
+              <Menu.Item key="3">Nearby Events/Activities</Menu.Item>
+            </Menu>
           </Sider>
 
-        </Layout>
+          <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>
+            <Content className="site-layout-background"
+              style={{
+                paddingLeft: 125,
+                minHeight: 280,
+              }}>
+              {componentsSwitch(selectedMenuItem)}
+            </Content>
+            <Sider width={300} style={{ padding: "25px" }}>
+              <div style={{ fontWeight: "bolder", paddingBottom: "15px", fontSize: "medium" }}>Pending Donations</div>
+              <div>
+                {this.props.userType.localeCompare('donor') === 0 ? pendingDonorDonationList : pendingDonationList}
+              </div>
+            </Sider>
 
-        <Modal
-          destroyOnClose
-          visible={visible}
-          title="Accept Donation"
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          footer={[
-            <Button key="back" onClick={this.handleCancel}>
-              Say Thanks
+          </Layout >
+
+          <Modal
+            destroyOnClose
+            visible={visible}
+            title="Accept Donation"
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            footer={[
+              <Button key="back" onClick={this.handleCancel}>
+                Say Thanks
               </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              loading={loading}
-              onClick={this.handleOk}
-              form = 'acceptform'
-              htmlType = 'submit'
-            >
-              Submit
+              <Button
+                key="submit"
+                type="primary"
+                loading={loading}
+                onClick={this.handleOk}
+                form='acceptform'
+                htmlType='submit'
+              >
+                Submit
               </Button>
-          ]}
-        >
-          <Form
-            id = 'acceptform'
-            {...layout}
-            name="basic"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            >
-            <Form.Item
-            label="No of people fed ?"
-            name="peoplefed"
-            rules={[
-              {
-              required: true,
-              message: 'Please input peoplefed',
-              },
             ]}
+          >
+            <Form
+              id='acceptform'
+              {...layout}
+              name="basic"
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
             >
-              <Input type='number' placeholder="Input Number Here" />
-            </Form.Item>
+              <Form.Item
+                label="No of people fed ?"
+                name="peoplefed"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input peoplefed',
+                  },
+                ]}
+              >
+                <Input type='number' placeholder="Input Number Here" />
+              </Form.Item>
 
-            <Form.Item
-            label="Rate the User"
-            name="rating"
-            rules={[
-              {
-              required: true,
-              message: 'Please rate the user',
-              },
-            ]}
-            >
-              <Input type='number' placeholder="Rate Between 1 to 5" />
-            </Form.Item>
+              <Form.Item
+                label="Rate the User"
+                name="rating"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please rate the user',
+                  },
+                ]}
+              >
+                <Input type='number' placeholder="Rate Between 1 to 5" />
+              </Form.Item>
 
-          </Form>
-        </Modal>
+            </Form>
+          </Modal>
 
 
-      </Layout>
+        </Layout >
     )
   }
 }
@@ -411,10 +413,10 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch, getState) => ({
-  addFed:bindActionCreators(addFed,dispatch),
-  addHistory:bindActionCreators(addHistory,dispatch),
-  getOrganisation: bindActionCreators(getOrganisation,dispatch),
-  acceptdonation: bindActionCreators(acceptdonation,dispatch),
+  addFed: bindActionCreators(addFed, dispatch),
+  addHistory: bindActionCreators(addHistory, dispatch),
+  getOrganisation: bindActionCreators(getOrganisation, dispatch),
+  acceptdonation: bindActionCreators(acceptdonation, dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),
   pendingDonation: bindActionCreators(pendingDonation, dispatch),
   rejectDonation: bindActionCreators(rejectDonation, dispatch),

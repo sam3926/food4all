@@ -28,6 +28,7 @@ class MapComp extends Component {
   constructor() {
     super();
     this.state = {
+      initialised: false,
       markers: []
     };
   }
@@ -36,8 +37,8 @@ class MapComp extends Component {
     const { markers } = this.state;
     markers.pop();
     markers.push(e.latlng);
-    console.log(markers)
     this.props.saveLatLng(markers[0]);
+
     this.setState({ markers });
   };
 
@@ -48,15 +49,24 @@ class MapComp extends Component {
 
     searchControl.on("results", function (data) {
       results.clearLayers();
-      for (let i = data.results.length - 1; i >= data.results.length - 1; i--) {
-        results.addLayer(L.marker(data.results[i].latlng));
-      }
     });
   }
+
 
   render() {
     const longitude = this.props.coords ? this.props.coords.longitude : DEFUALT_LONGITUDE;
     const latitude = this.props.coords ? this.props.coords.latitude : DEFAULT_LATITUDE;
+
+    if (!this.state.initialised && this.props.coords) {
+      this.setState({ initialised: true })
+      this.addMarker({
+        latlng: {
+          lat: latitude,
+          lng: longitude
+        }
+      })
+    }
+
     const center = [28.6139, 77.209];
     return (
       <>
@@ -77,7 +87,7 @@ class MapComp extends Component {
             <div className="pointer" />
 
 
-            {
+            {/* {
               !this.props.coords
                 ? <div className="loading">Loading</div>
                 :
@@ -88,7 +98,7 @@ class MapComp extends Component {
                     you are here!
             </Popup>
                 </Marker>
-            }
+            } */}
 
             {this.state.markers.map((position, idx) => (
               <Marker draggable={true} key={`marker-${idx}`} position={position}>

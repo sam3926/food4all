@@ -110,7 +110,7 @@ class Register extends Component {
         const { errors, value } = this.state;
 
         return (
-            <div style={{ paddingTop: "20px", height: "100vh", display: "flex", justifyContent: "center" }}>
+            <div style={{ paddingTop: "20px", display: "flex", justifyContent: "center" }}>
                 <Form
                     layout="vertical"
                     style={{

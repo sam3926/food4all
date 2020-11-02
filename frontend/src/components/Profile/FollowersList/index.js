@@ -29,13 +29,16 @@ class FollowersList extends React.Component {
                         dataSource={data}
                         loading={loading}
                         renderItem={item => (
-                            <List.Item>
-                                <List.Item.Meta
-                                    avatar={<Link onClick={this.props.handleCancel} to={`/profile/${item._id}`}><Avatar src={item.avatar} /></Link>}
-                                    title={<a>{item.name}</a>}
-                                    description={item.description}
-                                />
-                            </List.Item>
+                            <Link onClick={this.props.handleCancel} to={`/profile/${item._id}`}>
+                                <List.Item>
+                                    <List.Item.Meta
+                                        avatar={<Avatar src={item.avatar} />}
+                                        title={<a>{item.name}</a>}
+                                        description={item.description}
+                                    />
+                                </List.Item>
+                            </Link>
+
                         )}
                     />,
         </Modal>

@@ -12,12 +12,12 @@ const HomeCenterReducer = (state = initialState, action) => {
             return { ...state, someData: action.payload }
         }
         case 'GET_POST': {
-            state = {...state,posts:action.payload,postComments:action.allcomments};
+            state = { ...state, posts: action.payload, postComments: action.allcomments };
             break;
         }
         case 'ADD_POST': {
             let posts = [...state.posts, action.post]
-            let postComments = [...state.postComments,action.comment]
+            let postComments = [...state.postComments, action.comment]
             return {
                 ...state,
                 posts: posts,

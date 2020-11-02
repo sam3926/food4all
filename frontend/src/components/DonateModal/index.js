@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import 'antd/dist/antd.css';
-import { Form, Upload, Row , Col , Input , Modal,DatePicker, Button } from 'antd';
-import { UploadOutlined, InboxOutlined , CompassOutlined , AimOutlined } from '@ant-design/icons';
-import MapComp from "../MapComp";
-import { addDonation } from './action';
 import { bindActionCreators } from 'redux'
 import {connect} from 'react-redux'
 import axios from "axios"
 import moment from 'moment';
+
+import 'antd/dist/antd.css';
+import { Form, Upload, Row , Col , Input , Modal,DatePicker, Button } from 'antd';
+import { InboxOutlined , CompassOutlined } from '@ant-design/icons';
+
+import MapComp from "../MapComp";
+import { addDonation } from './action';
+import {addHistory} from '../Profile/action';
+
   const formItemLayout = {
       labelCol: {
       span: 6,
@@ -29,8 +32,6 @@ import moment from 'moment';
   };
 
   const normFile = (e) => {
-    console.log('Upload event:', e);
-
     if (Array.isArray(e)) {
     return e;
     }
@@ -58,7 +59,6 @@ import moment from 'moment';
       this.setState({
           latlng: latlng
       })
-      //console.log(this.state.latlng.lat + " , " + this.state.latlng.lng);
     }
     onChange = (value,dateString) => {
         this.setState({
@@ -66,22 +66,17 @@ import moment from 'moment';
         })
     }
     disabledDate = (current) => {
-      // Can not select days before today and today
       return current && current < moment().endOf('day');
     }
     
     render() {
       const onFieldsChange = (changedFields,allFields) =>{
-        console.log(allFields)
         this.setState({
           title: allFields[0].value,
           description:allFields[1].value,
-          //Date:allFields[2].value==undefined? (null):(allFields[2].value.getDate),
-          //files: allFields[3].value ==undefined? ([]):([allFields[3].value])
         })
       }
       const createPost = (e) =>{
-        console.log(this.state)
         if(this.state.latlng !== undefined){
           this.props.handleOk()
           const { dragger } = e;
@@ -99,6 +94,12 @@ import moment from 'moment';
             donorName:this.props.profileDetails.name
           }
           this.props.addDonation(donation,this.props.profileDetails.contact)
+          this.props.addHistory({
+            color: 'blue',
+            icon: 'clock',
+            text: donation.title + ' ( Donation expires on ' + donation.expiryTime + ' )'
+          });
+          
           this.setState({
             latlng:null,
             files:[]
@@ -111,7 +112,6 @@ import moment from 'moment';
         this.setState({
           files: [...this.state.files,imagelist.location]
         })
-        console.log('When the form is finished',this.state.files);
       }
       return(
         <>
@@ -189,7 +189,6 @@ import moment from 'moment';
                 formData.append('file', file)
                 await axios.post('/upload/donations', formData).then(res => {
                   onSuccess(res.data)
-                  console.log(res.data)
                   addpost(res.data)
                 }).catch(err => { console.log("error in uploading"); onError("Error in uploading.Try again") })
               }} >
@@ -221,6 +220,7 @@ import moment from 'moment';
   }
 
 const mapDispatchToProps = dispatch => ({
+  addHistory: bindActionCreators(addHistory,dispatch),
   addDonation : bindActionCreators(addDonation,dispatch)
 })
 const mapStatetoProps = state => {

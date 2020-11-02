@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
-import { getSomeData } from './action';
+
 import 'antd/dist/antd.css';
 import '../../index.css';
 import { BulbOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Layout, List, Avatar, Card,Space, Typography, Divider, Button , Modal} from 'antd';
 import "./styles.css";
 
+import { getSomeData } from './action';
 import LeftSidePanel from '../LeftSidePanel';
 import HomeCenter from '../HomeCenter';
 
@@ -79,7 +80,6 @@ class Home extends Component {
                     <Sider width={300} style={{ padding: "25px", marginTop: '48px', right : 0, position: 'fixed', height: '100vh' }}>
                     <List
                         itemLayout="horizontal"
-                        //dataSource={savedEvents}
                         header={
                             <div style={{ fontWeight: "bolder", padding: "5px", fontSize: "medium" }}>
                             Saved events

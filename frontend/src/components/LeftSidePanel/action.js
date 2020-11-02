@@ -4,7 +4,6 @@ import axios from "axios";
 export const getLeftDetails = () => async (dispatch) => {
     try {
         const res = await axios.get('/api/users/left-details')
-        console.log(res.data)
         dispatch({
             type: ACTION.GET_LEFT_DETAILS,
             payload: res.data

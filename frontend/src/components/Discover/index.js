@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom"
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+import moment from 'moment';
+import sortBy from 'lodash/sortBy';
+
 import 'antd/dist/antd.css';
 import '../../index.css';
 import './styles.css'
-import { connect } from 'react-redux'
-import { changeFilters, getDonation } from './action'
-import { bindActionCreators } from 'redux';
-import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Form , Image } from 'antd';
-import moment from 'moment';
+import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image, Form, Avatar } from 'antd';
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { pendingDonation } from './action';
-import { acceptdonation } from '../Profile/action';
-import { rejectDonation } from '../Profile/action';
-import sortBy from 'lodash/sortBy';
+
+import { pendingDonation, changeFilters, getDonation, getOrganisation } from './action';
+import { rejectDonation, acceptdonation } from '../Profile/action';
 import { setCurrentRoute } from '../Navbar/actions';
-import { Link } from "react-router-dom"
+import LoadingScreen from '../LoadingScreen';
+
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
-
 
 function success(contact) {
   Modal.success({
@@ -40,24 +41,27 @@ const tailLayout = {
     span: 16,
   },
 };
-
 class Discover extends Component {
   state = {
-    Organisations: [
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' },
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' },
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' },
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' },
-      { organisationName: 'Arpit1', address: 'Address', contact: 'contact no', peoplefed: '0', description: 'Brief description' }
-    ],
+    Organisations: [],
     Events: [],
     selectedMenuItem: '1',
     loading: false,
     visible: false,
     filters: []
   }
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({
+      profilePageLoading: true
+    })
+    
+    await this.props.getOrganisation();
     this.props.getDonation();
+    
+    this.setState({
+      profilePageLoading: false
+    })
+    
   }
   showModal = (data) => {
     this.props.acceptdonation(data)
@@ -80,36 +84,22 @@ class Discover extends Component {
     this.setState({ visible: false });
   };
 
-
   render() {
     const { Events, selectedMenuItem, visible, loading } = this.state;
     const { Organisations, Donations, pendingDonations, pendingDonorDonation } = this.props
-    //console.log('this is  the dicover ',pendingDonations);
-
+  
     const plainOptions = [
       { label: 'Location', value: 'Location' },
       { label: 'Expiry Date', value: 'Expiry Date' },
       { label: 'Time', value: 'Time' },
     ];
     const onChange = (checkedValues) => {
-      // this.props.changeFilters(checkedValues)
-      console.log(checkedValues)
       this.setState({
         filters: [...checkedValues]
       })
-      //console.log(this.state.filters)
-      //return checkedValues;
-      //console.log('checked = ', checkedValues);
     }
 
     const addpending = (Donation) => {
-      const { _id, donorName, postTime, description } = Donation;
-      const Pending = {
-        donorName: donorName,
-        postTime: postTime,
-        description: description
-      };
-
       this.props.pendingDonation(Donation);
     }
 
@@ -130,7 +120,6 @@ class Discover extends Component {
 
     const filteredDonation = (Donations) => {
       const filters = this.state.filters;
-      console.log(filters);
       if (filters.find((value => value.localeCompare("Time") === 0))) {
         const filterDonations = sortBy(Donations, (donation) => {
           return new moment(donation.createdAt);
@@ -148,8 +137,11 @@ class Discover extends Component {
       return Donations
     }
     const action = (Donation) => {
-      if (this.props.userType.localeCompare('donor') === 0)
+      if(this.props.userType.localeCompare('donor') === 0)
         return [];
+      if(this.props.userId == Donation.donorId)
+        return [];
+
       const value = [
         <Link to={{
           pathname: "/messages",
@@ -187,7 +179,6 @@ class Discover extends Component {
 
     const pendingDonationList = pendingDonations.length ? (
       pendingDonations.map(Donation => {
-
         return (
           <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
             actions={[
@@ -200,7 +191,7 @@ class Discover extends Component {
         )
       })
     ) : (
-        <div>No Donations are currently there!</div>
+        <div>No Pending donations are currently there!</div>
       )
     const pendingDonorDonationList = pendingDonorDonation.length ? (
       pendingDonorDonation.map(Donation => {
@@ -220,8 +211,14 @@ class Discover extends Component {
     const OrganisationList = Organisations.length ? (
       Organisations.map(Organisation => {
         return (
-
-          <Card title={<a>{Organisation.organisationName}</a>} extra={<p>People fed {Organisation.peoplefed}</p>} style={{ width: 700, margin: '8px' }}>
+          <Card title={<div> {
+            <Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Organisation._id}`}>
+            <Avatar
+              src={Organisation.avatar}
+              alt="Han Solo"
+            />
+            </Link>
+          } <a>{Organisation.name}</a> </div>} extra={<p>People fed {Organisation?.noFed}</p>} style={{ width: 700, margin: '8px' }}>
             <p><PhoneOutlined /> : {Organisation.contact} <HomeOutlined /> : {Organisation.address} </p>
 
             <p>{Organisation.description}</p>
@@ -274,6 +271,7 @@ class Discover extends Component {
     };
 
     return (
+      this.state.profilePageLoading ? <LoadingScreen /> :
       <Layout>
         <Sider width={280} className="site-layout-background"
           style={{
@@ -302,7 +300,7 @@ class Discover extends Component {
         <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>
           <Content className="site-layout-background"
             style={{
-              paddingLeft: 120,
+              paddingLeft:125,
               minHeight: 280,
             }}>
             {componentsSwitch(selectedMenuItem)}
@@ -384,25 +382,21 @@ class Discover extends Component {
 
 const mapStatetoProps = state => {
   const checkvisibilty = (donation) => {
-    //console.log(donation.status.localeCompare("NotAccepted") === 0 )
     return donation.status.localeCompare("NotAccepted") === 0
   }
   const pendingdonations = (donation) => {
     const userId = state.authReducer.user.userId
-    //console.log(userId)
-    //console.log(donation.status.localeCompare("pending") === 0 )
     return (donation.status.localeCompare("pending") == 0 && donation.receiverId == userId)
   }
   const pendingdonordonations = (donation) => {
     const userId = state.authReducer.user.userId
-    //console.log(userId)
-    //console.log(donation.status.localeCompare("pending") === 0 )
     return (donation.status.localeCompare("pending") == 0 && donation.donorId == userId)
   }
 
   return {
     pendingDonorDonation: state.DiscoverReducer.Donations.filter(pendingdonordonations),
     userType: state.authReducer.user.userType,
+    userId: state.authReducer.user.userId,
     currentfilter: state.DiscoverReducer.currentfilter,
     Donations: state.DiscoverReducer.Donations.filter(checkvisibilty),
     pendingDonations: state.DiscoverReducer.Donations.filter(pendingdonations),
@@ -412,6 +406,7 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch, getState) => ({
+  getOrganisation: bindActionCreators(getOrganisation,dispatch),
   acceptdonation: bindActionCreators(acceptdonation,dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),
   pendingDonation: bindActionCreators(pendingDonation, dispatch),

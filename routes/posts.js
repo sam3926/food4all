@@ -11,15 +11,14 @@ const router = express.Router();
 router.get('/', isAuth, async (req, res, next) => {
     try {
         
-        const posts = await Post.find({}).limit(20);
+        const posts = await Post.find({}).populate('authorId','avatar').limit(20);
         let postComments = [];
+        let postavatars = [];
         for(var i=0;i<posts.length;i++){
             const comment = await Comment.findById(posts[i].commentId);
             postComments.push(comment); 
-            console.log(comment)
-            
         }
-        console.log(postComments);
+       
         res.json({
             'posts': posts,
             'allcomments': postComments
@@ -48,7 +47,9 @@ router.post('/create', isAuth, async (req, res, next) => {
         const c = new Comment({postId: p._id});
         const commentResult = await c.save();
         p.commentId = c._id;
-        const result  = await p.save();
+        await p.save();
+        const result = await Post.findById(p._id).populate('authorId','avatar');
+        
         const user = await User.findById(req.userId)
         console.log(user)
         //console.log(result,commentResult)

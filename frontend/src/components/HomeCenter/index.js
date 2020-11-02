@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import 'antd/dist/antd.css';
-import './styles.css'
+import {bindActionCreators} from 'redux';
 
-import { Layout, Card, Space ,Image } from 'antd';
-import {
-    CommentOutlined,LikeFilled, LikeOutlined,
-    GiftOutlined, ShareAltOutlined, EditOutlined
-} from '@ant-design/icons';
-import { Link } from "react-router-dom"
-import { setCurrentRoute } from '../Navbar/actions';
+import 'antd/dist/antd.css';
+import './styles.css';
+import { Layout, Card, Space ,Image, Avatar } from 'antd';
+import { CommentOutlined, LikeFilled, LikeOutlined, GiftOutlined, ShareAltOutlined, EditOutlined } from '@ant-design/icons';
+import { Link } from "react-router-dom";
 import { Modal } from 'antd';
+
+import { changelike, getPost } from './action';
+import { setCurrentRoute } from '../Navbar/actions';
 import PostModal from '../PostModal';
 import Comments from '../Comments';
-import { changelike, getPost } from './action';
-import {bindActionCreators} from 'redux'
+import LoadingScreen from '../LoadingScreen';
+
 const { Content } = Layout;
 
 class HomeCenter extends Component {
@@ -24,12 +24,17 @@ class HomeCenter extends Component {
         visible: false,
         loadingComments: false,
         visibleComments: false,
-        currentPostid: null
+        currentPostid: null,
+        profilePageLoading: false
     }
-    componentDidMount(){
-        console.log('mount called in home center');
-        this.props.getPost();
-        
+    async componentDidMount(){
+        this.setState({
+            profilePageLoading: true
+        })
+        await this.props.getPost();
+        this.setState({
+            profilePageLoading: false
+        })
     }
     showModal = () => {
         this.setState({
@@ -43,7 +48,6 @@ class HomeCenter extends Component {
         this.setState({
             visibleComments:true
         })
-        console.log('inside start modal comment '.id);
     }
     showModalComments = () => {
         this.setState({
@@ -76,7 +80,6 @@ class HomeCenter extends Component {
         this.setState({ visibleComments: false });
     };
     incrementLike = (id,value) =>{
-        //console.log(id)
         this.props.changelike(id,value)
     }
     render (){
@@ -107,7 +110,13 @@ class HomeCenter extends Component {
         const postList = posts.length? (
             posts.map(post =>{
                 return(
-                    <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${post.authorId}`}>{post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
+                    <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${post.authorId._id}`}>
+                        <Avatar
+                          src={post.authorId.avatar}
+                          alt="Han Solo"
+                          style={{margin:'8px'}}
+                        />
+                       {post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
                         <div onClick={(id) =>this.incrementLike(post._id,post.liked)} >{type(post.liked)}{post.noOfLikes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
@@ -128,6 +137,7 @@ class HomeCenter extends Component {
             )
 
         return (
+            this.state.profilePageLoading ? <LoadingScreen /> :
             <Content style={{ "margin": "auto" }}>
                 <Card style={{ width: 700, margin: "8px" }} hoverable={true} onClick={this.showModal} >
                     <p className="cardtext"> <EditOutlined /> Share something with the community</p>

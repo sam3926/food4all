@@ -1,34 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {connect} from 'react-redux'
-import 'antd/dist/antd.css';
-import { Modal, Button } from 'antd';
-import { List, Avatar } from 'antd';
 
-// const data = [
-//   {
-//     title: 'Ant Design Title 1',
-//   },
-//   {
-//     title: 'Ant Design Title 2',
-//   },
-//   {
-//     title: 'Ant Design Title 3',
-//   },
-//   {
-//     title: 'Ant Design Title 4',
-//   },
-//   {
-//     title: 'Ant Design Title 5',
-//   },
-//   {
-//     title: 'Ant Design Title 6',
-//   },
-// ];
+import 'antd/dist/antd.css';
+import { List, Avatar, Modal} from 'antd';
 
 class ListModal extends React.Component {
   render() {
-    const {data} = this.props
+    const { data } = this.props
     return (
       <>
 
@@ -61,9 +39,5 @@ const mapStatetoProps = state => {
   return {
       data:state.ListReducer.users
   };
-
 };
 export default connect(mapStatetoProps)(ListModal);
-
-
-//export default ListModal;

@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Row, Col, Layout, List, Avatar, notification } from 'antd';
 import { connect } from "react-redux";
-import { getThreads, startThread, sendMessage, updateThread } from "./actions"
-import MessageCard from "./MessageCard"
+import { bindActionCreators } from 'redux';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
+
+import { Form, Input, Button, Row, Col, Layout, List, Avatar, notification } from 'antd';
 import { MessageOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
 import './styles.css'
-import { bindActionCreators } from 'redux';
+
 import LoadingScreen from '../LoadingScreen';
+import { getThreads, startThread, sendMessage, updateThread } from "./actions"
+import MessageCard from "./MessageCard"
+
 const { Content, Sider } = Layout;
 
 export class Messagepage extends Component {
@@ -27,7 +30,6 @@ export class Messagepage extends Component {
         })
 
         if (this.props.location.state) {
-            console.log("from user", this.props.location.state.user)
             this.setState({ requiredUser: this.props.location.state.user })
         }
 
@@ -55,7 +57,6 @@ export class Messagepage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps", nextProps)
         const currentThreadId = this.state.currentThread?._id;
         if (currentThreadId) {
             const req = nextProps.threads.find(x => x._id == currentThreadId);
@@ -75,10 +76,8 @@ export class Messagepage extends Component {
             if (req) {
                 const member = req.members.find(x => x._id != this.props.user.userId)
                 const you = req.members.find(x => x._id == this.props.user.userId)
-                console.log("okayy the required user", req)
                 this.setState({ currentThread: req, requiredUser: null, currentUser: member, you: you })
             } else {
-                console.log("not there, maybe new user")
                 this.props.startThread(this.state.requiredUser)
             }
         }

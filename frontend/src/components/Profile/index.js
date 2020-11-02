@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
 import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Layout, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space } from 'antd';
+import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space } from 'antd';
 import "./styles.css"
 
 import FollowersList from './FollowersList';
@@ -14,11 +14,27 @@ import { setCurrentRoute } from '../Navbar/actions';
 import LoadingScreen from '../LoadingScreen';
 import EditProfile from './EditProfile';
 import ProfilePic from './ProfilePic';
-import { getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
+import { addFed, getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
    getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation } from './action';
 
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
+
+const layout = {
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 8,
+    span: 16,
+  },
+};
 
 class Profile extends Component {
 
@@ -203,6 +219,15 @@ class Profile extends Component {
         <div>No Donations are currently there!</div>
       )
 
+      const onFinish = (values) => {
+        this.props.addFed(values.peoplefed)
+
+      };
+    
+      const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+      };
+
     return (
       this.state.profilePageLoading ? <LoadingScreen /> :
         <Layout key={this.props.match.params.id} className="layout" style={{ marginTop: "56px" }}>
@@ -357,6 +382,7 @@ class Profile extends Component {
           </Layout >
 
           <Modal
+            destroyOnClose
             visible={visibleAccept}
             title="Accept Donation"
             onOk={this.handleOkAccept}
@@ -370,15 +396,46 @@ class Profile extends Component {
                 type="primary"
                 loading={loadingAccept}
                 onClick={this.handleOkAccept}
+                form = 'acceptform'
+                htmlType = 'submit'
               >
-                Share Donation
+                Submit
                   </Button>
             ]}
           >
-            <b> Enter No of people will be fed from this donation ?</b>
-            <Input placeholder="Input Number Here" />
-            <b> Rate the User</b>
-            <Input placeholder="Rate Between 1 to 5" />
+          <Form
+            id = 'acceptform'
+            {...layout}
+            name="basic"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            >
+            <Form.Item
+            label="No of people fed ?"
+            name="peoplefed"
+            rules={[
+              {
+              required: true,
+              message: 'Please input peoplefed',
+              },
+            ]}
+            >
+              <Input type='number' placeholder="Input Number Here" />
+            </Form.Item>
+
+            <Form.Item
+            label="Rate the User"
+            name="rating"
+            rules={[
+              {
+              required: true,
+              message: 'Please rate the user',
+              },
+            ]}
+            >
+              <Input type='number' placeholder="Rate Between 1 to 5" />
+            </Form.Item>
+          </Form>
           </Modal>
 
 
@@ -407,6 +464,7 @@ const mapStateToProps = state => {
   
   
 const mapDispatchToProps = dispatch => ({
+  addFed:bindActionCreators(addFed,dispatch),
   addHistory:bindActionCreators(addHistory,dispatch),
   acceptdonation: bindActionCreators(acceptdonation,dispatch),
   getSomeData: bindActionCreators(getSomeData, dispatch),

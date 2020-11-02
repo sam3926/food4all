@@ -8,17 +8,39 @@ import sortBy from 'lodash/sortBy';
 import 'antd/dist/antd.css';
 import '../../index.css';
 import './styles.css'
-import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image, Avatar } from 'antd';
+import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image, Form, Avatar } from 'antd';
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { pendingDonation, changeFilters, getDonation, getOrganisation } from './action';
-import { rejectDonation, acceptdonation } from '../Profile/action';
+import { addFed, addHistory, rejectDonation, acceptdonation } from '../Profile/action';
 import { setCurrentRoute } from '../Navbar/actions';
 import LoadingScreen from '../LoadingScreen';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
+function success(contact) {
+  Modal.success({
+    title: 'Donor Notified',
+    content: 'You can contact Donor on ' + contact
+  });
+}
+
+const layout = {
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 8,
+    span: 16,
+  },
+};
 class Discover extends Component {
   state = {
     Organisations: [],
@@ -43,6 +65,12 @@ class Discover extends Component {
   }
   showModal = (data) => {
     this.props.acceptdonation(data)
+    this.props.addHistory({
+      color: 'green',
+      icon: 'dot',
+      text: data.title + ' ( Donation accepted on ' + moment().format("HH:mm ll") + ' )'
+    });
+
     this.setState({
       visible: true
     });
@@ -117,6 +145,9 @@ class Discover extends Component {
     const action = (Donation) => {
       if (this.props.userType.localeCompare('donor') === 0)
         return [];
+      if (this.props.userId == Donation.donorId)
+        return [];
+
       const value = [
         <Link to={{
           pathname: "/messages",
@@ -239,6 +270,14 @@ class Discover extends Component {
       )
     }
 
+    const onFinish = (values) => {
+      this.props.addFed(values.peoplefed)
+    };
+
+    const onFinishFailed = (errorInfo) => {
+      console.log('Failed:', errorInfo);
+    };
+
     return (
       this.state.profilePageLoading ? <LoadingScreen /> :
         <Layout>
@@ -269,7 +308,7 @@ class Discover extends Component {
           <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>
             <Content className="site-layout-background"
               style={{
-                paddingLeft: 270,
+                paddingLeft: 125,
                 minHeight: 280,
               }}>
               {componentsSwitch(selectedMenuItem)}
@@ -281,9 +320,10 @@ class Discover extends Component {
               </div>
             </Sider>
 
-          </Layout>
+          </Layout >
 
           <Modal
+            destroyOnClose
             visible={visible}
             title="Accept Donation"
             onOk={this.handleOk}
@@ -297,19 +337,51 @@ class Discover extends Component {
                 type="primary"
                 loading={loading}
                 onClick={this.handleOk}
+                form='acceptform'
+                htmlType='submit'
               >
-                Share Donation
+                Submit
               </Button>
             ]}
           >
-            <b> Enter No of people will be fed from this donation ?</b>
-            <Input placeholder="Input Number Here" />
-            <b> Rate the User</b>
-            <Input placeholder="Rate Between 1 to 5" />
+            <Form
+              id='acceptform'
+              {...layout}
+              name="basic"
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+            >
+              <Form.Item
+                label="No of people fed ?"
+                name="peoplefed"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input peoplefed',
+                  },
+                ]}
+              >
+                <Input type='number' placeholder="Input Number Here" />
+              </Form.Item>
+
+              <Form.Item
+                label="Rate the User"
+                name="rating"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please rate the user',
+                  },
+                ]}
+              >
+                <Input type='number' placeholder="Rate Between 1 to 5" />
+              </Form.Item>
+
+            </Form>
           </Modal>
 
 
-        </Layout>
+        </Layout >
     )
   }
 }
@@ -331,6 +403,7 @@ const mapStatetoProps = state => {
   return {
     pendingDonorDonation: state.DiscoverReducer.Donations.filter(pendingdonordonations),
     userType: state.authReducer.user.userType,
+    userId: state.authReducer.user.userId,
     currentfilter: state.DiscoverReducer.currentfilter,
     Donations: state.DiscoverReducer.Donations.filter(checkvisibilty),
     pendingDonations: state.DiscoverReducer.Donations.filter(pendingdonations),
@@ -340,6 +413,8 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch, getState) => ({
+  addFed: bindActionCreators(addFed, dispatch),
+  addHistory: bindActionCreators(addHistory, dispatch),
   getOrganisation: bindActionCreators(getOrganisation, dispatch),
   acceptdonation: bindActionCreators(acceptdonation, dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),

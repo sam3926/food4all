@@ -281,25 +281,30 @@ class Discover extends Component {
     return (
       this.state.profilePageLoading ? <LoadingScreen /> :
         <Layout>
-          <Sider width={280} className="site-layout-background"
+          <Sider width={280}
             style={{
               overflow: 'auto',
               height: '100vh',
               position: 'fixed',
               left: 0,
               marginTop: '64px',
+
             }} >
             <Menu
               mode="inline"
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['1']}
               style={{ height: '100%', borderRight: 0 }}
-              onClick={(e) => onclick(e.key)} >
-              <SubMenu key="1" title="Donations" onTitleClick={(e) => onclick(e.key)} style={{ fontSize: '16px' }}>
+              onClick={(e) => onclick(e.key)}
+              activeKey={selectedMenuItem}
+              style={{ position: "relative" }}
+            >
+              <SubMenu key="1" title="" onTitleClick={(e) => onclick(e.key)} style={{ fontSize: '16px', height: "100% " }}>
                 <div style={{ "padding": "auto" }}>
                   <Checkbox.Group options={plainOptions} onChange={onChange} />
                 </div>
               </SubMenu>
+              <Menu.Item key="1" style={{ position: "absolute", zIndex: "10", top: 0, left: 0, height: "40px", paddingLeft: "20px" }}>Donations</Menu.Item>
               <Menu.Item key="2">Nearby Organisations</Menu.Item>
               <Menu.Item key="3">Nearby Events/Activities</Menu.Item>
             </Menu>

@@ -141,19 +141,19 @@ export class Messagepage extends Component {
         return (
             <React.Fragment >
                 {this.state.loading ? <LoadingScreen /> :
-                    <Layout style={{ paddingTop: "64px", paddingLeft: "24px" }}>
+                    <Layout style={{ height: "100vh", paddingTop: "84px", margin: "auto" }}>
                         <Layout style={{}}>
 
-                            <Sider width={300}  className="site-layout-background">
+                            <Sider width={300} className="site-layout-background">
                                 <List
-                                    style={{paddingLeft: "10px"}}
+                                    style={{ paddingLeft: "10px" }}
                                     itemLayout="horizontal"
                                     dataSource={this.props.threads}
                                     renderItem={item => {
                                         const member = item.members.find(x => x._id != this.props.user.userId)
                                         const you = item.members.find(x => x._id == this.props.user.userId)
                                         return (
-                                            <List.Item key={item._id} onClick={() => this.setState({ currentThread: item, currentUser: member, you: you })}>
+                                            <List.Item style={this.state.currentThread._id == item._id ? { background: "#FFF", border: "1px solid #DDD", cursor: "pointer", padding: "4px 8px" } : { cursor: "pointer", padding: "4px 8px" }} key={item._id} onClick={() => this.setState({ currentThread: item, currentUser: member, you: you })}>
                                                 <List.Item.Meta
                                                     avatar={<Avatar src={member.avatar} />}
                                                     title={member.name}
@@ -165,7 +165,7 @@ export class Messagepage extends Component {
                                     }}
                                 />
                             </Sider>
-                            <Layout style={{ padding: "0 24px 24px" }}>
+                            <Layout style={{ width: "60vw", padding: "0 24px 24px" }}>
                                 <Content
                                     style={{
                                         //padding: 24,
@@ -205,7 +205,7 @@ export class Messagepage extends Component {
                                                             <section>
                                                                 <div {...getRootProps()}>
                                                                     <input {...getInputProps()} />
-                                                                    <Button  style={{ width: '100%' }}>
+                                                                    <Button style={{ width: '100%' }}>
                                                                         <UploadOutlined />
                                                                     </Button>
                                                                 </div>

@@ -270,7 +270,7 @@ class Discover extends Component {
         <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>
           <Content className="site-layout-background"
             style={{
-              paddingLeft: 270,
+              paddingLeft:125,
               minHeight: 280,
             }}>
             {componentsSwitch(selectedMenuItem)}

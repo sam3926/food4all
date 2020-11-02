@@ -298,6 +298,19 @@ router.get('/history/:id', isAuth, async (req, res, next) => {
     next(err)
   }
 })
+
+router.post('/addfed',isAuth, async(req,res,next) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.userId, { $inc: {noFed:req.body.value} }, { new: true }).populate('donations posts');
+    res.status(200).json(user)
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
 router.post('/addhistory',isAuth, async(req,res,next) => {
   try {
     const user = await User.findByIdAndUpdate(req.userId, { $push: {history:req.body.history} }, { new: true }).populate('donations posts');

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom'
 import { connect } from "react-redux";
 
-import { Layout, Menu, Button, Input, Modal } from 'antd';
+import { Layout, Menu, Button, Input, Modal , Badge , Popover , Card} from 'antd';
 import {
   HeartFilled, LogoutOutlined, HomeOutlined, BellOutlined, TrophyOutlined,
   UsergroupDeleteOutlined, BulbOutlined, UserOutlined,
@@ -18,6 +18,19 @@ import DonateModal from '../DonateModal';
 const { Header } = Layout;
 const { Search } = Input;
 
+const content = (
+  <div>
+    <Card style={{ width: 250, margin: '15px' }}>
+            <p><a>arpit </a>made a post.</p>
+    </Card>
+    <Card style={{ width: 250, margin: '15px' }}>
+            <p><a>arpit </a>recently made a donation.</p>
+    </Card>
+    <Card style={{ width: 250, margin: '15px' }}>
+            <p><a>arpit </a>liked your post.</p>
+    </Card>
+  </div>
+);
 
 class Navbar extends Component {
   state = {
@@ -63,7 +76,9 @@ class Navbar extends Component {
               <Menu.Item key="discover" icon={<BulbOutlined />}><Link to='/discover'>Discover</Link></Menu.Item>
               <Menu.Item key="community" icon={<TrophyOutlined />} ><Link to="/community">Community</Link></Menu.Item>
               <Menu.Item key="leaderboard" icon={<UsergroupDeleteOutlined />} ><Link to="/leaderboard">Leaderboard</Link></Menu.Item>
-              <Menu.Item key="notifications" icon={<BellOutlined />}><Link to="/notifications">Notifications</Link></Menu.Item>
+              <Menu.Item key="notifications"><Badge dot><Popover content={content} title="Notifications" trigger="click">
+              <p>{<BellOutlined />}Notifications</p>
+              </Popover></Badge></Menu.Item>
               <Menu.Item key="messages" icon={<MessageOutlined />} ><Link to="/messages">Messages</Link></Menu.Item>
               <Menu.Item key="profile" icon={<UserOutlined />} ><Link to={`/i/profile/${auth.user.userId}`}>Profile</Link></Menu.Item>
               <Menu.Item key="search">

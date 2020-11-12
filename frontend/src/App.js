@@ -7,6 +7,9 @@ import Home from "./components/Home";
 import Navbar from './components/Navbar';
 import Profile from './components/Profile';
 import Discover from './components/Discover';
+import Community from './components/Community';
+import Leaderboard from './components/Leaderboard';
+
 import { Layout, Button, notification } from 'antd';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 
@@ -104,6 +107,8 @@ const App = (props) => {
           <PrivateRoute exact path='/profile/:id' component={Profile} />
           <PrivateRoute exact path="/discover" component={Discover} />
           <PrivateRoute exact path="/messages" component={Messages} />
+          <PrivateRoute exact path="/community" component={Community} />
+          <PrivateRoute exact path="/leaderboard" component={Leaderboard} />
           <Route path="/" component={ComingSoon} />
         </RouterSwitch>
         {/* <Route path='/discover' component={Discover} /> */}

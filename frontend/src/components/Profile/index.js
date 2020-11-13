@@ -13,6 +13,7 @@ import FollowersList from './FollowersList';
 import { setCurrentRoute } from '../Navbar/actions';
 import LoadingScreen from '../LoadingScreen';
 import EditProfile from './EditProfile';
+import EventModal from '../EventModal';
 import ProfilePic from './ProfilePic';
 import { addFed, getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
    getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation } from './action';
@@ -43,6 +44,8 @@ class Profile extends Component {
     followingVisible: false,
     loadingAccept: false,
     visibleAccept: false,
+    loadingEvent: false,
+    visibleEvent: false,
     visibleEdit: false,
     visibleProfilePic: false,
     loadingEdit: false,
@@ -71,6 +74,29 @@ class Profile extends Component {
     console.log(e);
     this.setState({
       visible: false,
+    });
+  };
+
+  showModalEvent = () => {
+    this.setState({
+      visibleEvent: true,
+    });
+  };
+
+  handleOkEvent = () => {
+    this.setState({ loadingEvent: true });
+    setTimeout(() => {
+      this.setState({ loadingEvent: false, visibleEvent: false });
+    }, 500);
+    Modal.success({
+      content: 'Event posted',
+    });
+  };
+
+  handleCancelEvent = e => {
+    console.log(e);
+    this.setState({
+      visibleEvent: false,
     });
   };
 
@@ -137,7 +163,7 @@ class Profile extends Component {
   }
   render() {
 
-    const { followersVisible, followingVisible, loadingAccept, visibleAccept, visibleEdit, loadingEdit, visibleProfilePic } = this.state;
+    const { followersVisible, followingVisible, loadingAccept, visibleAccept , loadingEvent, visibleEvent , visibleEdit, loadingEdit, visibleProfilePic } = this.state;
     const { PendingDonations, profileDetails, user, followUser, unfollowUser, getFollowers, getFollowing } = this.props
 
     const imagelist = (images) => {
@@ -309,6 +335,10 @@ class Profile extends Component {
                       </Button>
                           <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
                           <ProfilePic visible={visibleProfilePic} handleCancel={this.handleCancelProfilePic} />
+                          <Button onClick={this.showModalEvent} type="primary" style={{ marginRight: "8px" }}  >
+                              Add Event
+                          </Button>
+                          <EventModal handleCancel={this.handleCancelEvent} handleOk={this.handleOkEvent} showModal={this.showModalEvent} visible={visibleEvent} loading={loadingEvent} />
                         </span>
                         ) : (<span style={{ float: "right", marginTop: "6px" }}>
                           <>

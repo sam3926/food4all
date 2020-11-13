@@ -4,7 +4,6 @@ import { ACTION } from "./constants";
 const initialState = {
     Donations:[],
     Organisations:[],
-    Events:[],
     currentfilter:[]
 }
 

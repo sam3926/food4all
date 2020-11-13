@@ -44,7 +44,6 @@ const tailLayout = {
 class Discover extends Component {
   state = {
     Organisations: [],
-    Events: [],
     selectedMenuItem: '1',
     loading: false,
     visible: false,
@@ -91,7 +90,7 @@ class Discover extends Component {
   };
 
   render() {
-    const { Events, selectedMenuItem, visible, loading } = this.state;
+    const { selectedMenuItem, visible, loading } = this.state;
     const { Organisations, Donations, pendingDonations, pendingDonorDonation } = this.props
 
     const plainOptions = [
@@ -237,26 +236,12 @@ class Discover extends Component {
         <div>No Organisation are currently there!</div>
       )
 
-    const EventList = Events.length ? (
-      Events.map(Event => {
-        return (
-          <Card title={Event.title} style={{ width: 700, margin: '8px' }}>
-            <p>{Event.description}</p>
-          </Card>
-        )
-      })
-    ) : (
-        <div>No Events are currently there!</div>
-      )
-
     const componentsSwitch = (key) => {
       switch (key) {
         case '1':
           return (DonationList);
         case '2':
           return (OrganisationList);
-        case '3':
-          return (EventList);
         default:
           return (DonationList);
       }
@@ -306,7 +291,6 @@ class Discover extends Component {
               </SubMenu>
               <Menu.Item key="1" style={{ position: "absolute", zIndex: "10", top: 0, left: 0, height: "40px", paddingLeft: "20px" }}>Donations</Menu.Item>
               <Menu.Item key="2">Nearby Organisations</Menu.Item>
-              <Menu.Item key="3">Nearby Events/Activities</Menu.Item>
             </Menu>
           </Sider>
 
@@ -413,7 +397,6 @@ const mapStatetoProps = state => {
     Donations: state.DiscoverReducer.Donations.filter(checkvisibilty),
     pendingDonations: state.DiscoverReducer.Donations.filter(pendingdonations),
     Organisations: state.DiscoverReducer.Organisations,
-    Events: state.DiscoverReducer.Events
   };
 
 };

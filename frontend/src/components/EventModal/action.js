@@ -1,10 +1,10 @@
-
 import axios from "axios"
 
-export const addDonation = (data,contact) => async (dispatch) => {
-    const res = await axios.post('/api/donation/create',{donation:data});
+export const addEvent = (data) => async (dispatch) => {
+    const res = await axios.post('/api/event/create',{event:data});
+    console.log(res.data);
     dispatch({
-        type: 'ADD_DONATION',
-        payload:{...res.data.donation,contact:contact}
+        type: 'ADD_EVENT',
+        payload:res.data.event
     })
 }

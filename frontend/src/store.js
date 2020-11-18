@@ -15,6 +15,8 @@ import DiscoverReducer from './components/Discover/reducer';
 import ListReducer from './components/ListModal/reducer';
 import profileReducer from "./components/Profile/reducer";
 import messageReducer from "./components/messages/reducer";
+import CommunityReducer from "./components/Community/reducer";
+import LeaderboardReducer from "./components/Leaderboard/reducer";
 //import all reducers here
 
 const persistConfig = {
@@ -31,7 +33,10 @@ const rootReducer = combineReducers({
     ListReducer,
     LeftSidePanelReducer,
     profileReducer,
-    messageReducer
+    messageReducer,
+    CommunityReducer,
+    LeaderboardReducer,
+    
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

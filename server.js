@@ -3,8 +3,8 @@ const cors = require('cors')
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path')
-// const passport = require("passport");
 
+// const passport = require("passport");
 //IMPORT all routes
 
 const userRoutes = require("./routes/users")
@@ -12,6 +12,7 @@ const uploadRoutes = require('./routes/upload')
 const postRoutes = require("./routes/posts")
 const commentRoutes = require("./routes/comment")
 const messageRoutes = require("./routes/message");
+const eventRoutes = require("./routes/event")
 const { initiateSocket } = require('./routes/utils');
 const donationRoutes = require("./routes/donation")
 const app = express();
@@ -47,8 +48,9 @@ app.use('/upload', uploadRoutes)
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comment", commentRoutes);
-app.use("/api/message", messageRoutes)
+app.use("/api/message", messageRoutes);
 app.use("/api/donation", donationRoutes);
+app.use("/api/event",eventRoutes);
 
 app.get("*", (req, res) => {
     console.log("hereee")

@@ -6,8 +6,10 @@ import sortBy from 'lodash/sortBy';
 
 import 'antd/dist/antd.css';
 import '../../index.css';
+import MapDiscover from "../MapDiscover";
 
-import { Menu, Checkbox, Layout, Card, Space, Image} from 'antd';
+import { Menu, Checkbox, Layout, Modal , Button , Card, Space, Image} from 'antd';
+import { InboxOutlined , CompassOutlined , EnvironmentOutlined } from '@ant-design/icons';
 import { changeFilters, getEvent } from './actions';
 import LoadingScreen from '../LoadingScreen';
 
@@ -18,7 +20,10 @@ class Community extends Component {
   
   state = {
     selectedMenuItem: '1',
-    filters: []
+    mapOpen: false,
+    filters: [],
+    lngp: 77.2090,
+    latp: 28.6139
   }
 
   async componentDidMount() {
@@ -35,7 +40,7 @@ class Community extends Component {
   }
 
   render() {
-    const { selectedMenuItem } = this.state;
+    const { selectedMenuItem , latp , lngp } = this.state;
     const { Events } = this.props;
     const plainOptions = [
       { label: 'Location', value: 'Location' },
@@ -84,8 +89,9 @@ class Community extends Component {
     const EventList = Events.length ? (
       filterEvents.map(Event => {
         return (
-          <Card title={Event.title} style={{ width: 700, margin: '8px' }}>
-            <p>{Event.description}</p>
+        <Card title={<div>{Event.title}</div>} extra={<div><p>Event Date : {moment(Event.expiryTime).format("HH:mm ll")}</p></div>} style={{ width: 700, margin: '8px' }}>
+            <a onClick={() => this.setState({ mapOpen: true })} ><EnvironmentOutlined /> Event Location </a>
+            <p> Event Details : {Event.description}</p>
             <Space>
               {imagelist(Event.images)}
             </Space>
@@ -126,6 +132,15 @@ class Community extends Component {
             <Sider width={300} style={{ padding: "25px" }}> </Sider>
 
           </Layout >
+
+          <Modal footer={[
+          <Button onClick={() => this.setState({ mapOpen: false })}>
+            Return
+          </Button>
+          ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+          <MapDiscover latitudeP={latp} longitudeP={lngp}/>
+          </Modal>
+
         </Layout >
     )
   }

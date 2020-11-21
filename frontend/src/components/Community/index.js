@@ -89,12 +89,19 @@ class Community extends Component {
     const EventList = Events.length ? (
       filterEvents.map(Event => {
         return (
-        <Card title={<div>{Event.title}</div>} extra={<div><p>Event Date : {moment(Event.expiryTime).format("HH:mm ll")}</p></div>} style={{ width: 700, margin: '8px' }}>
+        <Card title={<div>{Event.title}</div>} extra={<div><p>Event Date : {moment(Event.expiryTime).format(" HH:mm ll")}</p></div>} style={{ width: 700, margin: '8px' }}>
             <a onClick={() => this.setState({ mapOpen: true })} ><EnvironmentOutlined /> Event Location </a>
             <p> Event Details : {Event.description}</p>
             <Space>
               {imagelist(Event.images)}
             </Space>
+            <Modal footer={[
+              <Button onClick={() => this.setState({ mapOpen: false })}>
+                Return
+              </Button>
+              ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+              <MapDiscover latitudeP={Event.location.coordinates[1]} longitudeP={Event.location.coordinates[0]} message = 'Event Location'/>
+              </Modal>
           </Card>
         )
       })
@@ -133,13 +140,7 @@ class Community extends Component {
 
           </Layout >
 
-          <Modal footer={[
-          <Button onClick={() => this.setState({ mapOpen: false })}>
-            Return
-          </Button>
-          ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
-          <MapDiscover latitudeP={latp} longitudeP={lngp}/>
-          </Modal>
+          
 
         </Layout >
     )

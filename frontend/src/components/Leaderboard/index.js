@@ -11,7 +11,6 @@ import { Modal, Menu, Checkbox, Layout,  Carousel , Table, Card, Button, Input, 
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { pendingDonation, changeFilters, getDonation, getOrganisation } from './actions';
-import { addFed, addHistory, rejectDonation, acceptdonation } from '../Profile/action';
 import { setCurrentRoute } from '../Navbar/actions';
 import LoadingScreen from '../LoadingScreen';
 
@@ -78,7 +77,6 @@ const data = [
   }
 ];
 
-
 class Leaderboard extends Component {
   state = {
     selectedMenuItem: '1',
@@ -92,6 +90,10 @@ class Leaderboard extends Component {
     const plainOptions = [
       { label: 'People Fed', value: 'Peoplefed' },
       { label: 'Rating', value: 'rating' },
+    ];
+    const plainOptions1 = [
+      { label: 'Donor', value: 'donor' },
+      { label: 'Organsation', value: 'organisation' },
     ];
     const onChange = (checkedValues) => {
       this.setState({
@@ -117,12 +119,12 @@ class Leaderboard extends Component {
               activeKey={selectedMenuItem}
               style={{ position: "relative" }}
             >
-              <SubMenu key="1" title="Organisations" style={{ fontSize: '16px', height: "100% " }}>
+              <SubMenu key="1" title="Type" style={{ fontSize: '16px', height: "100% " }}>
                 <div style={{ "padding": "auto" }}>
-                  <Checkbox.Group options={plainOptions} onChange={onChange} />
+                  <Checkbox.Group options={plainOptions1} onChange={onChange} />
                 </div>
               </SubMenu>
-              <SubMenu key="2" title="Donors" style={{ fontSize: '16px', height: "100% " }}>
+              <SubMenu key="2" title="Filter" style={{ fontSize: '16px', height: "100% " }}>
                 <div style={{ "padding": "auto" }}>
                   <Checkbox.Group options={plainOptions} onChange={onChange} />
                 </div>
@@ -141,18 +143,10 @@ class Leaderboard extends Component {
                 marginTop: '20px'
               }}>
               <Carousel autoplay>
-              <div>
-              <h3 style={contentStyle}>1</h3>
-              </div>
-              <div>
-              <h3 style={contentStyle}>2</h3>
-              </div>
-              <div>
-              <h3 style={contentStyle}>3</h3>
-              </div>
-              <div>
-              <h3 style={contentStyle}>4</h3>
-              </div>
+              <div> <h3 style={contentStyle}>1</h3> </div>
+              <div> <h3 style={contentStyle}>2</h3> </div>
+              <div> <h3 style={contentStyle}>3</h3> </div>
+              <div> <h3 style={contentStyle}>4</h3> </div>
               </Carousel>
               </div>
 

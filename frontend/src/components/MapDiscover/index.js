@@ -56,9 +56,8 @@ class MapDiscover extends Component {
   render() {
     const longitude = this.props.coords ? this.props.coords.longitude : DEFUALT_LONGITUDE;
     const latitude = this.props.coords ? this.props.coords.latitude : DEFAULT_LATITUDE;
-    const latitudeP = 28.6139;
-    const longitudeP = 77.2090;
-
+    console.log(this.props);
+    const { longitudeP, latitudeP, message } = this.props;
     if (!this.state.initialised && this.props.coords) {
       this.setState({ initialised: true })
       this.addMarker({
@@ -112,7 +111,7 @@ class MapDiscover extends Component {
                   position={[latitudeP, longitudeP]}
                 >
                   <Popup>
-                    Pickup Location
+                    {message}
                   </Popup>
                 </Marker>
           </Map>

@@ -114,6 +114,7 @@ class Discover extends Component {
     }
 
     const addpending = (Donation) => {
+      this.setState({ mapOpen: true });
       this.props.pendingDonation(Donation);
     }
 
@@ -166,7 +167,7 @@ class Discover extends Component {
         }}>
           <p className="text" onClick={() => { this.props.setCurrentRoute('messages') }} ><b> Contact Donor </b></p>
         </Link>,
-        <p className="text" onClick={() => addpending(Donation)} ><b onClick={() => this.setState({ mapOpen: true })} > Interested </b></p>,
+        <p className="text" onClick={() => addpending(Donation)} ><b> Interested </b></p>,
       ]
 
       return value;
@@ -183,7 +184,24 @@ class Discover extends Component {
             <Space>
               {imagelist(Donation.images)}
             </Space>
-
+          <Modal footer={[
+            <Button onClick={() => this.setState({ mapOpen: false })}>
+              Done
+            </Button>
+            ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+            <MapDiscover latitudeP={Donation.location.coordinates[1]} longitudeP={Donation.location.coordinates[0]} message = 'Pickup Point'/>
+          <div style={{ marginLeft : "25vw" }}>
+          <p>
+          <br/>  
+          <Space>
+            Enter Pickup Date : 
+            <DatePicker onChange={value => console.log(value)} disabledDate={this.disabledDate} format="HH:mm ll" />
+            Enter Pickup Time : 
+            <TimePicker onChange={value => console.log(value)} />
+          </Space>
+          </p>
+          </div>
+          </Modal>
           </Card>
         )
       })
@@ -377,42 +395,6 @@ class Discover extends Component {
 
             </Form>
           </Modal>
-          
-          <Modal footer={[
-          <Button onClick={() => this.setState({ mapOpen: false })}>
-            Done
-          </Button>
-          ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
-          <MapDiscover latitudeP={latp} longitudeP={lngp}/>
-          <div style={{ marginLeft : "25vw" }}>
-          <p>
-          <br/>  
-          <Space>
-            Enter Pickup Date : 
-            <DatePicker onChange={value => console.log(value)} disabledDate={this.disabledDate} format="HH:mm ll" />
-            Enter Pickup Time : 
-            <TimePicker onChange={value => console.log(value)} />
-          </Space>
-          </p>
-          {/* <Form
-              id='pickupinfoform'
-              
-              name="basic"
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-            >
-              <Form.Item name="date-picker" label="Enter Pickup date">
-              <DatePicker disabledDate={this.disabledDate} format="HH:mm ll" />
-              </Form.Item>
-
-              <Form.Item name="time-picker" label="Enter Pickup Time">
-              <TimePicker onChange={value => console.log(value)} />
-              </Form.Item>
-            
-            </Form> */}
-          </div>
-          </Modal>
-
         </Layout >
     )
   }

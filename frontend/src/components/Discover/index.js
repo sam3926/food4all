@@ -8,7 +8,9 @@ import sortBy from 'lodash/sortBy';
 import 'antd/dist/antd.css';
 import '../../index.css';
 import './styles.css'
-import { Modal, Menu, Checkbox, Layout, Card, Button, Input, Space, Image, Form, Avatar } from 'antd';
+import MapDiscover from "../MapDiscover";
+
+import { Modal, Menu, DatePicker, TimePicker , Checkbox, Layout, Card, Button, Input, Space, Image, Form, Avatar } from 'antd';
 import { HomeOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { pendingDonation, changeFilters, getDonation, getOrganisation } from './action';
@@ -47,7 +49,10 @@ class Discover extends Component {
     selectedMenuItem: '1',
     loading: false,
     visible: false,
-    filters: []
+    filters: [],
+    mapOpen: false,
+    lngp: 77.2090,
+    latp: 28.6139
   }
   async componentDidMount() {
     this.setState({
@@ -89,8 +94,12 @@ class Discover extends Component {
     this.setState({ visible: false });
   };
 
+  disabledDate = (current) => {
+    return current && current < moment().endOf('day');
+  }
+
   render() {
-    const { selectedMenuItem, visible, loading } = this.state;
+    const { selectedMenuItem, visible, loading , latp , lngp } = this.state;
     const { Organisations, Donations, pendingDonations, pendingDonorDonation } = this.props
 
     const plainOptions = [
@@ -105,6 +114,7 @@ class Discover extends Component {
     }
 
     const addpending = (Donation) => {
+      this.setState({ mapOpen: true });
       this.props.pendingDonation(Donation);
     }
 
@@ -174,7 +184,24 @@ class Discover extends Component {
             <Space>
               {imagelist(Donation.images)}
             </Space>
-
+          <Modal footer={[
+            <Button onClick={() => this.setState({ mapOpen: false })}>
+              Done
+            </Button>
+            ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+            <MapDiscover latitudeP={Donation.location.coordinates[1]} longitudeP={Donation.location.coordinates[0]} message = 'Pickup Point'/>
+          <div style={{ marginLeft : "25vw" }}>
+          <p>
+          <br/>  
+          <Space>
+            Enter Pickup Date : 
+            <DatePicker onChange={value => console.log(value)} disabledDate={this.disabledDate} format="HH:mm ll" />
+            Enter Pickup Time : 
+            <TimePicker onChange={value => console.log(value)} />
+          </Space>
+          </p>
+          </div>
+          </Modal>
           </Card>
         )
       })
@@ -368,8 +395,6 @@ class Discover extends Component {
 
             </Form>
           </Modal>
-
-
         </Layout >
     )
   }

@@ -6,7 +6,7 @@ import moment from 'moment';
 
 import 'antd/dist/antd.css';
 import { Form, Upload, Row , Col , Input , Modal,DatePicker, Button } from 'antd';
-import { InboxOutlined , CompassOutlined } from '@ant-design/icons';
+import { InboxOutlined , CompassOutlined , EnvironmentOutlined } from '@ant-design/icons';
 
 import MapComp from "../MapComp";
 import { addEvent } from './action';

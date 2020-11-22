@@ -107,13 +107,14 @@ class Home extends Component {
                                 <p onClick={info}><ShoppingCartOutlined hoverable={true} key="buyAwards" /> Buy now! </p>,
                             ]}
                             >
+                     
                             <p>
                                 <Avatar.Group>
-                                <Avatar size="small" src="https://www.clipartmax.com/png/small/119-1190442_shield-batch-star-safe-badge-sheriff-police-icon-badge.png" />
-                                <Avatar size="large" src="https://www.clipartmax.com/png/small/216-2160288_shield-badge-star-reward-award-honor-achievement-comments-sheriff-shield.png" />
-                                <Avatar size={64} src="https://www.clipartmax.com/png/small/155-1553987_all-finishers-will-receive-a-custom-medal-award-icon.png" />
-                                <Avatar size="large" src="https://www.clipartmax.com/png/small/216-2160288_shield-badge-star-reward-award-honor-achievement-comments-sheriff-shield.png" />
-                                <Avatar size="small" src="https://www.clipartmax.com/png/small/119-1190442_shield-batch-star-safe-badge-sheriff-police-icon-badge.png" />
+                                <Avatar size="small" src="/images/awards/silver.jpg" />
+                                <Avatar size="large" src="/images/awards/gold.jpg" />
+                                <Avatar size={64} src="/images/awards/diamond.jpg" />
+                                <Avatar size="large" src="/images/awards/gold.jpg" />
+                                <Avatar size="small" src="/images/awards/silver.jpg" />
                                 </Avatar.Group>
                                 NofoodWasted awards are the best way to show your appreciation for work of other users!</p>
                         </Card>

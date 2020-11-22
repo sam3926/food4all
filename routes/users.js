@@ -361,6 +361,18 @@ router.post('/pending-donations/:id', isOrg, async (req, res, next) => {
     next(err)
   }
 })
-
+router.get('/leaderboard',isAuth, async(req,res,next) => {
+  try{
+      const ranked_users = await User.find({}).sort({noFed:-1}).select('name userType noFed').limit(15);
+      console.log(ranked_users);
+      res.status(200).json({list:ranked_users})
+  }
+  catch(err) {
+    if(!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
 
 module.exports = router;

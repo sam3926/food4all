@@ -51,6 +51,10 @@ const userSchema = new Schema({
     type: Number,
     default: 0
   },
+  rating:{
+    type: Number,
+    default:0
+  },
   noDonations: {
     type: Number,
     default: 0

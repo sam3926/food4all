@@ -6,8 +6,10 @@ import { Link } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
 import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space } from 'antd';
+import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge, message } from 'antd';
 import "./styles.css"
+
+//import {diamondAward} from '../../awards/diamond.jpg'
 
 import FollowersList from './FollowersList';
 import { setCurrentRoute } from '../Navbar/actions';
@@ -146,6 +148,22 @@ class Profile extends Component {
   handleCancelEdit = () => {
     this.setState({ visibleEdit: false });
   };
+
+  handleClickDiamond = () => {
+    message.info('Diamond award: each one feeds upto 5 people');
+  }
+
+  handleClickGold = () => {
+    message.info('Gold award : each one feeds upto 3 people');
+  }
+
+  handleClickleaderboardTop = () => {
+    message.info('nofoodWasted leaderboard :  Top contributor!');
+  }
+
+  handleClickSilver = () => {
+    message.info('Silver award : each feeds 1 person');
+  }
 
   callback = (key) => {
     console.log(key);
@@ -290,7 +308,7 @@ class Profile extends Component {
               >
                 <div style={{ display: "flex" }}>
                   <Image
-                    width={250}
+                    width={240}
                     src={profileDetails?.profilePic}
                   />
                   <Button
@@ -299,14 +317,37 @@ class Profile extends Component {
                     onClick={() => this.setState({ visibleProfilePic: true })}>
                     <EditOutlined />
                   </Button>
-                  <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                  <div style={{ marginLeft: "8px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
                     <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
 
-                    <div>
-                      <p>{profileDetails?.description}</p>
+                    <div style={{}}>
+                      <p>{profileDetails?.description} </p>
 
                       <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
                       <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
+
+                      <span style={{float: "right", marginLeft: "40px"}}>
+                      <span onClick={this.handleClickleaderboardTop} style={{marginRight: "6px" }}>
+                        <Badge size="small" count={10} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" src = "/images/awards/leaderboardTop.jpg" />
+                        </Badge>
+                      </span>
+                      <span onClick={this.handleClickDiamond} style={{marginRight: "6px" }}>
+                        <Badge size="small" count={3} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" src = "/images/awards/diamond.jpg" />
+                        </Badge>
+                      </span>
+                      <span onClick={this.handleClickGold} style={{marginRight: "6px" }}>
+                        <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" src = "/images/awards/gold.jpg" />
+                        </Badge>
+                      </span>
+                      <span onClick={this.handleClickSilver} style={{ }}>
+                        <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" src = "/images/awards/silver.jpg" />
+                        </Badge>
+                      </span>
+                      </span>
                     </div>
                     <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
                       <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={

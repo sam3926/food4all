@@ -10,6 +10,9 @@ const LeaderboardReducer = (state = initialState, action) => {
         case ACTION.CHANGE_FILTERS: {
             return { ...state, currentfilter: action.selectedfilters }
         }
+        case 'GET_LIST': {
+            return {...state, list: action.payload}
+        }
     }
     return state;
 }

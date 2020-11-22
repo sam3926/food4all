@@ -1,5 +1,6 @@
 import io from "socket.io-client";
 import { updateThread } from "../components/messages/actions";
+import { getSingleNotification, getUnreadMessage } from "../components/Navbar/actions"
 import { store } from "../store";
 // let server = "http://localhost:8000";
 let server = "/"
@@ -26,8 +27,16 @@ export const startConnection = () => {
     socket.on("output_message", thread => {
         // this.props.updateThread(thread);
         store.dispatch(updateThread(thread));
+        store.dispatch(getUnreadMessage())
         console.log("WOW... I got it", thread)
     })
+
+
+    socket.on("notification", notification => {
+        store.dispatch(getSingleNotification(notification));
+        console.log(notification)
+    })
+
     return socket;
 
 }

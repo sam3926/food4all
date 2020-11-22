@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
 import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge } from 'antd';
+import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge, message } from 'antd';
 import "./styles.css"
 
 //import {diamondAward} from '../../awards/diamond.jpg'
@@ -149,6 +149,22 @@ class Profile extends Component {
     this.setState({ visibleEdit: false });
   };
 
+  handleClickDiamond = () => {
+    message.info('Diamond award: each one feeds upto 5 people');
+  }
+
+  handleClickGold = () => {
+    message.info('Gold award : each one feeds upto 3 people');
+  }
+
+  handleClickleaderboardTop = () => {
+    message.info('nofoodWasted leaderboard :  Top contributor!');
+  }
+
+  handleClickSilver = () => {
+    message.info('Silver award : each feeds 1 person');
+  }
+
   callback = (key) => {
     console.log(key);
   }
@@ -215,6 +231,9 @@ class Profile extends Component {
         </TabPane>
 
         <TabPane tab="Posts" key="posts">
+
+
+
           {profileDetails?.posts?.map(post => (
             <Card title={post.author} extra={post.DateTime} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
               <p>{post.description}</p>
@@ -302,26 +321,28 @@ class Profile extends Component {
                     <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
 
                     <div style={{}}>
-                      <p>{profileDetails?.description}</p>
+                      <p>{profileDetails?.description} </p>
+
                       <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
                       <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
+
                       <span style={{float: "right", marginLeft: "40px"}}>
-                      <span style={{marginRight: "6px" }}>
+                      <span onClick={this.handleClickleaderboardTop} style={{marginRight: "6px" }}>
                         <Badge size="small" count={10} style={{backgroundColor: "#97033e"}}>
                           <Avatar size="small" src = "/images/awards/leaderboardTop.jpg" />
                         </Badge>
                       </span>
-                      <span style={{marginRight: "6px" }}>
+                      <span onClick={this.handleClickDiamond} style={{marginRight: "6px" }}>
                         <Badge size="small" count={3} style={{backgroundColor: "#97033e"}}>
                           <Avatar size="small" src = "/images/awards/diamond.jpg" />
                         </Badge>
                       </span>
-                      <span style={{marginRight: "6px" }}>
+                      <span onClick={this.handleClickGold} style={{marginRight: "6px" }}>
                         <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
                           <Avatar size="small" src = "/images/awards/gold.jpg" />
                         </Badge>
                       </span>
-                      <span style={{ }}>
+                      <span onClick={this.handleClickSilver} style={{ }}>
                         <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
                           <Avatar size="small" src = "/images/awards/silver.jpg" />
                         </Badge>

@@ -13,6 +13,7 @@ import { changelike, getPost } from './action';
 import { setCurrentRoute } from '../Navbar/actions';
 import PostModal from '../PostModal';
 import Comments from '../Comments';
+import Awards from '../Awards';
 import LoadingScreen from '../LoadingScreen';
 
 const { Content } = Layout;
@@ -25,7 +26,9 @@ class HomeCenter extends Component {
         loadingComments: false,
         visibleComments: false,
         currentPostid: null,
-        profilePageLoading: false
+        profilePageLoading: false,
+        visibleawards: false,
+        visiblepayment: false,
     }
     async componentDidMount(){
         this.setState({
@@ -79,12 +82,45 @@ class HomeCenter extends Component {
     handleCancelComments = () => {
         this.setState({ visibleComments: false });
     };
+
+    showModalawards = () => {
+        this.setState({
+          visibleawards: true
+        });
+      };
+    
+    hideModalawards = () => {
+        this.setState({
+          visibleawards: false
+        });
+      };
+
+    hideModalSawards = () => {
+        this.setState({
+          visibleawards: false,
+          visiblepayment: true
+        });
+      };
+
+    hideModalP = () => {
+        this.setState({
+            visiblepayment: false
+        });
+      };
+    
+    hideModalB = () => {
+        this.setState({
+            visiblepayment: false,
+            visibleawards: true
+        });
+      };
+
     incrementLike = (id,value) =>{
         this.props.changelike(id,value)
     }
     render (){
         
-        const { visible, loading , visibleComments, loadingComments} = this.state;
+        const { visible, visibleawards , loading , visiblepayment , visibleComments, loadingComments} = this.state;
         const { posts } = this.props;
         const imageList = (imagelist) =>{
             if(imagelist==undefined)
@@ -121,7 +157,7 @@ class HomeCenter extends Component {
                         <div onClick={(id) =>this.incrementLike(post._id,post.liked)} >{type(post.liked)}{post.noOfLikes}</div>,
                         <div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
                         <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post._id)} key="Comment" style={{margin:"8px"}}/> </div>,
-                        <div><GiftOutlined key="Award" style={{margin:"8px"}}/> </div>,
+                        <div><GiftOutlined key="Award" onClick={this.showModalawards} style={{margin:"8px"}}/> </div>,
                         ]} >
                         <p>{post.description}</p>
                         <Space>
@@ -144,6 +180,7 @@ class HomeCenter extends Component {
                 </Card>
                 <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    
                 <Comments id={this.state.currentPostid} handleCancel={this.handleCancelComments} handleOk={this.handleOkComments} showModal={this.showModalComments} visible={visibleComments} loading={loadingComments}/>
+                <Awards hideModal={this.hideModalawards} hideModalB={this.hideModalB} hideModalP={this.hideModalP} hideModalS={this.hideModalSawards} showModal={this.showModalawards} visible={visibleawards} visiblepay={visiblepayment} />
                 {postList}   
             </Content>
         )

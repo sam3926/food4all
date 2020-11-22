@@ -84,7 +84,18 @@ const userSchema = new Schema({
     icon: String,
     text: String
   }],
-
+  notifications: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Notification'
+  }],
+  unreadNotifications: {
+    type: Boolean,
+    default: false
+  },
+  unreadMessage: {
+    type: Boolean,
+    default: false
+  },
   threads: [{
     type: Schema.Types.ObjectId,
     ref: 'Thread'

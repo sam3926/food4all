@@ -6,8 +6,10 @@ const keys = require("../config/keys");
 
 // Load User model
 const User = require("../models/User");
+const Notification = require("../models/Notification");
 const isAuth = require("../middlewares/isAuth");
 const isOrg = require("../middlewares/isOrg");
+const { getOnlineUsers } = require("./utils");
 
 router.post("/register", async (req, res, next) => {
   const { email, name, password, contact, description, address, userType, location } = req.body;
@@ -85,19 +87,19 @@ router.post("/login", async (req, res, next) => {
   }
 
 })
-router.get('/organisations',isAuth, async(req,res,next) =>{
-  try{
-      const organisation = await User.find({userType:'organisation'}).select('name noFed contact address avatar _id')
-      console.log('this is the organsaiton get ')
-      console.log(organisation)
-      res.json({
-          'organisations': organisation
-      })
-  } catch(err){
-      if(!err.statusCode){
-          err.statusCode=500
-      }
-      next(err)
+router.get('/organisations', isAuth, async (req, res, next) => {
+  try {
+    const organisation = await User.find({ userType: 'organisation' }).select('name noFed contact address avatar _id')
+    console.log('this is the organsaiton get ')
+    console.log(organisation)
+    res.json({
+      'organisations': organisation
+    })
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
   }
 })
 router.get('/profile/:id', isAuth, async (req, res, next) => {
@@ -159,8 +161,32 @@ router.get('/follow/:id', isAuth, async (req, res, next) => {
       err.statusCode = 403;
       throw err;
     } else {
-      const user = await User.findByIdAndUpdate(id, { $push: { followers: req.userId } }, { new: true }).populate('donations posts')
-      await User.findByIdAndUpdate(req.userId, { $push: { following: id } })
+
+      const notification = new Notification({
+        notificationType: "follow",
+        user: req.userId,
+      })
+      const t = await notification.save()
+      const not = await t.populate({
+        path: 'user',
+        select: 'avatar name'
+      }).execPopulate()
+
+      console.log("OKAAAYYYY")
+      let user;
+      let onlineUsers = getOnlineUsers();
+      if (onlineUsers[id]) {
+        user = await User.findByIdAndUpdate(id, { $push: { followers: req.userId, notifications: t } }, { new: true }).populate('donations posts')
+        await User.findByIdAndUpdate(req.userId, { $push: { following: id } })
+        console.log("user online")
+        let receiverSocket = onlineUsers[id];
+        receiverSocket.emit('notification', not);
+      } else {
+        user = await User.findByIdAndUpdate(id, { $push: { followers: req.userId, notifications: t }, $set: { unreadNotifications: true } }, { new: true }).populate('donations posts')
+        await User.findByIdAndUpdate(req.userId, { $push: { following: id } })
+        console.log("user not online", Object.keys(onlineUsers))
+        //Set some unread thing
+      }
       res.status(200).json(user)
     }
 
@@ -299,9 +325,9 @@ router.get('/history/:id', isAuth, async (req, res, next) => {
   }
 })
 
-router.post('/addfed',isAuth, async(req,res,next) => {
+router.post('/addfed', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.userId, { $inc: {noFed:req.body.value} }, { new: true }).populate('donations posts');
+    const user = await User.findByIdAndUpdate(req.userId, { $inc: { noFed: req.body.value } }, { new: true }).populate('donations posts');
     res.status(200).json(user)
 
   } catch (err) {
@@ -311,9 +337,9 @@ router.post('/addfed',isAuth, async(req,res,next) => {
     next(err)
   }
 })
-router.post('/addhistory',isAuth, async(req,res,next) => {
+router.post('/addhistory', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.userId, { $push: {history:req.body.history} }, { new: true }).populate('donations posts');
+    const user = await User.findByIdAndUpdate(req.userId, { $push: { history: req.body.history } }, { new: true }).populate('donations posts');
     res.status(200).json(user)
 
   } catch (err) {
@@ -354,6 +380,70 @@ router.get('/pending-donations', isAuth, async (req, res, next) => {
 router.post('/pending-donations/:id', isOrg, async (req, res, next) => {
   try {
 
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
+router.post('/notifications', isAuth, async (req, res, next) => {
+  try {
+    const not = new Notification({
+      notificationType: "follow",
+      user: req.userId,
+    })
+    const t = await not.save()
+    console.log(t)
+    await User.findByIdAndUpdate(req.userId, { $push: { notifications: t } })
+    res.json({ "yes": "no" })
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
+router.get('/read-notifications', isAuth, async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.userId, { unreadNotifications: false })
+    res.status(200).json({ "yes": "no" })
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
+router.get('/read-messages', isAuth, async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.userId, { unreadMessages: false })
+    res.status(200).json({ "yes": "no" })
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
+
+
+router.get('/notifications', isAuth, async (req, res, next) => {
+  try {
+    const notifications = await User.findById(req.userId).select('notifications unreadNotifications unreadMessage').populate({
+      path: 'notifications',
+
+      populate: {
+        path: 'user',
+        model: 'User',
+        select: 'name avatar'
+      }
+    }).slice('notifications', -5)
+    res.json(notifications)
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500

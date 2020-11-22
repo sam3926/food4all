@@ -6,8 +6,10 @@ import { Link } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
 import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space } from 'antd';
+import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge } from 'antd';
 import "./styles.css"
+
+//import {diamondAward} from '../../awards/diamond.jpg'
 
 import FollowersList from './FollowersList';
 import { setCurrentRoute } from '../Navbar/actions';
@@ -290,7 +292,7 @@ class Profile extends Component {
               >
                 <div style={{ display: "flex" }}>
                   <Image
-                    width={250}
+                    width={240}
                     src={profileDetails?.profilePic}
                   />
                   <Button
@@ -299,14 +301,36 @@ class Profile extends Component {
                     onClick={() => this.setState({ visibleProfilePic: true })}>
                     <EditOutlined />
                   </Button>
-                  <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                  <div style={{ marginLeft: "8px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
                     <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
 
-                    <div>
+                    <div style={{}}>
                       <p>{profileDetails?.description}</p>
 
                       <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
                       <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
+                      <span style={{float: "right", marginLeft: "40px"}}>
+                      <span style={{marginRight: "6px" }}>
+                        <Badge size="small" count={10} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" icon={<HomeOutlined />} />
+                        </Badge>
+                      </span>
+                      <span style={{marginRight: "6px" }}>
+                        <Badge size="small" count={3} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" icon={<HomeOutlined />} />
+                        </Badge>
+                      </span>
+                      <span style={{marginRight: "6px" }}>
+                        <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" icon={<HomeOutlined />} />
+                        </Badge>
+                      </span>
+                      <span style={{ }}>
+                        <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" icon={<HomeOutlined />} />
+                        </Badge>
+                      </span>
+                      </span>
                     </div>
                     <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
                       <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={

@@ -107,6 +107,15 @@ class Home extends Component {
                                 <p onClick={info}><ShoppingCartOutlined hoverable={true} key="buyAwards" /> Buy now! </p>,
                             ]}
                             >
+                            {
+                      /*
+                      All images mentioned here saved in food4all/images/awards
+
+                        Avator 1, 5 image to be silver
+                        Avatar 2, 4 image to be gold
+                        Avatar 3 image to be diamond
+                      */
+                    }
                             <p>
                                 <Avatar.Group>
                                 <Avatar size="small" src="https://www.clipartmax.com/png/small/119-1190442_shield-batch-star-safe-badge-sheriff-police-icon-badge.png" />

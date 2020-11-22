@@ -215,9 +215,6 @@ class Profile extends Component {
         </TabPane>
 
         <TabPane tab="Posts" key="posts">
-
-
-
           {profileDetails?.posts?.map(post => (
             <Card title={post.author} extra={post.DateTime} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
               <p>{post.description}</p>
@@ -306,28 +303,27 @@ class Profile extends Component {
 
                     <div style={{}}>
                       <p>{profileDetails?.description}</p>
-
                       <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
                       <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
                       <span style={{float: "right", marginLeft: "40px"}}>
                       <span style={{marginRight: "6px" }}>
                         <Badge size="small" count={10} style={{backgroundColor: "#97033e"}}>
-                          <Avatar size="small" icon={<HomeOutlined />} />
+                          <Avatar size="small" src = "/images/awards/leaderboardTop.jpg" />
                         </Badge>
                       </span>
                       <span style={{marginRight: "6px" }}>
                         <Badge size="small" count={3} style={{backgroundColor: "#97033e"}}>
-                          <Avatar size="small" icon={<HomeOutlined />} />
+                          <Avatar size="small" src = "/images/awards/diamond.jpg" />
                         </Badge>
                       </span>
                       <span style={{marginRight: "6px" }}>
                         <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
-                          <Avatar size="small" icon={<HomeOutlined />} />
+                          <Avatar size="small" src = "/images/awards/gold.jpg" />
                         </Badge>
                       </span>
                       <span style={{ }}>
                         <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
-                          <Avatar size="small" icon={<HomeOutlined />} />
+                          <Avatar size="small" src = "/images/awards/silver.jpg" />
                         </Badge>
                       </span>
                       </span>

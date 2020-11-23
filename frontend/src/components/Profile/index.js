@@ -323,6 +323,8 @@ class Profile extends Component {
                   </Button>
                   <div style={{ marginLeft: "8px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
                     <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}
+                    {profileDetails.userType === "organisation" ?
+                    (
                       <span style={{position: "relative", top: "-8px", left: "-4px"}}>
                     <Button
                       shape="circle"
@@ -333,6 +335,10 @@ class Profile extends Component {
                       <CheckCircleTwoTone />
                     </Button>
                     </span>
+                    ) :
+                    null
+                    }
+                    
                     </p>
                     <div style={{}}>
                       <p>{profileDetails?.description} </p>

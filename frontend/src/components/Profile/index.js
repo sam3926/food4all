@@ -244,22 +244,18 @@ class Profile extends Component {
             </Card>
           ))}
         </TabPane>
-        <TabPane tab="Acheivements" key="achievements" >
-          <p style={{ fontSize: "20px", textAlign: "center" }}> Coming Soon!</p>
-        </TabPane>
       </Tabs >
     );
-
     const PendingDonationList = PendingDonations.length ? (
       PendingDonations.map(PendingDonation => {
         return (
-          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
+          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("ll")} size="small" style={{ width: 250 }}
             actions={[
               <p classname="cardtext1" onClick={() => this.showModalAccept(PendingDonation)} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
               <p onClick={() => this.props.rejectDonation(PendingDonation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
             ]}
           >
-            <p>{PendingDonation.description}</p>
+            <p><p><b>Time Given: </b>{PendingDonation.pickupDate}</p>{PendingDonation.description}</p>
           </Card>
         )
       })

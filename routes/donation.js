@@ -75,10 +75,20 @@ router.get('/donations',isAuth, async(req,res,next) =>{
 router.post('/changeStatus',isAuth,async(req,res,next) =>{
     try{
         const { _id,status } = req.body
-        await Donations.updateOne({_id:_id},{
-            status:status,
-            receiverId:req.userId
-        });   
+        if (status=='pending'){
+            await Donations.updateOne({_id:_id},{
+                status:status,
+                receiverId:req.userId,
+                pickupDate:req.body.date
+            });
+        }
+        else{
+            await Donations.updateOne({_id:_id},{
+                status:status,
+                receiverId:req.userId
+            });
+        }
+           
         
         res.status(200).json({'message':'changed successfully'})
     } catch(err){

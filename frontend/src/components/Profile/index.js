@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
-import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined, CheckCircleTwoTone } from '@ant-design/icons';
 import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge, message } from 'antd';
 import "./styles.css"
 
@@ -150,15 +150,19 @@ class Profile extends Component {
   };
 
   handleClickDiamond = () => {
-    message.info('Diamond award: each one feeds upto 5 people');
+    message.info('Diamond award: each one feeds upto 3 people');
   }
 
   handleClickGold = () => {
-    message.info('Gold award : each one feeds upto 3 people');
+    message.info('Gold award : each one feeds upto 2 people');
   }
 
   handleClickleaderboardTop = () => {
     message.info('nofoodWasted leaderboard :  Top contributor!');
+  }
+
+  handleClickverifiedAccount = () => {
+    message.info('This is a verified organisation registered with the authorities!');
   }
 
   handleClickSilver = () => {
@@ -245,13 +249,13 @@ class Profile extends Component {
     const PendingDonationList = PendingDonations.length ? (
       PendingDonations.map(PendingDonation => {
         return (
-          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
+          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("ll")} size="small" style={{ width: 250 }}
             actions={[
               <p classname="cardtext1" onClick={() => this.showModalAccept(PendingDonation)} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
               <p onClick={() => this.props.rejectDonation(PendingDonation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
             ]}
           >
-            <p>{PendingDonation.description}</p>
+            <p><p><b>Time Given: </b>{PendingDonation.pickupDate}</p>{PendingDonation.description}</p>
           </Card>
         )
       })
@@ -314,8 +318,24 @@ class Profile extends Component {
                     <EditOutlined />
                   </Button>
                   <div style={{ marginLeft: "8px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-                    <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
-
+                    <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}
+                    {profileDetails.userType === "organisation" ?
+                    (
+                      <span style={{position: "relative", top: "-8px", left: "-4px"}}>
+                    <Button
+                      shape="circle"
+                      size="small"
+                      ghost="true"
+                      type="link"
+                      onClick={this.handleClickverifiedAccount}>
+                      <CheckCircleTwoTone />
+                    </Button>
+                    </span>
+                    ) :
+                    null
+                    }
+                    
+                    </p>
                     <div style={{}}>
                       <p>{profileDetails?.description} </p>
 

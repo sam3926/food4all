@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import 'antd/dist/antd.css';
 import '../../index.css';
-import { Menu, Checkbox, Layout,  Carousel , Table, Tag } from 'antd';
+import { Menu, Checkbox, Layout,  Carousel , Table, Tag, Image } from 'antd';
 
 import { changeFilters, getList } from './actions';
 
@@ -14,9 +14,10 @@ const { SubMenu } = Menu;
 const contentStyle = {
   height: '200px',
   color: '#fff',
-  lineHeight: '160px',
+  lineHeight: '30px',
   textAlign: 'center',
   background: '#364d79',
+  fontSize: '20px'
 };
 
 const columns = [
@@ -164,10 +165,45 @@ class Leaderboard extends Component {
                 marginTop: '20px'
               }}>
               <Carousel autoplay>
-              <div> <h3 style={contentStyle}>1</h3> </div>
-              <div> <h3 style={contentStyle}>2</h3> </div>
-              <div> <h3 style={contentStyle}>3</h3> </div>
-              <div> <h3 style={contentStyle}>4</h3> </div>
+              <div> <div style={contentStyle}>
+                <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
+                <Image
+                  width={200}
+                  src="images\leaderboard\leaderboard.png"
+                />
+                </span>
+                <p style={{paddingTop: "40px", fontSize:"60px"}}>Leaderboard</p> <p> a look at our top contributors!</p></div>
+              </div>
+              
+              <div> <div style={contentStyle}>
+                <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
+                <Image
+                  width={200}
+                  src="images\leaderboard\leaderboard.png"
+                />
+                </span>
+                <p style={{paddingTop: "40px", fontSize:"60px"}}>1. Y </p> <p> X has fed xx people</p></div>
+              </div>
+              <div> <div style={contentStyle}>
+                <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
+                <Image
+                  width={200}
+                  src="images\leaderboard\leaderboard.png"
+                />
+                </span>
+                <p style={{paddingTop: "40px", fontSize:"60px"}}>2. Y</p> <p> X has fed xx people</p></div>
+              </div>
+              
+              <div> <div style={contentStyle}>
+                <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
+                <Image
+                  width={200}
+                  src="images\leaderboard\leaderboard.png"
+                />
+                </span>
+                <p style={{paddingTop: "40px", fontSize:"60px"}}>3. Y</p> <p> X has fed xx people</p></div>
+              </div>
+
               </Carousel>
               </div>
 

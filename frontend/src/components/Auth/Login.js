@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { loginUser } from "./action";
 import { bindActionCreators } from "redux";
 import { Form, Input, Button } from 'antd';
-import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import { MailOutlined, LockOutlined, HeartFilled } from '@ant-design/icons';
 
 
 class Login extends Component {
@@ -51,41 +51,52 @@ class Login extends Component {
         const { errors } = this.state;
 
         return (
-            <div style={{ paddingTop: "200px", height: "100vh", display: "flex", justifyContent: "center" }}>
-                <Form
-                    layout="vertical"
-                    style={{
-                        width: "500px"
-                    }}
-                    onFinish={this.onSubmit}
-                >
-                    <Form.Item
-                        label="Email"
-                        name="email"
-                        rules={[{
-                            type: 'email',
-                            message: 'The input is not valid E-mail!',
-                        }, { required: true, message: 'Please input your email!' }]}
+            <div>
+                <div style={{ paddingTop: "200px", paddingLeft: "100px" ,height: "100vh", justifyContent: "center", float: "left" }}>
+                    <span style={{fontSize: "70px", color: "#97033e", marginLeft: "32px"}}>
+                    <HeartFilled />nofoodWasted
+                    </span>
+                    <p style={{fontSize: "16px"}}>
+                        nofoodWasted is a community-led initiative to help bring about zero hunger. Join now!
+                    </p>
+                    
+                </div>
+                <div style={{ paddingTop: "200px", paddingRight: "100px" ,height: "100vh", justifyContent: "center", float: "right" }}>
+                    <Form
+                        layout="vertical"
+                        style={{
+                            width: "500px"
+                        }}
+                        onFinish={this.onSubmit}
                     >
-                        <Input prefix={<MailOutlined className="site-form-item-icon" />} />
+                        <Form.Item
+                            label="Email"
+                            name="email"
+                            rules={[{
+                                type: 'email',
+                                message: 'The input is not valid E-mail!',
+                            }, { required: true, message: 'Please input your email!' }]}
+                        >
+                            <Input prefix={<MailOutlined className="site-form-item-icon" />} />
 
-                    </Form.Item>
+                        </Form.Item>
 
 
-                    <Form.Item
-                        label="Password"
-                        name="password"
-                        rules={[{ required: true, message: 'Please input your password!' }]}
-                    >
-                        <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button loading={this.state.loading} type="primary" htmlType="submit">
-                            Log in
-                        </Button>
-                        {" "}Or <Link to="/register">Register now!</Link>
-                    </Form.Item>
-                </Form>
+                        <Form.Item
+                            label="Password"
+                            name="password"
+                            rules={[{ required: true, message: 'Please input your password!' }]}
+                        >
+                            <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button loading={this.state.loading} type="primary" htmlType="submit">
+                                Log in
+                            </Button>
+                            {" "}Or <Link to="/register">Register now!</Link>
+                        </Form.Item>
+                    </Form>
+                </div>
             </div>
         )
     }

@@ -240,12 +240,8 @@ class Profile extends Component {
             </Card>
           ))}
         </TabPane>
-        <TabPane tab="Acheivements" key="achievements" >
-          <p style={{ fontSize: "20px", textAlign: "center" }}> Coming Soon!</p>
-        </TabPane>
       </Tabs >
     );
-
     const PendingDonationList = PendingDonations.length ? (
       PendingDonations.map(PendingDonation => {
         return (

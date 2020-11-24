@@ -67,6 +67,10 @@ const userSchema = new Schema({
     type:Number,
     default:0
   },
+  leaderboardTop:{
+    type:Number,
+    default:0
+  },
   noDonations: {
     type: Number,
     default: 0

@@ -56,6 +56,7 @@ router.post("/send", isAuth, async (req, res, next) => {
             let receiverSocket = onlineUsers[receiver._id];
             receiverSocket.emit('output_message', thread);
         } else {
+            await User.findByIdAndUpdate(receiver._id, { unreadMessage: true });
             console.log("user not online", Object.keys(onlineUsers))
             console.log("receiver", receiver)
 

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
 import 'antd/dist/antd.css';
 import './styles.css';
-import { Layout, Card, Space ,Image, Avatar } from 'antd';
+import { Layout, Card, Space, Image, Avatar } from 'antd';
 import { CommentOutlined, LikeFilled, LikeOutlined, GiftOutlined, ShareAltOutlined, EditOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { Modal } from 'antd';
 
 import { changelike, getPost } from './action';
-import { setCurrentRoute } from '../Navbar/actions';
+import { setCurrentRoute, getNotifications } from '../Navbar/actions';
 import PostModal from '../PostModal';
 import Comments from '../Comments';
 import Awards from '../Awards';
@@ -30,11 +30,12 @@ class HomeCenter extends Component {
         visibleawards: false,
         visiblepayment: false,
     }
-    async componentDidMount(){
+    async componentDidMount() {
         this.setState({
             profilePageLoading: true
         })
         await this.props.getPost();
+        this.props.getNotifications();
         this.setState({
             profilePageLoading: false
         })
@@ -44,12 +45,12 @@ class HomeCenter extends Component {
             visible: true
         });
     };
-    startModalComments = async (id) =>{
+    startModalComments = async (id) => {
         await this.setState({
-            currentPostid:id
+            currentPostid: id
         });
         this.setState({
-            visibleComments:true
+            visibleComments: true
         })
     }
     showModalComments = () => {
@@ -122,35 +123,35 @@ class HomeCenter extends Component {
         
         const { visible, visibleawards , loading , visiblepayment , visibleComments, loadingComments} = this.state;
         const { posts } = this.props;
-        const imageList = (imagelist) =>{
-            if(imagelist==undefined)
-                return(
+        const imageList = (imagelist) => {
+            if (imagelist == undefined)
+                return (
                     <div>No images!</div>
                 )
-            return imagelist.length? (imagelist.map(imageurl =>{
+            return imagelist.length ? (imagelist.map(imageurl => {
                 return (
                     <Image
                         width={100}
                         height={100}
                         alt="example"
                         src={imageurl}
-                        />
+                    />
                 )
             })
-                
-            ):(<div>No images!</div>)
+
+            ) : (<div>No images!</div>)
         }
-        const type = (liked) =>{
-            return liked? (<LikeFilled key="Like" style={{margin:"8px"}} />):(<LikeOutlined key="Like" style={{margin:"8px"}} />)
+        const type = (liked) => {
+            return liked ? (<LikeFilled key="Like" style={{ margin: "8px" }} />) : (<LikeOutlined key="Like" style={{ margin: "8px" }} />)
         }
-        const postList = posts.length? (
-            posts.map(post =>{
-                return(
+        const postList = posts.length ? (
+            posts.map(post => {
+                return (
                     <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${post.authorId._id}`}>
                         <Avatar
-                          src={post.authorId.avatar}
-                          alt="Han Solo"
-                          style={{margin:'8px'}}
+                            src={post.authorId.avatar}
+                            alt="Han Solo"
+                            style={{ margin: '8px' }}
                         />
                        {post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
@@ -161,7 +162,7 @@ class HomeCenter extends Component {
                         ]} >
                         <p>{post.description}</p>
                         <Space>
-                        {imageList(post.imageUrl)}
+                            {imageList(post.imageUrl)}
                         </Space>
                     </Card>
 
@@ -188,12 +189,13 @@ class HomeCenter extends Component {
 }
 const mapStateToProps = state => ({
     posts: state.HomeCenterReducer.posts,
-    
+
 })
 const mapDispatchToProps = dispatch => ({
     changelike: bindActionCreators(changelike, dispatch),
-    getPost: bindActionCreators(getPost,dispatch),
-    setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch)
+    getPost: bindActionCreators(getPost, dispatch),
+    setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch),
+    getNotifications: bindActionCreators(getNotifications, dispatch),
 })
 
-export default connect(mapStateToProps,mapDispatchToProps)(HomeCenter);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeCenter);

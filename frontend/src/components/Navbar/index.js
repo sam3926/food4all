@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom'
 import { connect } from "react-redux";
+import moment from 'moment';
 
-import { Layout, Menu, Button, Input, Modal , Badge , Popover , Card} from 'antd';
+import { Layout, Menu, Button, Input, Modal, Badge, Popover, Card, Avatar } from 'antd';
 import {
   HeartFilled, LogoutOutlined, HomeOutlined, BellOutlined, TrophyOutlined,
   UsergroupDeleteOutlined, BulbOutlined, UserOutlined,
@@ -18,19 +19,7 @@ import DonateModal from '../DonateModal';
 const { Header } = Layout;
 const { Search } = Input;
 
-const content = (
-  <div>
-    <Card style={{ width: 250, margin: '15px' }}>
-            <p><a>arpit </a>made a post.</p>
-    </Card>
-    <Card style={{ width: 250, margin: '15px' }}>
-            <p><a>arpit </a>recently made a donation.</p>
-    </Card>
-    <Card style={{ width: 250, margin: '15px' }}>
-            <p><a>arpit </a>liked your post.</p>
-    </Card>
-  </div>
-);
+
 
 class Navbar extends Component {
   state = {
@@ -61,7 +50,22 @@ class Navbar extends Component {
 
   render() {
     const { visible, loading } = this.state;
-    const { currentRoute, setCurrentRoute, logoutUser, auth } = this.props;
+    let { currentRoute, setCurrentRoute, logoutUser, auth, notifications, unreadNotifications, unreadMessages } = this.props;
+    const content = (
+      notifications.length ? notifications.map(({ user, notificationType, createdAt }) => (
+        <Card style={{ width: 320, margin: '10px 5px' }}>
+          <p><Link to={`/profile/${user._id}`}><Avatar src={user.avatar}></Avatar> {user.name}</Link>
+            {notificationType == 'follow' ? ' followed you!' : notificationType == 'post' ? ' added a post' : notificationType == 'donation' ? ' made a donation' : notificationType == 'like' ? ' liked your post' : notificationType == 'comment' ? ' commented on your post' : ''}
+          </p>
+          <span style={{ marginLeft: '5px' }}>{moment(createdAt).fromNow()}</span>
+        </Card>
+      )) : <div>
+          Notifications are Empty
+      </div>
+    );
+
+
+
     if (auth.isAuthenticated)
       return (
         <div>
@@ -76,17 +80,13 @@ class Navbar extends Component {
               <Menu.Item key="discover" icon={<BulbOutlined />}><Link to='/discover'>Discover</Link></Menu.Item>
               <Menu.Item key="community" icon={<TrophyOutlined />} ><Link to="/community">Community</Link></Menu.Item>
               <Menu.Item key="leaderboard" icon={<UsergroupDeleteOutlined />} ><Link to="/leaderboard">Leaderboard</Link></Menu.Item>
-              <Menu.Item key="notifications"><Badge dot><Popover content={content} title="Notifications" trigger="click">
-              <p>{<BellOutlined />}Notifications</p>
-              </Popover></Badge></Menu.Item>
-              <Menu.Item key="messages" icon={<MessageOutlined />} ><Link to="/messages">Messages</Link></Menu.Item>
+              <Menu.Item key="notifications"><Badge dot={unreadNotifications ? true : false} ><Popover placement="bottom" content={content} title="Notifications" trigger="click">
+                <p>{<BellOutlined />}Notifications</p>
+              </Popover></Badge ></Menu.Item>
+              <Menu.Item key="messages" ><Badge dot={unreadMessages ? true : false} >
+                <Link to="/messages"><p>{<MessageOutlined />}Messages</p></Link>
+              </Badge ></Menu.Item>
               <Menu.Item key="profile" icon={<UserOutlined />} ><Link to={`/i/profile/${auth.user.userId}`}>Profile</Link></Menu.Item>
-              <Menu.Item key="search">
-                <Search
-                  placeholder="Search"
-                  onSearch={value => console.log(value)}
-                  style={{ width: 200 }} />
-              </Menu.Item>
               <Menu.Item key="logout" icon={<LogoutOutlined />} >Logout</Menu.Item>
             </Menu>
           </Header>
@@ -100,7 +100,10 @@ class Navbar extends Component {
 
 const mapStateToProps = state => ({
   currentRoute: state.navReducer.currentRoute,
-  auth: state.authReducer
+  auth: state.authReducer,
+  notifications: state.navReducer.notifications,
+  unreadNotifications: state.navReducer.unreadNotifications,
+  unreadMessages: state.navReducer.unreadMessages
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -25,6 +25,7 @@ const DiscoverReducer = (state = initialState, action) => {
         case 'PENDING_DONATION': {
             const donation = action.payload;
             donation.status = "pending"
+            donation.pickupDate = action.date.format("HH:mm ll");
             donation.receiverId = action.userId
             return { ...state,Donations:state.Donations.map( d => d._id == donation._id? {...donation}:{...d})}
         }

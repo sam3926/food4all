@@ -50,7 +50,7 @@ class Comments extends React.Component {
     setTimeout(() => {
 
       var comments = {
-        author: 'Arpit Bandjiya',
+        author: 'Arpit Bandejiya',
         avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
         content: value,
         datetime: moment().fromNow(),

@@ -64,7 +64,8 @@ const profileReducer = (state = initialState, action) => {
             const PendingDonation = {
                 donorname: donorName,
                 Description: description,
-                posttime: postTime
+                posttime: postTime,
+                pickupDate: action.date.format("HH:mm ll")
             }
             return { ...state, Pending: [...state.Pending, PendingDonation] }
         }

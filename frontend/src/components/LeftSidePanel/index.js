@@ -150,16 +150,6 @@ class LeftSidePanel extends Component {
                     <SubMenu key="sub4" title="Recent Donations" style={{ fontSize: '16px' }}>
                         {donationList}
                     </SubMenu>
-
-                    {/* <SubMenu key="sub5" title="Recent Acheivements" style={{ fontSize: '16px' }}>
-                        {achievementList}
-                    </SubMenu> */}
-
-                    <SubMenu key="sub6" title="Filters" style={{ fontSize: '16px' }}>
-                        <div style={{ "padding": "auto" }}>
-                            <Checkbox.Group options={plainOptions} onChange={onChange} />
-                        </div>
-                    </SubMenu>
                 </Menu>
             </Sider>
 

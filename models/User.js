@@ -55,6 +55,22 @@ const userSchema = new Schema({
     type: Number,
     default:0
   },
+  silverAwards:{
+    type:Number,
+    default:0
+  },
+  goldAwards:{
+    type: Number,
+    default:0
+  },
+  diamondAwards:{
+    type:Number,
+    default:0
+  },
+  leaderboardTop:{
+    type:Number,
+    default:0
+  },
   noDonations: {
     type: Number,
     default: 0
@@ -88,7 +104,18 @@ const userSchema = new Schema({
     icon: String,
     text: String
   }],
-
+  notifications: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Notification'
+  }],
+  unreadNotifications: {
+    type: Boolean,
+    default: false
+  },
+  unreadMessage: {
+    type: Boolean,
+    default: false
+  },
   threads: [{
     type: Schema.Types.ObjectId,
     ref: 'Thread'

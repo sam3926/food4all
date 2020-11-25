@@ -52,7 +52,8 @@ class Discover extends Component {
     filters: [],
     mapOpen: false,
     lngp: 77.2090,
-    latp: 28.6139
+    latp: 28.6139,
+    pickupDate: null
   }
   async componentDidMount() {
     this.setState({
@@ -76,7 +77,8 @@ class Discover extends Component {
     });
 
     this.setState({
-      visible: true
+      visible: true,
+      acceptdonation: data
     });
   };
 
@@ -114,10 +116,12 @@ class Discover extends Component {
     }
 
     const addpending = (Donation) => {
-      this.setState({ mapOpen: true });
-      this.props.pendingDonation(Donation);
+      console.log(this.state.pickupDate?.format("HH:mm DD-MM-YYYY"));
+      const date = this.state.pickupDate;
+      console.log(Donation);
+      this.props.pendingDonation(Donation,date);
+      this.setState({ mapOpen: false })
     }
-
     const imagelist = (images) => {
       return images.length ? (
         images.map(image => {
@@ -167,7 +171,7 @@ class Discover extends Component {
         }}>
           <p className="text" onClick={() => { this.props.setCurrentRoute('messages') }} ><b> Contact Donor </b></p>
         </Link>,
-        <p className="text" onClick={() => addpending(Donation)} ><b> Interested </b></p>,
+        <p className="text" onClick={async() => {console.log(Donation); await this.setState({ currentDonation: Donation,}); this.setState({mapOpen: true });}} ><b> Interested </b></p>,
       ]
 
       return value;
@@ -184,24 +188,7 @@ class Discover extends Component {
             <Space>
               {imagelist(Donation.images)}
             </Space>
-          <Modal footer={[
-            <Button onClick={() => this.setState({ mapOpen: false })}>
-              Done
-            </Button>
-            ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
-            <MapDiscover latitudeP={Donation.location.coordinates[1]} longitudeP={Donation.location.coordinates[0]} message = 'Pickup Point'/>
-          <div style={{ marginLeft : "25vw" }}>
-          <p>
-          <br/>  
-          <Space>
-            Enter Pickup Date : 
-            <DatePicker onChange={value => console.log(value)} disabledDate={this.disabledDate} format="HH:mm ll" />
-            Enter Pickup Time : 
-            <TimePicker onChange={value => console.log(value)} />
-          </Space>
-          </p>
-          </div>
-          </Modal>
+          
           </Card>
         )
       })
@@ -212,13 +199,14 @@ class Discover extends Component {
     const pendingDonationList = pendingDonations.length ? (
       pendingDonations.map(Donation => {
         return (
-          <Card title={Donation.donorName} extra={moment(Donation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
+          <Card title={Donation.donorName} extra={moment(Donation.postTime).format("ll")} size="small" style={{ width: 250 }}
+            
             actions={[
               <p classname="cardtext1" onClick={() => this.showModal(Donation)} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
               <p onClick={() => this.props.rejectDonation(Donation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
             ]}
           >
-            <p>{Donation.description}</p>
+            <p><p><b>Time Given: </b>{Donation.pickupDate}</p>{Donation.description}</p>
           </Card>
         )
       })
@@ -250,7 +238,7 @@ class Discover extends Component {
                 src={Organisation.avatar}
                 alt="Han Solo"
               />
-            } <a>{Organisation.name}</a> </div>} extra={<p>People fed {Organisation?.noFed}</p>} style={{ width: 700, margin: '8px' }}>
+            } <a>{Organisation.name}</a> </div>} extra={<p>People fed {Organisation?.noFed} </p>} style={{ width: 700, margin: '8px' }}>
               <p><PhoneOutlined /> : {Organisation.contact} <HomeOutlined /> : {Organisation.address} </p>
 
               <p>{Organisation.description}</p>
@@ -261,7 +249,7 @@ class Discover extends Component {
       })
     ) : (
         <div>No Organisation are currently there!</div>
-      )
+    )
 
     const componentsSwitch = (key) => {
       switch (key) {
@@ -282,8 +270,8 @@ class Discover extends Component {
       )
     }
 
-    const onFinish = (values) => {
-      this.props.addFed(values.peoplefed)
+    const onFinish = async(values) => {
+      await this.props.addFed(values.peoplefed,values.rating,this.state.acceptdonation?.donorId);
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -394,6 +382,26 @@ class Discover extends Component {
               </Form.Item>
 
             </Form>
+          </Modal>
+          <Modal footer={[
+            <Button onClick={() => addpending(this.state.currentDonation)}>
+              Done
+            </Button>
+            ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+            <MapDiscover latitudeP={this.state.currentDonation?.location.coordinates[1]} longitudeP={this.state.currentDonation?.location.coordinates[0]} message = 'Pickup Point'/>
+          <div style={{ marginLeft : "25vw" }}>
+          <p>
+          <br/>  
+          <Space>
+            Enter Pickup Date : 
+            <DatePicker
+              format="YYYY-MM-DD HH:mm:ss"
+              showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+              onChange={value => {console.log(value); this.setState({pickupDate:value})}}
+            />
+          </Space>
+          </p>
+          </div>
           </Modal>
         </Layout >
     )

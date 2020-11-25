@@ -16,7 +16,16 @@ const { Sider } = Layout;
 
 function info() {
     Modal.info({
-      title: 'Coming soon',
+      title: 'Awards',
+      content: (
+        <div>
+          <p>nofoodwasted awards, where users can buy and award organisations with such virtual awards to show their appreciation. 
+            These awards will be visible on organisations' profiles, 
+            giving their work legitimacy while at the same time money spent on buying these awards will also go towards 
+            these organisations' funds and help in feeding childrens who need your support.
+          </p>
+        </div>
+      ),
       onOk() {},
     });
   }
@@ -104,7 +113,6 @@ class Home extends Component {
                         <Card size="small" style={{ width: 200 , marginLeft: 25}} bodyStyle={{color: '#97033e', fontWeight:'bold'}} bordered={false}
                             actions={[
                                 <p onClick={info}><BulbOutlined hoverable={true} key="learnMoreAwards" /> Learn more </p>,
-                                <p onClick={info}><ShoppingCartOutlined hoverable={true} key="buyAwards" /> Buy now! </p>,
                             ]}
                             >
                      

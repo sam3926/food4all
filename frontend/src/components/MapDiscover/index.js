@@ -11,8 +11,8 @@ import "esri-leaflet-geocoder/dist/esri-leaflet-geocoder.js";
 import 'antd/dist/antd.css';
 import { Modal, Button } from 'antd';
 
-const DEFAULT_LATITUDE = 28.6139;
-const DEFUALT_LONGITUDE = 77.2090;
+const DEFAULT_LATITUDE = 23.2599;
+const DEFUALT_LONGITUDE = 77.4126;
 
 // import marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -68,14 +68,14 @@ class MapDiscover extends Component {
       })
     }
 
-    const center = [28.6139, 77.209];
+    const center = [23.2599, 77.4126];
     return (
       <>
         <div className="MAP">
           <Map
             style={{ height: "80vh" }}
             center={[latitude, longitude]}
-            zoom="10"
+            zoom="5"
             ref={(m) => {
               this.leafletMap = m;
             }}

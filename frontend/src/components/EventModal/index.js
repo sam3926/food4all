@@ -147,7 +147,7 @@ class EventModal extends Component {
           </Form.Item>
 
           <Form.Item name="date-picker" label="Enter Event date" {...config}>
-            <DatePicker onChange={this.onChange} disabledDate={this.disabledDate} format="HH:mm ll" />
+            <DatePicker showTime onChange={this.onChange} disabledDate={this.disabledDate} format="HH:mm ll" />
           </Form.Item>
 
           <Form.Item label="Address" 

@@ -46,6 +46,8 @@ class Profile extends Component {
     followingVisible: false,
     loadingAccept: false,
     visibleAccept: false,
+    loadingDonation: false,
+    visibleDonation: false,
     loadingEvent: false,
     visibleEvent: false,
     visibleEdit: false,
@@ -130,6 +132,27 @@ class Profile extends Component {
     this.setState({ visibleAccept: false });
   };
 
+  showModalDonation = () => {
+    this.setState({
+      visibleDonation: true,
+    });
+  };
+
+
+  handleOkDonation = () => {
+    this.setState({ loadingDonation: true });
+    setTimeout(() => {
+      this.setState({ loadingDonation: false, visibleDonation: false });
+    }, 1000);
+    Modal.success({
+      content: "Thank You"
+    });
+  };
+
+  handleCancelDonation = () => {
+    this.setState({ visibleDonation: false });
+  };
+
   handleCancelProfilePic = () => {
     this.setState({ visibleProfilePic: false })
   }
@@ -186,7 +209,7 @@ class Profile extends Component {
   }
   render() {
 
-    const { followersVisible, followingVisible, loadingAccept, visibleAccept , loadingEvent, visibleEvent , visibleEdit, loadingEdit, visibleProfilePic } = this.state;
+    const { followersVisible, followingVisible, loadingDonation , visibleDonation , loadingAccept, visibleAccept , loadingEvent, visibleEvent , visibleEdit, loadingEdit, visibleProfilePic } = this.state;
     const { PendingDonations, profileDetails, user, followUser, unfollowUser, getFollowers, getFollowing } = this.props
 
     const imagelist = (images) => {
@@ -211,7 +234,7 @@ class Profile extends Component {
               { console.log(Donation);
                 await this.setState({ currentDonation: Donation,});
               }
-            } ><b> Rate the Reciever </b></p>,
+            } ><b onClick={() => this.showModalDonation()} > Rate the Reciever </b></p>,
         ]
         return value;
       }
@@ -280,6 +303,15 @@ class Profile extends Component {
       };
     
       const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+      };
+
+      const onFinishD = (values) => {
+        console.log('Success:', values);
+      };
+    
+    
+      const onFinishFailedD = (errorInfo) => {
         console.log('Failed:', errorInfo);
       };
 
@@ -487,7 +519,7 @@ class Profile extends Component {
             onCancel={this.handleCancelAccept}
             footer={[
               <Button key="back" onClick={this.handleCancelAccept}>
-                Say Thanks
+                cancel
                   </Button>,
               <Button
                 key="submit"
@@ -531,11 +563,54 @@ class Profile extends Component {
               },
             ]}
             >
-              <Input type='number' placeholder="Rate Between 1 to 5" />
+              <Input type='number' min="0" max="5" placeholder="Rate Between 1 to 5" />
             </Form.Item>
           </Form>
           </Modal>
 
+          <Modal
+            destroyOnClose
+            visible={visibleDonation}
+            title="Rate the Organisation"
+            onOk={this.handleOkDonation}
+            onCancel={this.handleCancelDonation}
+            footer={[
+              <Button key="back" onClick={this.handleCancelDonation}>
+                cancel
+                  </Button>,
+              <Button
+                key="submit"
+                type="primary"
+                loading={loadingDonation}
+                onClick={this.handleOkDonation}
+                form = 'acceptform'
+                htmlType = 'submit'
+              >
+                Submit
+                  </Button>
+            ]}
+          >
+          <Form
+            id = 'acceptform'
+            {...layout}
+            name="basic"
+            onFinish={onFinishD}
+            onFinishFailed={onFinishFailedD}
+            >
+            <Form.Item
+            label="Rate the Organisation"
+            name="rating"
+            rules={[
+              {
+              required: true,
+              message: 'Please rate the user',
+              },
+            ]}
+            >
+              <Input type='number' min="0" max="5" placeholder="Rate Between 1 to 5" />
+            </Form.Item>
+          </Form>
+          </Modal>
 
         </Layout >
     )

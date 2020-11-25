@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import 'antd/dist/antd.css';
 import '../../index.css';
-import { Menu, Checkbox, Layout,  Carousel , Table, Tag, Image } from 'antd';
+import { Menu, Checkbox, Layout,  Carousel , Table, Tag, Image , Radio} from 'antd';
 
 import { changeFilters, getList } from './actions';
 
@@ -95,8 +95,18 @@ const data = [
 class Leaderboard extends Component {
   state = {
     selectedMenuItem: '1',
+    valueF: '1',
     filters: []
   }
+
+
+  onChangeF = e => {
+    console.log('radio checked', e.target.value);
+    this.setState({
+      valueF: e.target.value,
+    });
+  };
+
   async componentDidMount() {
       await this.props.getList();
   }
@@ -116,23 +126,19 @@ class Leaderboard extends Component {
     });
   }
   render() {
+    
     let { data } = this.props;
     console.log(data);
     data = this.modified(data);
-    const { selectedMenuItem } = this.state;
-    const plainOptions = [
-      { label: 'People Fed', value: 'Peoplefed' },
-      { label: 'Rating', value: 'rating' },
-    ];
-    const plainOptions1 = [
-      { label: 'Donor', value: 'donor' },
-      { label: 'Organsation', value: 'organisation' },
-    ];
-    const onChange = (checkedValues) => {
-      this.setState({
-        filters: [...checkedValues]
-      })
-    }
+    const { selectedMenuItem , valueF } = this.state;
+    
+
+    const radioStyle = {
+      display: 'block',
+      height: '30px',
+      lineHeight: '30px',
+      marginLeft: '30px',
+    };
 
     return (
         <Layout>
@@ -149,7 +155,16 @@ class Leaderboard extends Component {
               style={{ height: '100%', borderRight: 0 }} activeKey={selectedMenuItem}
               style={{ position: "relative" }} >
               <SubMenu key="2" title="Filter" style={{ fontSize: '16px', height: "100% " }}>
-                <div style={{ "padding": "auto" }}> <Checkbox.Group options={plainOptions} onChange={onChange} /> </div>
+                <div style={{ "padding": "auto" }}> 
+                <Radio.Group onChange={this.onChangeF} value={valueF}>
+                  <Radio style={radioStyle} value={1}>
+                  People Fed
+                  </Radio>
+                  <Radio style={radioStyle} value={2}>
+                  Rating
+                  </Radio>
+                </Radio.Group>
+                </div>
               </SubMenu>
             </Menu>
           </Sider>

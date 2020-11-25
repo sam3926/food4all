@@ -47,6 +47,15 @@ export const addFed = (value,rating,donationId) => async (dispatch) =>{
         payload:res.data
     })
 }
+export const reviewOrg = (id,rating) => async(dispatch) =>{
+    console.log(rating,id);
+    const res = await axios.post('/api/users/review',{id:id,rating:rating});
+    console.log('After reviewing the Organisation',res.body);
+    dispatch({
+        type:'REVIEW',
+        payload: res.data
+    })
+}
 export const getSuggestedPages = () => async (dispatch) => {
     const res = await axios.get("/api/path/to/sugPage");
     dispatch({

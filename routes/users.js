@@ -10,6 +10,7 @@ const Notification = require("../models/Notification");
 const isAuth = require("../middlewares/isAuth");
 const isOrg = require("../middlewares/isOrg");
 const { getOnlineUsers } = require("./utils");
+const Donation = require("../models/Donation");
 
 router.post("/register", async (req, res, next) => {
   const { email, name, password, contact, description, address, userType, location } = req.body;
@@ -489,6 +490,34 @@ router.get('/leaderboard',isAuth, async(req,res,next) => {
     next(err)
   }
 })
-
+router.post('/review',isAuth,async(req,res,next)=>{
+  try{
+    const donation = await Donation.findById(req.body.id);
+    donation.reviewed = true;
+    await donation.save();
+    await User.findById(donation.receiverId, (err,user)=>{
+      if(err){
+        const err = new Error('Add Fed isn\'t working for this donation');
+        err.statusCode = 404;
+        throw err;
+      }
+      if(user.rating !=0){
+        user.rating = (user.rating + parseInt(req.body.rating))/2;
+      }
+      else{
+        user.rating = parseInt(req.body.rating);
+      }
+      user.save();
+  })
+  const user = await User.findById(req.userId).populate('donations posts');
+  res.status(200).json(user);
+  }
+  catch(err){
+    if(!err.statusCode){
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
 
 module.exports = router;

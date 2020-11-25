@@ -327,7 +327,31 @@ router.get('/history/:id', isAuth, async (req, res, next) => {
 
 router.post('/addfed', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.userId, { $inc: { noFed: req.body.value } }, { new: true }).populate('donations posts');
+    await User.findById(req.userId, (err,user)=>{
+        if(err){
+          const err = new Error('Add Fed isn\'t working for this donation');
+          err.statusCode = 404;
+          throw err;
+        }
+        user.noFed = user.noFed + parseInt(req.body.value);
+        user.save();
+    })
+    await User.findById(req.body.donationId, (err,user)=>{
+      if(err){
+        const err = new Error('Add Fed isn\'t working for this donation');
+        err.statusCode = 404;
+        throw err;
+      }
+      if(user.rating !=0){
+        user.rating = (user.rating + parseInt(req.body.rating))/2;
+      }
+      else{
+        user.rating = parseInt(req.body.rating);
+      }
+      user.noFed = user.noFed + parseInt(req.body.value);
+      user.save();
+    })
+    const user = await User.findById(req.userId);
     res.status(200).json(user)
 
   } catch (err) {
@@ -454,7 +478,7 @@ router.get('/notifications', isAuth, async (req, res, next) => {
 
 router.get('/leaderboard',isAuth, async(req,res,next) => {
   try{
-      const ranked_users = await User.find({}).sort({noFed:-1}).select('name userType noFed profilePic').limit(15);
+      const ranked_users = await User.find({}).sort({noFed:-1}).select('name userType noFed profilePic rating').limit(15);
       console.log(ranked_users);
       res.status(200).json({list:ranked_users})
   }

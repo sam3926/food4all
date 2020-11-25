@@ -111,7 +111,8 @@ class Profile extends Component {
     });
     
     this.setState({
-      visibleAccept: true
+      visibleAccept: true,
+      acceptdonation: data
     });
   };
 
@@ -189,7 +190,7 @@ class Profile extends Component {
     const { PendingDonations, profileDetails, user, followUser, unfollowUser, getFollowers, getFollowing } = this.props
 
     const imagelist = (images) => {
-      return images.length ? (
+      return images?.length ? (
         images.map(image => {
           return (
             <Image
@@ -202,7 +203,20 @@ class Profile extends Component {
         })
       ) : (<div> No images!</div>)
     }
-    
+    const action = (Donation) => {
+      if(Donation.status === "Accepted")
+      {
+        const value = [
+          <p className="text" onClick={async() => 
+              { console.log(Donation);
+                await this.setState({ currentDonation: Donation,});
+              }
+            } ><b> Rate the Reciever </b></p>,
+        ]
+        return value;
+      }
+      else return [];      
+    }
     const Demo = () => (
       <Tabs centered="true" size="large"
       >
@@ -220,11 +234,8 @@ class Profile extends Component {
 
 
         <TabPane tab="Donations" key="donations">
-          {
-            //Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
-          }
           {profileDetails?.donations?.map(donation => (
-            <Card title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
+            <Card actions={action(donation)} title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
               <p>{donation.description}</p>
               <Space>
                 {imagelist(donation.images)}
@@ -263,8 +274,8 @@ class Profile extends Component {
         <div>No Donations are currently there!</div>
       )
 
-      const onFinish = (values) => {
-        this.props.addFed(values.peoplefed)
+      const onFinish = async (values) => {
+        await this.props.addFed(values.peoplefed,values.rating,this.state.acceptdonation?.donorId);
 
       };
     

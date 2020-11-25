@@ -108,7 +108,7 @@ class Leaderboard extends Component {
         rank: count,
         key: count++,
         name: element.name,
-        rating: 23,
+        rating: element.rating,
         peoplefed: element.noFed,
         type: element.userType,
         tags:[element.userType]

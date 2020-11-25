@@ -24,6 +24,9 @@ const donationSchema = new Schema({
     acceptedTime: {
         type: Schema.Types.Date
     },
+    reviewed:{
+        type: Boolean
+    },
     peopleFed: {//NAME TO BE DECIDED
         type: Number,
 

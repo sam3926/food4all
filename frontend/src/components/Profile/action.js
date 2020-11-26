@@ -1,10 +1,10 @@
 import { ACTION } from "./constants";
 import axios from "axios";
-export const acceptdonation = (data) => async(dispatch) =>{
+export const acceptdonation = (data) => async (dispatch) => {
     await axios.post('../../api/donation/accept', { _id: data._id })
     dispatch({
-        type:'ACCEPT_DONATION',
-        payload:data
+        type: 'ACCEPT_DONATION',
+        payload: data
     })
 }
 export const getSomeData = (data) => async (dispatch) => {
@@ -14,11 +14,11 @@ export const getSomeData = (data) => async (dispatch) => {
         payload: data,
     });
 };
-export const addHistory =(history) => async(dispatch) =>{
+export const addHistory = (history) => async (dispatch) => {
     const res = await axios.post('/api/users/addhistory', { history: history })
     dispatch({
-        type:'ADD_HISTORY',
-        payload: res.data 
+        type: 'ADD_HISTORY',
+        payload: res.data
     })
 }
 export const getProfile = (id) => async (dispatch) => {
@@ -37,11 +37,11 @@ export const getProfile = (id) => async (dispatch) => {
     }
 
 }
-export const addFed = (value) => async (dispatch) =>{
-    const res = await axios.post('/api/users/addfed',{value:value})
+export const addFed = (value) => async (dispatch) => {
+    const res = await axios.post('/api/users/addfed', { value: value })
     dispatch({
-        type:'ADD_FED',
-        payload:res.data
+        type: 'ADD_FED',
+        payload: res.data
     })
 }
 export const getSuggestedPages = () => async (dispatch) => {
@@ -146,7 +146,7 @@ export const getFollowing = (id) => async (dispatch) => {
 
 export const rejectDonation = (id) => async (dispatch) => {
     try {
-        const res = await axios.post('api/donation/reject', { _id: id })
+        const res = await axios.post('/api/donation/reject', { _id: id })
         console.log(res.data);
         dispatch({
             type: 'REJECT_DONATION',

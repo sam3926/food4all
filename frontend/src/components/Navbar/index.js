@@ -85,7 +85,7 @@ class Navbar extends Component {
           <Header style={{ position: 'fixed', zIndex: 100, width: '100%' }}>
             <Menu theme="dark" mode="horizontal" selectedKeys={[currentRoute, "logo"]} onSelect={(item) => { item.key == "logout" ? logoutUser() : setCurrentRoute(item.key) }}>
               <Menu.Item key="logo" className="customclasslogo" icon={<HeartFilled />} ><Link to="/home">NofoodWasted</Link></Menu.Item>
-              <Button type="dashed" size={"large"} style={{ "marginRight": "8px", "marginLeft": "8px" }} onClick={this.showModal}>
+              <Button type="dashed" size={"large"} style={{ "marginRight": "36px", "marginLeft": "36px" }} onClick={this.showModal}>
                 Donate Now!
                   </Button>
               <DonateModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading} />

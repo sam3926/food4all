@@ -580,7 +580,7 @@ class Profile extends Component {
             onCancel={this.handleCancelDonation}
             footer={[
               <Button key="back" onClick={this.handleCancelDonation}>
-                cancel
+                Cancel
                   </Button>,
               <Button
                 key="submit"
@@ -611,7 +611,7 @@ class Profile extends Component {
               },
             ]}
             >
-              <Input type='number' min="0" max="5" placeholder="Rate Between 1 to 5" />
+              <Input type='number' min="1" max="5" placeholder="Rate Between 1 to 5" />
             </Form.Item>
           </Form>
           </Modal>

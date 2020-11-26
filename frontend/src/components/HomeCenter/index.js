@@ -156,7 +156,7 @@ class HomeCenter extends Component {
                        {post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
                         <div onClick={(id) =>this.incrementLike(post._id,post.liked)} >{type(post.liked)}{post.noOfLikes}</div>,
-                        <div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
+                        //<div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
                         <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post._id)} key="Comment" style={{margin:"8px"}}/> </div>,
                         <div><GiftOutlined key="Award" onClick={this.showModalawards} style={{margin:"8px"}}/> </div>,
                         ]} >

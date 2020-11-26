@@ -19,11 +19,9 @@ function info() {
       title: 'Awards',
       content: (
         <div>
-          <p>nofoodwasted awards, where users can buy and award organisations with such virtual awards to show their appreciation. 
-            These awards will be visible on organisations' profiles, 
-            giving their work legitimacy while at the same time money spent on buying these awards will also go towards 
-            these organisations' funds and help in feeding childrens who need your support.
-          </p>
+          <p>nofoodWasted awards are an innovative way to show support for your favourite users while also supporting the fight for food security! 
+            These awards are highlighted on users profile, giving their cause legitimacy while at the same time money spent on these goes to feed someone. 
+            </p> Join our cause, buy nofoodWasted awards now!
         </div>
       ),
       onOk() {},

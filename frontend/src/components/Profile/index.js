@@ -18,7 +18,8 @@ import EditProfile from './EditProfile';
 import EventModal from '../EventModal';
 import ProfilePic from './ProfilePic';
 import { addFed, getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
-   getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation } from './action';
+   getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation,
+   reviewOrg } from './action';
 
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
@@ -132,8 +133,9 @@ class Profile extends Component {
     this.setState({ visibleAccept: false });
   };
 
-  showModalDonation = () => {
+  showModalDonation = (id) => {
     this.setState({
+      currentDonationId: id,
       visibleDonation: true,
     });
   };
@@ -227,14 +229,14 @@ class Profile extends Component {
       ) : (<div> No images!</div>)
     }
     const action = (Donation) => {
-      if(Donation.status === "Accepted")
+      if(!(Donation?.reviewed) && Donation.status === "Accepted")
       {
         const value = [
           <p className="text" onClick={async() => 
               { console.log(Donation);
                 await this.setState({ currentDonation: Donation,});
               }
-            } ><b onClick={() => this.showModalDonation()} > Rate the Reciever </b></p>,
+            } ><b onClick={() => this.showModalDonation(Donation._id)} > Rate the Reciever </b></p>,
         ]
         return value;
       }
@@ -307,7 +309,9 @@ class Profile extends Component {
       };
 
       const onFinishD = (values) => {
+        this.props.reviewOrg(this.state.currentDonationId,values.rating);
         console.log('Success:', values);
+        console.log(this.state.currentDonationId);
       };
     
     
@@ -637,6 +641,7 @@ const mapStateToProps = state => {
   
   
 const mapDispatchToProps = dispatch => ({
+  reviewOrg:bindActionCreators(reviewOrg,dispatch),
   addFed:bindActionCreators(addFed,dispatch),
   addHistory:bindActionCreators(addHistory,dispatch),
   acceptdonation: bindActionCreators(acceptdonation,dispatch),

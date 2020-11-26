@@ -89,6 +89,9 @@ const profileReducer = (state = initialState, action) => {
         case 'ADD_FED':{
             return {...state,profileDetails:action.payload}
         }
+        case 'REVIEW':{
+            return {...state,profileDetails:action.payload}
+        }
     }
     return state;
 }

@@ -10,6 +10,7 @@ import { InboxOutlined , CompassOutlined , EnvironmentOutlined } from '@ant-desi
 
 import MapComp from "../MapComp";
 import { addEvent } from './action';
+import {addHistory} from '../Profile/action';
 
 const formItemLayout = {
     labelCol: {
@@ -87,6 +88,11 @@ class EventModal extends Component {
           images:this.state.files
         }
         this.props.addEvent(event)
+        this.props.addHistory({
+          color: 'blue',
+          icon: 'dot',
+          text: event.title + ' ( Event Created on ' + moment().format("HH:mm ll") + ' )'
+        });
         
         this.setState({
           latlng:null,
@@ -206,7 +212,8 @@ class EventModal extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  addEvent : bindActionCreators(addEvent,dispatch)
+  addEvent : bindActionCreators(addEvent,dispatch),
+  addHistory : bindActionCreators(addHistory,dispatch)
 })
 const mapStatetoProps = state => {
   return {

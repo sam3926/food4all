@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from "react-router-dom";
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import sortBy from 'lodash/sortBy';
@@ -12,6 +13,7 @@ import { Menu, Checkbox, Layout, Modal , Button , Card, Space, Image} from 'antd
 import { InboxOutlined , CompassOutlined , EnvironmentOutlined } from '@ant-design/icons';
 import { changeFilters, getEvent } from './actions';
 import LoadingScreen from '../LoadingScreen';
+import { setCurrentRoute } from '../Navbar/actions';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -85,23 +87,39 @@ class Community extends Component {
       }
       return Events
     }
-    const filterEvents = filteredEvent(Events);
+
+    const filterEvents = filteredEvent(Events.filter( (event) => { return moment(event.expiryTime).isAfter(moment.now())} ));
+    const action = (Event) =>{
+      console.log("this is the action center",this.props.user.userId, 'the event donor id is',Event.donorId);
+      if(Event.donorId === this.props.user?.userId)
+        return []
+      
+      return([
+        <Link to={{
+          pathname: "/messages",
+          state: {
+            //PUT DONOR_ID
+            user: Event.donorId
+          }
+        }}>
+          <p className="text" onClick={() => { this.props.setCurrentRoute('messages') }} ><b> Contact Organisor </b></p>
+        </Link>
+      ])
+    }
     const EventList = Events.length ? (
       filterEvents.map(Event => {
         return (
-        <Card title={<div>{Event.title}</div>} extra={<div><p>Event Date : {moment(Event.expiryTime).format(" HH:mm ll")}</p></div>} style={{ width: 700, margin: '8px' }}>
-            <a onClick={() => this.setState({ mapOpen: true })} ><EnvironmentOutlined /> Event Location </a>
+        <Card 
+        title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Event.donorId}`}>{Event.title}</Link>}
+        extra={<div><p>Event Date : {moment(Event.expiryTime).format(" HH:mm ll")}</p></div>} 
+        style={{ width: 700, margin: '8px' }}
+        actions={action(Event)}>
+            <a onClick={() => this.setState({ mapOpen: true,currentEvent:Event })} ><EnvironmentOutlined /> Event Location </a>
             <p> Event Details : {Event.description}</p>
             <Space>
               {imagelist(Event.images)}
             </Space>
-            <Modal footer={[
-              <Button onClick={() => this.setState({ mapOpen: false })}>
-                Return
-              </Button>
-              ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
-              <MapDiscover latitudeP={Event.location.coordinates[1]} longitudeP={Event.location.coordinates[0]} message = 'Event Location'/>
-              </Modal>
+            
           </Card>
         )
       })
@@ -139,7 +157,13 @@ class Community extends Component {
             <Sider width={300} style={{ padding: "25px" }}> </Sider>
 
           </Layout >
-
+          <Modal footer={[
+            <Button onClick={() => this.setState({ mapOpen: false })}>
+              Return
+            </Button>
+            ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+            <MapDiscover latitudeP={this.state.currentEvent?.location.coordinates[1]} longitudeP={this.state.currentEvent?.location.coordinates[0]} message = 'Event Location'/>
+            </Modal>
           
 
         </Layout >
@@ -150,13 +174,15 @@ class Community extends Component {
 const mapStatetoProps = state => {
   return {
     currentfilter: state.CommunityReducer.currentfilter,
-    Events: state.CommunityReducer.Events
+    Events: state.CommunityReducer.Events,
+    user: state.authReducer.user,
   };
 
 };
 const mapDispatchToProps = (dispatch, getState) => ({
   getEvent: bindActionCreators(getEvent,dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),
+  setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch)
 })
 
 export default connect(mapStatetoProps, mapDispatchToProps)(Community);

@@ -16,6 +16,7 @@ router.post("/register", async (req, res, next) => {
   const { email, name, password, contact, description, address, userType, location } = req.body;
   console.log(req.body)
   console.log(location)
+  const avatar = `https://robohash.org/${Math.random() * 10000}?size=50x50`
   const checkExistingUser = await User.findOne({ email: email })
   if (!checkExistingUser) {
     try {
@@ -29,7 +30,8 @@ router.post("/register", async (req, res, next) => {
         contact: contact,
         address: address,
         userType: userType,
-        location: location
+        location: location,
+        avatar: avatar
       });
       const result = await user.save();
       console.log("result", result)
@@ -328,25 +330,25 @@ router.get('/history/:id', isAuth, async (req, res, next) => {
 
 router.post('/addfed', isAuth, async (req, res, next) => {
   try {
-    await User.findById(req.userId, (err,user)=>{
-        if(err){
-          const err = new Error('Add Fed isn\'t working for this donation');
-          err.statusCode = 404;
-          throw err;
-        }
-        user.noFed = user.noFed + parseInt(req.body.value);
-        user.save();
-    })
-    await User.findById(req.body.donationId, (err,user)=>{
-      if(err){
+    await User.findById(req.userId, (err, user) => {
+      if (err) {
         const err = new Error('Add Fed isn\'t working for this donation');
         err.statusCode = 404;
         throw err;
       }
-      if(user.rating !=0){
-        user.rating = (user.rating + parseInt(req.body.rating))/2;
+      user.noFed = user.noFed + parseInt(req.body.value);
+      user.save();
+    })
+    await User.findById(req.body.donationId, (err, user) => {
+      if (err) {
+        const err = new Error('Add Fed isn\'t working for this donation');
+        err.statusCode = 404;
+        throw err;
       }
-      else{
+      if (user.rating != 0) {
+        user.rating = (user.rating + parseInt(req.body.rating)) / 2;
+      }
+      else {
         user.rating = parseInt(req.body.rating);
       }
       user.noFed = user.noFed + parseInt(req.body.value);
@@ -477,43 +479,43 @@ router.get('/notifications', isAuth, async (req, res, next) => {
   }
 })
 
-router.get('/leaderboard',isAuth, async(req,res,next) => {
-  try{
-      const ranked_users = await User.find({}).sort({noFed:-1}).select('name userType noFed profilePic rating').limit(15);
-      console.log(ranked_users);
-      res.status(200).json({list:ranked_users})
+router.get('/leaderboard', isAuth, async (req, res, next) => {
+  try {
+    const ranked_users = await User.find({}).sort({ noFed: -1 }).select('name userType noFed profilePic rating').limit(15);
+    console.log(ranked_users);
+    res.status(200).json({ list: ranked_users })
   }
-  catch(err) {
-    if(!err.statusCode) {
+  catch (err) {
+    if (!err.statusCode) {
       err.statusCode = 500
     }
     next(err)
   }
 })
-router.post('/review',isAuth,async(req,res,next)=>{
-  try{
+router.post('/review', isAuth, async (req, res, next) => {
+  try {
     const donation = await Donation.findById(req.body.id);
     donation.reviewed = true;
     await donation.save();
-    await User.findById(donation.receiverId, (err,user)=>{
-      if(err){
+    await User.findById(donation.receiverId, (err, user) => {
+      if (err) {
         const err = new Error('Add Fed isn\'t working for this donation');
         err.statusCode = 404;
         throw err;
       }
-      if(user.rating !=0){
-        user.rating = (user.rating + parseInt(req.body.rating))/2;
+      if (user.rating != 0) {
+        user.rating = (user.rating + parseInt(req.body.rating)) / 2;
       }
-      else{
+      else {
         user.rating = parseInt(req.body.rating);
       }
       user.save();
-  })
-  const user = await User.findById(req.userId).populate('donations posts');
-  res.status(200).json(user);
+    })
+    const user = await User.findById(req.userId).populate('donations posts');
+    res.status(200).json(user);
   }
-  catch(err){
-    if(!err.statusCode){
+  catch (err) {
+    if (!err.statusCode) {
       err.statusCode = 500
     }
     next(err)

@@ -20,12 +20,13 @@ export const getDonation = () => async (dispatch) =>{
         donations: res.data.donations
     })
 }
-export const pendingDonation = (data) => async (dispatch,getState) => {
+export const pendingDonation = (data,date) => async (dispatch,getState) => {
     const userId = getState().authReducer.user.userId
-    await axios.post('/api/donation/changeStatus',{_id:data._id,status:'pending'})
+    await axios.post('/api/donation/changeStatus',{_id:data._id,status:'pending',date:date.format("HH:mm ll")})
     dispatch({
         type: 'PENDING_DONATION',
         payload:data,
+        date:date,
         userId
     })
 }

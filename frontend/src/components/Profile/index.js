@@ -5,9 +5,11 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
-import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space } from 'antd';
+import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined, CheckCircleTwoTone } from '@ant-design/icons';
+import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge, message } from 'antd';
 import "./styles.css"
+
+//import {diamondAward} from '../../awards/diamond.jpg'
 
 import FollowersList from './FollowersList';
 import { setCurrentRoute } from '../Navbar/actions';
@@ -16,7 +18,8 @@ import EditProfile from './EditProfile';
 import EventModal from '../EventModal';
 import ProfilePic from './ProfilePic';
 import { addFed, getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
-   getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation } from './action';
+   getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation,
+   reviewOrg } from './action';
 
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
@@ -44,6 +47,8 @@ class Profile extends Component {
     followingVisible: false,
     loadingAccept: false,
     visibleAccept: false,
+    loadingDonation: false,
+    visibleDonation: false,
     loadingEvent: false,
     visibleEvent: false,
     visibleEdit: false,
@@ -109,7 +114,8 @@ class Profile extends Component {
     });
     
     this.setState({
-      visibleAccept: true
+      visibleAccept: true,
+      acceptdonation: data
     });
   };
 
@@ -125,6 +131,28 @@ class Profile extends Component {
 
   handleCancelAccept = () => {
     this.setState({ visibleAccept: false });
+  };
+
+  showModalDonation = (id) => {
+    this.setState({
+      currentDonationId: id,
+      visibleDonation: true,
+    });
+  };
+
+
+  handleOkDonation = () => {
+    this.setState({ loadingDonation: true });
+    setTimeout(() => {
+      this.setState({ loadingDonation: false, visibleDonation: false });
+    }, 1000);
+    Modal.success({
+      content: "Thank You"
+    });
+  };
+
+  handleCancelDonation = () => {
+    this.setState({ visibleDonation: false });
   };
 
   handleCancelProfilePic = () => {
@@ -147,6 +175,26 @@ class Profile extends Component {
     this.setState({ visibleEdit: false });
   };
 
+  handleClickDiamond = () => {
+    message.info('Diamond award: each one feeds upto 3 people');
+  }
+
+  handleClickGold = () => {
+    message.info('Gold award : each one feeds upto 2 people');
+  }
+
+  handleClickleaderboardTop = () => {
+    message.info('nofoodWasted leaderboard :  Top contributor!');
+  }
+
+  handleClickverifiedAccount = () => {
+    message.info('This is a verified organisation registered with the authorities!');
+  }
+
+  handleClickSilver = () => {
+    message.info('Silver award : each feeds 1 person');
+  }
+
   callback = (key) => {
     console.log(key);
   }
@@ -163,11 +211,11 @@ class Profile extends Component {
   }
   render() {
 
-    const { followersVisible, followingVisible, loadingAccept, visibleAccept , loadingEvent, visibleEvent , visibleEdit, loadingEdit, visibleProfilePic } = this.state;
+    const { followersVisible, followingVisible, loadingDonation , visibleDonation , loadingAccept, visibleAccept , loadingEvent, visibleEvent , visibleEdit, loadingEdit, visibleProfilePic } = this.state;
     const { PendingDonations, profileDetails, user, followUser, unfollowUser, getFollowers, getFollowing } = this.props
 
     const imagelist = (images) => {
-      return images.length ? (
+      return images?.length ? (
         images.map(image => {
           return (
             <Image
@@ -180,7 +228,20 @@ class Profile extends Component {
         })
       ) : (<div> No images!</div>)
     }
-    
+    const action = (Donation) => {
+      if(!(Donation?.reviewed) && Donation.status === "Accepted")
+      {
+        const value = [
+          <p className="text" onClick={async() => 
+              { console.log(Donation);
+                await this.setState({ currentDonation: Donation,});
+              }
+            } ><b onClick={() => this.showModalDonation(Donation._id)} > Rate the Reciever </b></p>,
+        ]
+        return value;
+      }
+      else return [];      
+    }
     const Demo = () => (
       <Tabs centered="true" size="large"
       >
@@ -198,11 +259,8 @@ class Profile extends Component {
 
 
         <TabPane tab="Donations" key="donations">
-          {
-            //Add donation card here : donation title, body, photos plus show whether donation active or accepted (see reducer for sample data entry)
-          }
           {profileDetails?.donations?.map(donation => (
-            <Card title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
+            <Card actions={action(donation)} title={donation.title} extra={<div>{donation.status}</div>} style={{ marginLeft: '75px', marginRight: '75px', marginTop: '8px' }}>
               <p>{donation.description}</p>
               <Space>
                 {imagelist(donation.images)}
@@ -222,22 +280,18 @@ class Profile extends Component {
             </Card>
           ))}
         </TabPane>
-        <TabPane tab="Acheivements" key="achievements" >
-          <p style={{ fontSize: "20px", textAlign: "center" }}> Coming Soon!</p>
-        </TabPane>
       </Tabs >
     );
-
     const PendingDonationList = PendingDonations.length ? (
       PendingDonations.map(PendingDonation => {
         return (
-          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("HH:mm ll")} size="small" style={{ width: 250 }}
+          <Card title={PendingDonation.donorName} extra={moment(PendingDonation.postTime).format("ll")} size="small" style={{ width: 250 }}
             actions={[
               <p classname="cardtext1" onClick={() => this.showModalAccept(PendingDonation)} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,
               <p onClick={() => this.props.rejectDonation(PendingDonation._id)}><CloseOutlined hoverable={true} key="Reject" /> Reject </p>,
             ]}
           >
-            <p>{PendingDonation.description}</p>
+            <p><p><b>Time Given: </b>{PendingDonation.pickupDate}</p>{PendingDonation.description}</p>
           </Card>
         )
       })
@@ -245,12 +299,23 @@ class Profile extends Component {
         <div>No Donations are currently there!</div>
       )
 
-      const onFinish = (values) => {
-        this.props.addFed(values.peoplefed)
+      const onFinish = async (values) => {
+        await this.props.addFed(values.peoplefed,values.rating,this.state.acceptdonation?.donorId);
 
       };
     
       const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+      };
+
+      const onFinishD = (values) => {
+        this.props.reviewOrg(this.state.currentDonationId,values.rating);
+        console.log('Success:', values);
+        console.log(this.state.currentDonationId);
+      };
+    
+    
+      const onFinishFailedD = (errorInfo) => {
         console.log('Failed:', errorInfo);
       };
 
@@ -290,7 +355,7 @@ class Profile extends Component {
               >
                 <div style={{ display: "flex" }}>
                   <Image
-                    width={250}
+                    width={240}
                     src={profileDetails?.profilePic}
                   />
                   <Button
@@ -299,14 +364,53 @@ class Profile extends Component {
                     onClick={() => this.setState({ visibleProfilePic: true })}>
                     <EditOutlined />
                   </Button>
-                  <div style={{ marginLeft: "20px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
-                    <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}</p>
-
-                    <div>
-                      <p>{profileDetails?.description}</p>
+                  <div style={{ marginLeft: "8px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
+                    <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}
+                    {profileDetails.userType === "organisation" ?
+                    (
+                      <span style={{position: "relative", top: "-8px", left: "-4px"}}>
+                    <Button
+                      shape="circle"
+                      size="small"
+                      ghost="true"
+                      type="link"
+                      onClick={this.handleClickverifiedAccount}>
+                      <CheckCircleTwoTone />
+                    </Button>
+                    </span>
+                    ) :
+                    null
+                    }
+                    
+                    </p>
+                    <div style={{}}>
+                      <p>{profileDetails?.description} </p>
 
                       <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
                       <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
+
+                      <span style={{float: "right", marginLeft: "40px"}}>
+                      <span onClick={this.handleClickleaderboardTop} style={{marginRight: "6px" }}>
+                        <Badge size="small" count={10} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" src = "/images/awards/leaderboardTop.jpg" />
+                        </Badge>
+                      </span>
+                      <span onClick={this.handleClickDiamond} style={{marginRight: "6px" }}>
+                        <Badge size="small" count={3} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" src = "/images/awards/diamond.jpg" />
+                        </Badge>
+                      </span>
+                      <span onClick={this.handleClickGold} style={{marginRight: "6px" }}>
+                        <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" src = "/images/awards/gold.jpg" />
+                        </Badge>
+                      </span>
+                      <span onClick={this.handleClickSilver} style={{ }}>
+                        <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
+                          <Avatar size="small" src = "/images/awards/silver.jpg" />
+                        </Badge>
+                      </span>
+                      </span>
                     </div>
                     <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
                       <Button type="link" size="large" style={{ fontWeight: "bolder" }} onClick={
@@ -419,7 +523,7 @@ class Profile extends Component {
             onCancel={this.handleCancelAccept}
             footer={[
               <Button key="back" onClick={this.handleCancelAccept}>
-                Say Thanks
+                cancel
                   </Button>,
               <Button
                 key="submit"
@@ -463,11 +567,54 @@ class Profile extends Component {
               },
             ]}
             >
-              <Input type='number' placeholder="Rate Between 1 to 5" />
+              <Input type='number' min="0" max="5" placeholder="Rate Between 1 to 5" />
             </Form.Item>
           </Form>
           </Modal>
 
+          <Modal
+            destroyOnClose
+            visible={visibleDonation}
+            title="Rate the Organisation"
+            onOk={this.handleOkDonation}
+            onCancel={this.handleCancelDonation}
+            footer={[
+              <Button key="back" onClick={this.handleCancelDonation}>
+                cancel
+                  </Button>,
+              <Button
+                key="submit"
+                type="primary"
+                loading={loadingDonation}
+                onClick={this.handleOkDonation}
+                form = 'acceptform'
+                htmlType = 'submit'
+              >
+                Submit
+                  </Button>
+            ]}
+          >
+          <Form
+            id = 'acceptform'
+            {...layout}
+            name="basic"
+            onFinish={onFinishD}
+            onFinishFailed={onFinishFailedD}
+            >
+            <Form.Item
+            label="Rate the Organisation"
+            name="rating"
+            rules={[
+              {
+              required: true,
+              message: 'Please rate the user',
+              },
+            ]}
+            >
+              <Input type='number' min="0" max="5" placeholder="Rate Between 1 to 5" />
+            </Form.Item>
+          </Form>
+          </Modal>
 
         </Layout >
     )
@@ -494,6 +641,7 @@ const mapStateToProps = state => {
   
   
 const mapDispatchToProps = dispatch => ({
+  reviewOrg:bindActionCreators(reviewOrg,dispatch),
   addFed:bindActionCreators(addFed,dispatch),
   addHistory:bindActionCreators(addHistory,dispatch),
   acceptdonation: bindActionCreators(acceptdonation,dispatch),

@@ -64,7 +64,8 @@ const profileReducer = (state = initialState, action) => {
             const PendingDonation = {
                 donorname: donorName,
                 Description: description,
-                posttime: postTime
+                posttime: postTime,
+                pickupDate: action.date.format("HH:mm ll")
             }
             return { ...state, Pending: [...state.Pending, PendingDonation] }
         }
@@ -86,6 +87,9 @@ const profileReducer = (state = initialState, action) => {
             return {...state,profileDetails:action.payload}
         }
         case 'ADD_FED':{
+            return {...state,profileDetails:action.payload}
+        }
+        case 'REVIEW':{
             return {...state,profileDetails:action.payload}
         }
     }

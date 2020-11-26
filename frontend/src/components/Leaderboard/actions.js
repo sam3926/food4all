@@ -6,3 +6,11 @@ export const changeFilters = (data) => async (dispatch) => {
         selectedfilters: data,
     });
 };
+export const getList = () => async (dispatch) => {
+    const  res = await axios.get('/api/users/leaderboard');
+    console.log(res.data);
+    dispatch({
+        type:'GET_LIST',
+        payload: res.data.list
+    })
+}

@@ -16,11 +16,17 @@ const donationSchema = new Schema({
         required:true
     },
     expiryTime: {
-        type: Schema.Types.Date,
-        default: Date.now()
+        type: Schema.Types.Date
+    },
+    pickupDate:{
+        type: String
     },
     acceptedTime: {
         type: Schema.Types.Date
+    },
+    reviewed:{
+        type: Boolean,
+        default: false
     },
     peopleFed: {//NAME TO BE DECIDED
         type: Number,

@@ -37,10 +37,22 @@ export const getProfile = (id) => async (dispatch) => {
     }
 
 }
-export const addFed = (value) => async (dispatch) => {
-    const res = await axios.post('/api/users/addfed', { value: value })
+export const addFed = (value, rating, donationId) => async (dispatch) => {
+    console.log('rating is:', rating);
+    console.log('donationid is:', donationId);
+    const res = await axios.post('/api/users/addfed', { value: value, rating: rating, donationId: donationId })
+    console.log('add fed data is; ', res.data);
     dispatch({
         type: 'ADD_FED',
+        payload: res.data
+    })
+}
+export const reviewOrg = (id, rating) => async (dispatch) => {
+    console.log(rating, id);
+    const res = await axios.post('/api/users/review', { id: id, rating: rating });
+    console.log('After reviewing the Organisation', res.body);
+    dispatch({
+        type: 'REVIEW',
         payload: res.data
     })
 }

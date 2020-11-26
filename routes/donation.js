@@ -103,28 +103,46 @@ router.get('/donations', isAuth, async (req, res, next) => {
 router.post('/changeStatus', isAuth, async (req, res, next) => {
     try {
         const { _id, status } = req.body
-        const { donorId } = await Donations.findOneAndUpdate({ _id: _id }, {
-            status: status,
-            receiverId: req.userId
-        });
+        if (status == 'pending') {
+            // await Donations.updateOne({_id:_id},{
+            //     status:status,
+            //     receiverId:req.userId,
+            //     pickupDate:req.body.date
+            // });
 
-        const notification = new Notification({
-            notificationType: "donation-interest",
-            user: req.userId,
-        })
-        const t = await notification.save()
-        const not = await t.populate({
-            path: 'user',
-            select: 'avatar name'
-        }).execPopulate()
+            const { donorId } = await Donations.findOneAndUpdate({ _id: _id }, {
+                status: status,
+                receiverId: req.userId
+            });
 
-        let onlineUsers = getOnlineUsers();
-        if (onlineUsers[donorId]) {
-            await User.findByIdAndUpdate(donorId, { $push: { notifications: t } })
-            let receiverSocket = onlineUsers[donorId];
-            receiverSocket.emit('notification', not);
-        } else {
-            await User.findByIdAndUpdate(donorId, { $push: { notifications: t }, $set: { unreadNotifications: true } })
+            const notification = new Notification({
+                notificationType: "donation-interest",
+                user: req.userId,
+            })
+            const t = await notification.save()
+            const not = await t.populate({
+                path: 'user',
+                select: 'avatar name'
+            }).execPopulate()
+
+            let onlineUsers = getOnlineUsers();
+            if (onlineUsers[donorId]) {
+                await User.findByIdAndUpdate(donorId, { $push: { notifications: t } })
+                let receiverSocket = onlineUsers[donorId];
+                receiverSocket.emit('notification', not);
+            } else {
+                await User.findByIdAndUpdate(donorId, { $push: { notifications: t }, $set: { unreadNotifications: true } })
+            }
+
+
+
+
+        }
+        else {
+            await Donations.updateOne({ _id: _id }, {
+                status: status,
+                receiverId: req.userId
+            });
         }
 
 

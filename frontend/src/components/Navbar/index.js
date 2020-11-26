@@ -100,12 +100,6 @@ class Navbar extends Component {
                 <Link to="/messages"><p>{<MessageOutlined />}Messages</p></Link>
               </Badge ></Menu.Item>
               <Menu.Item key="profile" icon={<UserOutlined />} ><Link to={`/i/profile/${auth.user.userId}`}>Profile</Link></Menu.Item>
-              <Menu.Item key="search">
-                <Search
-                  placeholder="Search"
-                  onSearch={value => console.log(value)}
-                  style={{ width: 200 }} />
-              </Menu.Item>
               <Menu.Item key="logout" icon={<LogoutOutlined />} >Logout</Menu.Item>
             </Menu>
           </Header>

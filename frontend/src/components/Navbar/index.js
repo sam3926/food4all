@@ -55,7 +55,20 @@ class Navbar extends Component {
       notifications.length ? notifications.map(({ user, notificationType, createdAt }) => (
         <Card style={{ width: 320, margin: '10px 5px' }}>
           <p><Link to={`/profile/${user._id}`}><Avatar src={user.avatar}></Avatar> {user.name}</Link>
-            {notificationType == 'follow' ? ' followed you!' : notificationType == 'post' ? ' added a post' : notificationType == 'donation' ? ' made a donation' : notificationType == 'like' ? ' liked your post' : notificationType == 'comment' ? ' commented on your post' : ''}
+            {notificationType == 'follow' ?
+              ' followed you!' :
+              notificationType == 'donation-accept' ?
+                ' has accepted your donation' :
+                notificationType == 'donation' ?
+                  ' posted a donation' :
+                  notificationType == 'like' ?
+                    ' liked your post' :
+                    notificationType == 'comment' ?
+                      ' commented on your post' :
+                      notificationType == 'donation-interest' ?
+                        ' is interested in your donation' :
+                        notificationType == 'donation-reject' ?
+                          ' rejected your donation' : ''}
           </p>
           <span style={{ marginLeft: '5px' }}>{moment(createdAt).fromNow()}</span>
         </Card>
@@ -80,18 +93,26 @@ class Navbar extends Component {
               <Menu.Item key="discover" icon={<BulbOutlined />}><Link to='/discover'>Discover</Link></Menu.Item>
               <Menu.Item key="community" icon={<TrophyOutlined />} ><Link to="/community">Community</Link></Menu.Item>
               <Menu.Item key="leaderboard" icon={<UsergroupDeleteOutlined />} ><Link to="/leaderboard">Leaderboard</Link></Menu.Item>
-              <Menu.Item key="notifications"><Badge dot={unreadNotifications ? true : false} ><Popover placement="bottom" content={content} title="Notifications" trigger="click">
-                <p>{<BellOutlined />}Notifications</p>
-              </Popover></Badge ></Menu.Item>
-              <Menu.Item key="messages" ><Badge dot={unreadMessages ? true : false} >
-                <Link to="/messages"><p>{<MessageOutlined />}Messages</p></Link>
-              </Badge ></Menu.Item>
+              <Menu.Item key="notifications"><Popover placement="bottom" content={content} title="Notifications" trigger="click">
+                <Badge dot={unreadNotifications ? true : false} />
+                {<BellOutlined />}Notifications
+              </Popover></Menu.Item>
+              <Menu.Item key="messages" >
+                <Link to="/messages">
+                  <Badge dot={unreadMessages ? true : false} />
+
+                  <MessageOutlined />
+
+                    Messages
+
+                </Link>
+              </Menu.Item>
               <Menu.Item key="profile" icon={<UserOutlined />} ><Link to={`/i/profile/${auth.user.userId}`}>Profile</Link></Menu.Item>
               <Menu.Item key="logout" icon={<LogoutOutlined />} >Logout</Menu.Item>
             </Menu>
           </Header>
 
-        </div>
+        </div >
       );
     else
       return null;

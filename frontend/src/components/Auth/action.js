@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 
 import { ACTION } from "./constants";
 import { startConnection } from "../../utils/common";
+import { setCurrentRoute } from "../Navbar/actions";
 
 // Register User
 export const registerUser = (userData, history) => async dispatch => {
@@ -35,7 +36,7 @@ export const loginUser = userData => async dispatch => {
             const decoded = jwt_decode(token);
             // Set current user
             dispatch(setCurrentUser(decoded));
-
+            dispatch(setCurrentRoute('home'));
             startConnection();
 
 

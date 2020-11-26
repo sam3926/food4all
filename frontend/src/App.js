@@ -31,6 +31,7 @@ import Messages from './components/messages';
 import { startConnection } from './utils/common';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { setCurrentRoute } from './components/Navbar/actions';
 
 
 
@@ -56,7 +57,7 @@ if (localStorage.jwtToken) {
 
 
   //START SOCKET HERE..................
-
+  store.dispatch(setCurrentRoute('home'))
   startConnection()
 
 

@@ -1,10 +1,10 @@
 import { ACTION } from "./constants";
 import axios from "axios";
-export const acceptdonation = (data) => async(dispatch) =>{
+export const acceptdonation = (data) => async (dispatch) => {
     await axios.post('../../api/donation/accept', { _id: data._id })
     dispatch({
-        type:'ACCEPT_DONATION',
-        payload:data
+        type: 'ACCEPT_DONATION',
+        payload: data
     })
 }
 export const getSomeData = (data) => async (dispatch) => {
@@ -14,11 +14,11 @@ export const getSomeData = (data) => async (dispatch) => {
         payload: data,
     });
 };
-export const addHistory =(history) => async(dispatch) =>{
+export const addHistory = (history) => async (dispatch) => {
     const res = await axios.post('/api/users/addhistory', { history: history })
     dispatch({
-        type:'ADD_HISTORY',
-        payload: res.data 
+        type: 'ADD_HISTORY',
+        payload: res.data
     })
 }
 export const getProfile = (id) => async (dispatch) => {
@@ -37,22 +37,22 @@ export const getProfile = (id) => async (dispatch) => {
     }
 
 }
-export const addFed = (value,rating,donationId) => async (dispatch) =>{
-    console.log('rating is:',rating);
-    console.log('donationid is:',donationId);
-    const res = await axios.post('/api/users/addfed',{value:value,rating:rating,donationId:donationId})
-    console.log('add fed data is; ',res.data);
+export const addFed = (value, rating, donationId) => async (dispatch) => {
+    console.log('rating is:', rating);
+    console.log('donationid is:', donationId);
+    const res = await axios.post('/api/users/addfed', { value: value, rating: rating, donationId: donationId })
+    console.log('add fed data is; ', res.data);
     dispatch({
-        type:'ADD_FED',
-        payload:res.data
+        type: 'ADD_FED',
+        payload: res.data
     })
 }
-export const reviewOrg = (id,rating) => async(dispatch) =>{
-    console.log(rating,id);
-    const res = await axios.post('/api/users/review',{id:id,rating:rating});
-    console.log('After reviewing the Organisation',res.body);
+export const reviewOrg = (id, rating) => async (dispatch) => {
+    console.log(rating, id);
+    const res = await axios.post('/api/users/review', { id: id, rating: rating });
+    console.log('After reviewing the Organisation', res.body);
     dispatch({
-        type:'REVIEW',
+        type: 'REVIEW',
         payload: res.data
     })
 }
@@ -158,7 +158,7 @@ export const getFollowing = (id) => async (dispatch) => {
 
 export const rejectDonation = (id) => async (dispatch) => {
     try {
-        const res = await axios.post('api/donation/reject', { _id: id })
+        const res = await axios.post('/api/donation/reject', { _id: id })
         console.log(res.data);
         dispatch({
             type: 'REJECT_DONATION',

@@ -55,7 +55,20 @@ class Navbar extends Component {
       notifications.length ? notifications.map(({ user, notificationType, createdAt }) => (
         <Card style={{ width: 320, margin: '10px 5px' }}>
           <p><Link to={`/profile/${user._id}`}><Avatar src={user.avatar}></Avatar> {user.name}</Link>
-            {notificationType == 'follow' ? ' followed you!' : notificationType == 'post' ? ' added a post' : notificationType == 'donation' ? ' made a donation' : notificationType == 'like' ? ' liked your post' : notificationType == 'comment' ? ' commented on your post' : ''}
+            {notificationType == 'follow' ?
+              ' followed you!' :
+              notificationType == 'donation-accept' ?
+                ' has accepted your donation' :
+                notificationType == 'donation' ?
+                  ' posted a donation' :
+                  notificationType == 'like' ?
+                    ' liked your post' :
+                    notificationType == 'comment' ?
+                      ' commented on your post' :
+                      notificationType == 'donation-interest' ?
+                        ' is interested in your donation' :
+                        notificationType == 'donation-reject' ?
+                          ' rejected your donation' : ''}
           </p>
           <span style={{ marginLeft: '5px' }}>{moment(createdAt).fromNow()}</span>
         </Card>

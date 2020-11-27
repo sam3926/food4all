@@ -115,10 +115,21 @@ class HomeCenter extends Component {
             visibleawards: true
         });
       };
+    Liked = (ids) =>{
+        const alreadyLiked = ids.find((likeuser) => {return likeuser==this.props.user.userId});
+        console.log(ids);
+        console.log(alreadyLiked);
 
-    incrementLike = (id,value) =>{
-        this.props.changelike(id,value)
+        if(alreadyLiked == undefined)
+            return false;
+        else
+            return true;
     }
+    incrementLike = (id,value,ids) =>{
+        console.log(this.props.user.userId);
+        const liked = this.Liked(ids);
+        this.props.changelike(id,liked);
+        }
     render (){
         
         const { visible, visibleawards , loading , visiblepayment , visibleComments, loadingComments} = this.state;
@@ -155,7 +166,7 @@ class HomeCenter extends Component {
                         />
                        {post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
                       actions= {[
-                        <div onClick={(id) =>this.incrementLike(post._id,post.liked)} >{type(post.liked)}{post.noOfLikes}</div>,
+                        <div onClick={(id) =>this.incrementLike(post._id,post.liked,post.likes)} >{type(this.Liked(post.likes))}{post.noOfLikes}</div>,
                         //<div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
                         <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post._id)} key="Comment" style={{margin:"8px"}}/> </div>,
                         <div><GiftOutlined key="Award" onClick={this.showModalawards} style={{margin:"8px"}}/> </div>,
@@ -189,6 +200,7 @@ class HomeCenter extends Component {
 }
 const mapStateToProps = state => ({
     posts: state.HomeCenterReducer.posts,
+    user: state.authReducer.user,
 
 })
 const mapDispatchToProps = dispatch => ({

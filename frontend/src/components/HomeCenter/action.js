@@ -10,10 +10,12 @@ export const getPost = () => async (dispatch) => {
     })
 }
 export const changelike = (id,value) => async (dispatch) => {
-    value? (await axios.post('/api/posts/like', {id:id,value:-1})):(await axios.post('/api/posts/like', {id:id,value:1}));
+    console.log('this is the like thing',id,value);
+    const val = value? -1:1;
+    const res = await axios.post('/api/posts/like', {id:id,value:val});
+    console.log('lets see thevalue here',res.data);
     dispatch({
         type: 'CHANGE_LIKE',
-        id:id,
-        value:value
+        payload: res.data.post
     });
 };

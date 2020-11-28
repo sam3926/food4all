@@ -70,32 +70,37 @@ router.post('/create', isAuth, async (req, res, next) => {
 router.post('/like', isAuth, async (req, res, next) => {
     try {
         console.log(req.body.value)
-        const post = await Post.findOneAndUpdate({ _id: req.body.id }, {
+        const { value } = req.body;
+        const post = await Post.findOneAndUpdate({ _id: req.body.id }, (value == 1)? {
             $inc: { noOfLikes: req.body.value },
             $push: { likes: req.userId }
-        })
+        }:{
+            $inc: { noOfLikes: req.body.value },
+            $pullAll: { likes: [req.userId] }
+        },{new:true})
         // const post = await Post.find({ authorId: req.body.authorId })
-
-        const notification = new Notification({
+        if(value == 1)
+        {
+            const notification = new Notification({
             notificationType: "like",
             user: req.userId,
-        })
-        const t = await notification.save()
-        const not = await t.populate({
-            path: 'user',
-            select: 'avatar name'
-        }).execPopulate()
-
-        let onlineUsers = getOnlineUsers();
-        if (onlineUsers[post.authorId]) {
-            await User.findByIdAndUpdate(post.authorId, { $push: { notifications: t } })
-            let receiverSocket = onlineUsers[post.authorId];
-            receiverSocket.emit('notification', not);
-        } else {
-            await User.findByIdAndUpdate(post.authorId, { $push: { notifications: t }, $set: { unreadNotifications: true } })
+            })
+            const t = await notification.save()
+            const not = await t.populate({
+                path: 'user',
+                select: 'avatar name'
+            }).execPopulate()
+            let onlineUsers = getOnlineUsers();
+            if (onlineUsers[post.authorId]) {
+                await User.findByIdAndUpdate(post.authorId, { $push: { notifications: t } })
+                let receiverSocket = onlineUsers[post.authorId];
+                receiverSocket.emit('notification', not);
+            } else {
+                await User.findByIdAndUpdate(post.authorId, { $push: { notifications: t }, $set: { unreadNotifications: true } })
+            }
         }
         res.json({
-            'message': 'updated the like'
+            post:post
         })
     } catch (err) {
         if (!err.statusCode) {

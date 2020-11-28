@@ -25,17 +25,9 @@ const HomeCenterReducer = (state = initialState, action) => {
             }
         }
         case 'CHANGE_LIKE': {
-            let posts = [...state.posts];
-            let Post = posts.find((post) => { return post._id == action.id })
-            if (Post.liked) {
-                Post.noOfLikes = Post.noOfLikes - 1
-                Post.liked = false;
-            }
-            else {
-                Post.noOfLikes = Post.noOfLikes + 1
-                Post.liked = true;
-            }
-            return { ...state, posts }
+            
+            console.log('Change_like', action.payload);
+            return { ...state, posts:state.posts.map(p => p._id ==action.payload._id? {...p,likes:[...action.payload.likes],noOfLikes:action.payload.noOfLikes}:{...p}) }
         }
         case 'ADD_COMMENT': {
             return { ...state, postComments: state.postComments.map(p => p.postId == action.id ? { ...p, comments: [...p.comments, action.comment] } : { ...p }) }

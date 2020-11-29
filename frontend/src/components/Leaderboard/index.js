@@ -7,6 +7,8 @@ import '../../index.css';
 import { Menu, Checkbox, Layout,  Carousel , Table, Tag, Image , Radio} from 'antd';
 
 import { changeFilters, getList } from './actions';
+import { setCurrentRoute } from '../Navbar/actions';
+import { Link } from 'react-router-dom';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -20,77 +22,8 @@ const contentStyle = {
   fontSize: '20px'
 };
 
-const columns = [
-  {
-    title: "Rank",
-    dataIndex: "rank",
-    key: "rank",
-    render: text => <p>{text}</p>
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: text => <a>{text}</a>
-  },
-  {
-    title: 'Type',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
-      <>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "People Fed",
-    dataIndex: "peoplefed",
-    key: "peoplefed"
-  },
-  {
-    title: "Rating",
-    dataIndex: "rating",
-    key: "rating"
-  }
-];
 
-const data = [
-  {
-    key: "1",
-    rank: "1",
-    name: "John Brown",
-    rating: 32,
-    peoplefed: 500,
-    tags: ["nice", "developer"]
-  },
-  {
-    key: "2",
-    rank: "2",
-    name: "Jim Green",
-    rating: 42,
-    peoplefed: 300,
-    tags: ["loser"]
-  },
-  {
-    key: "3",
-    rank: "3",
-    name: "Joe Black",
-    rating: 32,
-    peoplefed: 100,
-    tags: ["cool", "teacher"]
-  }
-];
+
 
 class Leaderboard extends Component {
   state = {
@@ -98,7 +31,50 @@ class Leaderboard extends Component {
     valueF: '1',
     filters: []
   }
-
+  columns = [
+    {
+      title: "Rank",
+      dataIndex: "rank",
+      key: "rank",
+      render: text => <p>{text}</p>
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text,user) => <Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${user.id}`}>{text}</Link>
+    },
+    {
+      title: 'Type',
+      key: 'tags',
+      dataIndex: 'tags',
+      render: tags => (
+        <>
+          {tags.map(tag => {
+            let color = tag.length > 5 ? 'geekblue' : 'green';
+            if (tag === 'loser') {
+              color = 'volcano';
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: "People Fed",
+      dataIndex: "peoplefed",
+      key: "peoplefed"
+    },
+    {
+      title: "Rating",
+      dataIndex: "rating",
+      key: "rating"
+    }
+  ];
 
   onChangeF = e => {
     console.log('radio checked', e.target.value);
@@ -121,7 +97,8 @@ class Leaderboard extends Component {
         rating: element.rating,
         peoplefed: element.noFed,
         type: element.userType,
-        tags:[element.userType]
+        tags:[element.userType],
+        id: element._id
       })
     });
   }
@@ -225,7 +202,7 @@ class Leaderboard extends Component {
               </div>
 
               <div style={{ width: 700}}>
-              <Table columns={columns} dataSource={data} />
+              <Table columns={this.columns} dataSource={data} />
               </div>
 
             </Content>
@@ -246,6 +223,7 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch) => ({
+  setCurrentRoute: bindActionCreators(setCurrentRoute,dispatch),
   getList: bindActionCreators(getList,dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),
 })

@@ -180,7 +180,7 @@ class Discover extends Component {
     const DonationList = (Donations).length ? (
       filterDonations.map(Donation => {
         return (
-          <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Donation.donorId}`}>{Donation.donorName}</Link>} extra={<div>{moment(Donation.postTime).format("HH:mm ll")}</div>} style={{ width: 700, margin: '8px' }}
+          <Card title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Donation.donorId}`}>{Donation.donorName}</Link>} extra={<div>{moment(Donation.createdAt).format("HH:mm ll")}</div>} style={{ width: 700, margin: '8px' }}
 
             actions={action(Donation)}
           >
@@ -195,11 +195,11 @@ class Discover extends Component {
     ) : (
         <div>No Donations are currently there!</div>
       )
-
+    console.log('this is inside the donations',Donations);
     const pendingDonationList = pendingDonations.length ? (
       pendingDonations.map(Donation => {
         return (
-          <Card title={Donation.donorName} extra={moment(Donation.postTime).format("ll")} size="small" style={{ width: 250 }}
+          <Card title={Donation.donorName} extra={moment(Donation.createdAt).format("ll")} size="small" style={{ width: 250 }}
 
             actions={[
               <p classname="cardtext1" onClick={() => this.showModal(Donation)} ><CheckOutlined hoverable={true} key="Accept" /> Accept </p>,

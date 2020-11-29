@@ -23,9 +23,9 @@ ReactDOM.render(
     <BrowserRouter>
       <PersistGate persistor={persistor}>
         {/* <React.StrictMode> */}
-        <ThemeSwitcherProvider themeMap={themes} defaultTheme="light">
-          <App />
-        </ThemeSwitcherProvider>
+        {/* <ThemeSwitcherProvider themeMap={themes} defaultTheme="light"> */}
+        <App />
+        {/* </ThemeSwitcherProvider> */}
         {/* </React.StrictMode> */}
       </PersistGate>
     </BrowserRouter>

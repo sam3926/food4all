@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
-import axios from 'axios';
-import 'antd/dist/antd.css';
-import '../../index.css';
 import { Menu, Checkbox, Layout, Carousel, Table, Tag, Image, Radio } from 'antd';
 
 import { changeFilters, getList } from './actions';

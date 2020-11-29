@@ -30,9 +30,9 @@
     "socket.io-client": "^2.3.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -51,7 +51,9 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^5.8.0",
     "autoprefixer": "^9.0.0",
+    "craco-less": "^1.17.1",
     "gulp": "^4.0.2",
     "gulp-csso": "^4.0.1",
     "gulp-debug": "^4.0.0",

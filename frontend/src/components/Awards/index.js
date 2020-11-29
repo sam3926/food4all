@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import moment from 'moment';
 import axios from "axios"
 
-import "antd/dist/antd.css";
 import { Form, Upload, Input, Radio, Modal, Button, Result, Avatar } from "antd";
 import { InboxOutlined, } from "@ant-design/icons";
 

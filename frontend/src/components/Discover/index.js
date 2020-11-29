@@ -5,8 +5,6 @@ import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import sortBy from 'lodash/sortBy';
 
-import 'antd/dist/antd.css';
-import '../../index.css';
 import './styles.css'
 import MapDiscover from "../MapDiscover";
 
@@ -195,7 +193,7 @@ class Discover extends Component {
     ) : (
         <div>No Donations are currently there!</div>
       )
-    console.log('this is inside the donations',Donations);
+    console.log('this is inside the donations', Donations);
     const pendingDonationList = pendingDonations.length ? (
       pendingDonations.map(Donation => {
         return (

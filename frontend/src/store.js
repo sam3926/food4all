@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
-import { composeWithDevTools as compose } from "redux-devtools-extension/developmentOnly";
+// import { composeWithDevTools as compose } from "redux-devtools-extension/developmentOnly";
 import thunk from "redux-thunk";
 
 import { persistStore, persistReducer } from 'redux-persist'
@@ -36,7 +36,7 @@ const rootReducer = combineReducers({
     messageReducer,
     CommunityReducer,
     LeaderboardReducer,
-    
+
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -45,7 +45,8 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 export const store = createStore(
     persistedReducer,
     {},
-    compose(applyMiddleware(thunk))
+    applyMiddleware(thunk)
+    // compose(applyMiddleware(thunk))
 );
 
 export const persistor = persistStore(store)

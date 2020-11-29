@@ -116,9 +116,9 @@ const App = (props) => {
         {/*Put remaining routes here*/}
       </RouterSwitch>
 
-      <Button shape="circle" size="large" icon={
+      {/* <Button shape="circle" size="large" icon={
         // <FireTwoTone twoToneColor={isDarkMode?"yellow":"black"} 
-        <FireFilled style={isDarkMode ? { "color": "#F0C315" } : { "color": "#444" }} />} style={{ "position": "fixed", "right": "16px", "bottom": "16px" }} onClick={() => toggleTheme(!isDarkMode)}></Button>
+        <FireFilled style={isDarkMode ? { "color": "#F0C315" } : { "color": "#444" }} />} style={{ "position": "fixed", "right": "16px", "bottom": "16px" }} onClick={() => toggleTheme(!isDarkMode)}></Button> */}
 
     </Layout>
   )

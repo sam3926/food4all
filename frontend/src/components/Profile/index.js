@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import 'antd/dist/antd.css';
 import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined, CheckCircleTwoTone } from '@ant-design/icons';
-import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge, message } from 'antd';
+import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge, message, InputNumber } from 'antd';
 import "./styles.css"
 
 //import {diamondAward} from '../../awards/diamond.jpg'
@@ -17,9 +17,11 @@ import LoadingScreen from '../LoadingScreen';
 import EditProfile from './EditProfile';
 import EventModal from '../EventModal';
 import ProfilePic from './ProfilePic';
-import { addFed, getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
-   getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation,
-   reviewOrg } from './action';
+import {
+  addFed, getSomeData, changeTab, getProfile, followUser, unfollowUser, getFollowers,
+  getFollowing, addHistory, getPendingDonations, rejectDonation, editProfile, acceptdonation,
+  reviewOrg
+} from './action';
 
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
@@ -112,7 +114,7 @@ class Profile extends Component {
       icon: 'dot',
       text: data.title + ' ( Donation accepted on ' + moment().format("HH:mm ll") + ' )'
     });
-    
+
     this.setState({
       visibleAccept: true,
       acceptdonation: data
@@ -211,7 +213,7 @@ class Profile extends Component {
   }
   render() {
 
-    const { followersVisible, followingVisible, loadingDonation , visibleDonation , loadingAccept, visibleAccept , loadingEvent, visibleEvent , visibleEdit, loadingEdit, visibleProfilePic } = this.state;
+    const { followersVisible, followingVisible, loadingDonation, visibleDonation, loadingAccept, visibleAccept, loadingEvent, visibleEvent, visibleEdit, loadingEdit, visibleProfilePic } = this.state;
     const { PendingDonations, profileDetails, user, followUser, unfollowUser, getFollowers, getFollowing } = this.props
 
     const imagelist = (images) => {
@@ -229,18 +231,17 @@ class Profile extends Component {
       ) : (<div> No images!</div>)
     }
     const action = (Donation) => {
-      if(!(Donation?.reviewed) && Donation.status === "Accepted")
-      {
+      if (!(Donation?.reviewed) && Donation.status === "Accepted") {
         const value = [
-          <p className="text" onClick={async() => 
-              { console.log(Donation);
-                await this.setState({ currentDonation: Donation,});
-              }
-            } ><b onClick={() => this.showModalDonation(Donation._id)} > Rate the Reciever </b></p>,
+          <p className="text" onClick={async () => {
+            console.log(Donation);
+            await this.setState({ currentDonation: Donation, });
+          }
+          } ><b onClick={() => this.showModalDonation(Donation._id)} > Rate the Reciever </b></p>,
         ]
         return value;
       }
-      else return [];      
+      else return [];
     }
     const Demo = () => (
       <Tabs centered="true" size="large"
@@ -299,25 +300,25 @@ class Profile extends Component {
         <div>No Donations are currently there!</div>
       )
 
-      const onFinish = async (values) => {
-        await this.props.addFed(values.peoplefed,values.rating,this.state.acceptdonation?.donorId);
+    const onFinish = async (values) => {
+      await this.props.addFed(values.peoplefed, values.rating, this.state.acceptdonation?.donorId);
 
-      };
-    
-      const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-      };
+    };
 
-      const onFinishD = (values) => {
-        this.props.reviewOrg(this.state.currentDonationId,values.rating);
-        console.log('Success:', values);
-        console.log(this.state.currentDonationId);
-      };
-    
-    
-      const onFinishFailedD = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-      };
+    const onFinishFailed = (errorInfo) => {
+      console.log('Failed:', errorInfo);
+    };
+
+    const onFinishD = (values) => {
+      this.props.reviewOrg(this.state.currentDonationId, values.rating);
+      console.log('Success:', values);
+      console.log(this.state.currentDonationId);
+    };
+
+
+    const onFinishFailedD = (errorInfo) => {
+      console.log('Failed:', errorInfo);
+    };
 
     return (
       this.state.profilePageLoading ? <LoadingScreen /> :
@@ -366,22 +367,22 @@ class Profile extends Component {
                   </Button>
                   <div style={{ marginLeft: "8px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
                     <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}
-                    {profileDetails.userType === "organisation" ?
-                    (
-                      <span style={{position: "relative", top: "-8px", left: "-4px"}}>
-                    <Button
-                      shape="circle"
-                      size="small"
-                      ghost="true"
-                      type="link"
-                      onClick={this.handleClickverifiedAccount}>
-                      <CheckCircleTwoTone />
-                    </Button>
-                    </span>
-                    ) :
-                    null
-                    }
-                    
+                      {profileDetails.userType === "organisation" ?
+                        (
+                          <span style={{ position: "relative", top: "-8px", left: "-4px" }}>
+                            <Button
+                              shape="circle"
+                              size="small"
+                              ghost="true"
+                              type="link"
+                              onClick={this.handleClickverifiedAccount}>
+                              <CheckCircleTwoTone />
+                            </Button>
+                          </span>
+                        ) :
+                        null
+                      }
+
                     </p>
                     <div style={{}}>
                       <p>{profileDetails?.description} </p>
@@ -389,27 +390,30 @@ class Profile extends Component {
                       <PhoneOutlined /> <span style={{ fontWeight: 500, marginRight: "20px" }}>{profileDetails?.contact}</span>
                       <HomeOutlined /> <span style={{ fontWeight: 500 }}>{profileDetails?.address}</span>
 
-                      <span style={{float: "right", marginLeft: "40px"}}>
-                      <span onClick={this.handleClickleaderboardTop} style={{marginRight: "6px" }}>
-                        <Badge size="small" count={10} style={{backgroundColor: "#97033e"}}>
-                          <Avatar size="small" src = "/images/awards/leaderboardTop.jpg" />
-                        </Badge>
-                      </span>
-                      <span onClick={this.handleClickDiamond} style={{marginRight: "6px" }}>
-                        <Badge size="small" count={3} style={{backgroundColor: "#97033e"}}>
-                          <Avatar size="small" src = "/images/awards/diamond.jpg" />
-                        </Badge>
-                      </span>
-                      <span onClick={this.handleClickGold} style={{marginRight: "6px" }}>
-                        <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
-                          <Avatar size="small" src = "/images/awards/gold.jpg" />
-                        </Badge>
-                      </span>
-                      <span onClick={this.handleClickSilver} style={{ }}>
-                        <Badge size="small" count={2} style={{backgroundColor: "#97033e"}}>
-                          <Avatar size="small" src = "/images/awards/silver.jpg" />
-                        </Badge>
-                      </span>
+
+                      <span style={{ float: "right", marginLeft: "40px" }}>
+                        {profileDetails?.leaderboardTop ? (
+                          <span onClick={this.handleClickleaderboardTop} style={{ marginRight: "6px" }}>
+                            {/* <Badge size="small" count={profileDetails?.leaderboardTop} style={{ backgroundColor: "#97033e" }}> */}
+                            <Avatar size="small" src="/images/awards/leaderboardTop.jpg" />
+                            {/* </Badge> */}
+                          </span>
+                        ) : null}
+                        <span onClick={this.handleClickDiamond} style={{ marginRight: "6px" }}>
+                          <Badge showZero={true} size="small" count={profileDetails?.diamondAwards} style={{ backgroundColor: "#97033e" }}>
+                            <Avatar size="small" src="/images/awards/diamond.jpg" />
+                          </Badge>
+                        </span>
+                        <span onClick={this.handleClickGold} style={{ marginRight: "6px" }}>
+                          <Badge showZero={true} size="small" count={profileDetails?.goldAwards} style={{ backgroundColor: "#97033e" }}>
+                            <Avatar size="small" src="/images/awards/gold.jpg" />
+                          </Badge>
+                        </span>
+                        <span onClick={this.handleClickSilver} style={{}}>
+                          <Badge showZero={true} size="small" count={profileDetails?.silverAwards} style={{ backgroundColor: "#97033e" }}>
+                            <Avatar size="small" src="/images/awards/silver.jpg" />
+                          </Badge>
+                        </span>
                       </span>
                     </div>
                     <div style={{ marginLeft: "-16px", marginTop: "6px" }}>
@@ -440,7 +444,7 @@ class Profile extends Component {
                           <EditProfile handleCancel={this.handleCancelEdit} handleOk={this.handleOkEdit} showModal={this.showModalEdit} visible={visibleEdit} loading={loadingEdit} />
                           <ProfilePic visible={visibleProfilePic} handleCancel={this.handleCancelProfilePic} />
                           <Button onClick={this.showModalEvent} type="primary" style={{ marginRight: "8px" }}  >
-                              Add Event
+                            Add Event
                           </Button>
                           <EventModal handleCancel={this.handleCancelEvent} handleOk={this.handleOkEvent} showModal={this.showModalEvent} visible={visibleEvent} loading={loadingEvent} />
                         </span>
@@ -530,46 +534,46 @@ class Profile extends Component {
                 type="primary"
                 loading={loadingAccept}
                 onClick={this.handleOkAccept}
-                form = 'acceptform'
-                htmlType = 'submit'
+                form='acceptform'
+                htmlType='submit'
               >
                 Submit
                   </Button>
             ]}
           >
-          <Form
-            id = 'acceptform'
-            {...layout}
-            name="basic"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            <Form
+              id='acceptform'
+              {...layout}
+              name="basic"
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
             >
-            <Form.Item
-            label="No of people fed ?"
-            name="peoplefed"
-            rules={[
-              {
-              required: true,
-              message: 'Please input peoplefed',
-              },
-            ]}
-            >
-              <Input type='number' placeholder="Input Number Here" />
-            </Form.Item>
+              <Form.Item
+                label="No of people fed ?"
+                name="peoplefed"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input peoplefed',
+                  },
+                ]}
+              >
+                <InputNumber min="1" placeholder="No. Fed" />
+              </Form.Item>
 
-            <Form.Item
-            label="Rate the User"
-            name="rating"
-            rules={[
-              {
-              required: true,
-              message: 'Please rate the user',
-              },
-            ]}
-            >
-              <Input type='number' min="0" max="5" placeholder="Rate Between 1 to 5" />
-            </Form.Item>
-          </Form>
+              <Form.Item
+                label="Rate the User"
+                name="rating"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please rate the user',
+                  },
+                ]}
+              >
+                <InputNumber min="1" max="5" placeholder="1 to 5" />
+              </Form.Item>
+            </Form>
           </Modal>
 
           <Modal
@@ -587,33 +591,33 @@ class Profile extends Component {
                 type="primary"
                 loading={loadingDonation}
                 onClick={this.handleOkDonation}
-                form = 'acceptform'
-                htmlType = 'submit'
+                form='rateform'
+                htmlType='submit'
               >
                 Submit
                   </Button>
             ]}
           >
-          <Form
-            id = 'acceptform'
-            {...layout}
-            name="basic"
-            onFinish={onFinishD}
-            onFinishFailed={onFinishFailedD}
+            <Form
+              id='rateform'
+              {...layout}
+              name="basic"
+              onFinish={onFinishD}
+              onFinishFailed={onFinishFailedD}
             >
-            <Form.Item
-            label="Rate the Organisation"
-            name="rating"
-            rules={[
-              {
-              required: true,
-              message: 'Please rate the user',
-              },
-            ]}
-            >
-              <Input type='number' min="1" max="5" placeholder="Rate Between 1 to 5" />
-            </Form.Item>
-          </Form>
+              <Form.Item
+                label="Rate the Organisation"
+                name="rating"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please rate the user',
+                  },
+                ]}
+              >
+                <InputNumber min="1" max="5" placeholder="1 to 5" />
+              </Form.Item>
+            </Form>
           </Modal>
 
         </Layout >
@@ -635,16 +639,16 @@ const mapStateToProps = state => {
     followers: state.profileReducer.followers,
     following: state.profileReducer.following
   })
-  
+
 }
-  
-  
-  
+
+
+
 const mapDispatchToProps = dispatch => ({
-  reviewOrg:bindActionCreators(reviewOrg,dispatch),
-  addFed:bindActionCreators(addFed,dispatch),
-  addHistory:bindActionCreators(addHistory,dispatch),
-  acceptdonation: bindActionCreators(acceptdonation,dispatch),
+  reviewOrg: bindActionCreators(reviewOrg, dispatch),
+  addFed: bindActionCreators(addFed, dispatch),
+  addHistory: bindActionCreators(addHistory, dispatch),
+  acceptdonation: bindActionCreators(acceptdonation, dispatch),
   getSomeData: bindActionCreators(getSomeData, dispatch),
   changeTab: bindActionCreators(changeTab, dispatch),
   getProfile: bindActionCreators(getProfile, dispatch),

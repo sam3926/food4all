@@ -68,7 +68,15 @@ class Navbar extends Component {
                       notificationType == 'donation-interest' ?
                         ' is interested in your donation' :
                         notificationType == 'donation-reject' ?
-                          ' rejected your donation' : ''}
+                          ' rejected your donation' :
+                          notificationType == 'gold' ?
+                            ' gave you a Gold award' :
+                            notificationType == 'silver' ?
+                              ' gave you a Silver award' :
+                              notificationType == 'diamond' ?
+                                ' gave you a Diamond award' :
+                                " "
+            }
           </p>
           <span style={{ marginLeft: '5px' }}>{moment(createdAt).fromNow()}</span>
         </Card>

@@ -128,10 +128,12 @@ class Leaderboard extends Component {
   render() {
     
     let { data } = this.props;
+    const leaders = data;
     console.log(data);
     data = this.modified(data);
     const { selectedMenuItem , valueF } = this.state;
     
+    console.log(leaders[0]);
 
     const radioStyle = {
       display: 'block',
@@ -183,40 +185,40 @@ class Leaderboard extends Component {
               <div> <div style={contentStyle}>
                 <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
                 <Image
-                  width={200}
+                  width={170}
                   src="images\leaderboard\leaderboard.png"
                 />
                 </span>
-                <p style={{paddingTop: "40px", fontSize:"60px"}}>Leaderboard</p> <p> a look at our top contributors!</p></div>
+                <p style={{paddingTop: "30px", fontSize:"60px"}}>Leaderboard</p> <p> a look at our top contributors!</p></div>
               </div>
               
               <div> <div style={contentStyle}>
                 <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
                 <Image
-                  width={200}
-                  src="images\leaderboard\leaderboard.png"
+                  width={170}
+                  src={leaders[0].profilePic}
                 />
                 </span>
-                <p style={{paddingTop: "40px", fontSize:"60px"}}>1. Y </p> <p> X has fed xx people</p></div>
+                <p style={{paddingTop: "30px", fontSize:"30px"}}>1. {leaders[0].name} </p> <p> fed {leaders[0].noFed} people</p></div>
               </div>
               <div> <div style={contentStyle}>
                 <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
                 <Image
-                  width={200}
-                  src="images\leaderboard\leaderboard.png"
+                  width={170}
+                  src={leaders[1].profilePic}
                 />
                 </span>
-                <p style={{paddingTop: "40px", fontSize:"60px"}}>2. Y</p> <p> X has fed xx people</p></div>
+                <p style={{paddingTop: "30px", fontSize:"30px"}}>2. {leaders[1].name}</p> <p> fed {leaders[1].noFed}people</p></div>
               </div>
               
               <div> <div style={contentStyle}>
                 <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
                 <Image
-                  width={200}
-                  src="images\leaderboard\leaderboard.png"
+                  width={170}
+                  src={leaders[2].profilePic}
                 />
                 </span>
-                <p style={{paddingTop: "40px", fontSize:"60px"}}>3. Y</p> <p> X has fed xx people</p></div>
+                <p style={{paddingTop: "30px", fontSize:"30px"}}>3. {leaders[2].name}</p> <p> fed {leaders[2].noFed} people</p></div>
               </div>
 
               </Carousel>

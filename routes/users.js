@@ -492,7 +492,7 @@ router.get('/notifications', isAuth, async (req, res, next) => {
 
 router.get('/leaderboard', isAuth, async (req, res, next) => {
   try {
-    const ranked_users = await User.find({}).sort({ noFed: -1 }).select('name userType noFed profilePic rating').limit(15);
+    const ranked_users = await User.find({}).sort({ noFed: -1 }).select('name userType noFed profilePic avatar rating').limit(15);
     console.log(ranked_users);
     res.status(200).json({ list: ranked_users })
   }

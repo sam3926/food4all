@@ -8,7 +8,6 @@ import "leaflet/dist/leaflet.css";
 import "esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css";
 import "leaflet/dist/leaflet.js";
 import "esri-leaflet-geocoder/dist/esri-leaflet-geocoder.js";
-import 'antd/dist/antd.css';
 import { Modal, Button } from 'antd';
 
 const DEFAULT_LATITUDE = 23.2599;
@@ -107,13 +106,13 @@ class MapDiscover extends Component {
                 </Popup>
               </Marker>
             ))} */}
-                <Marker
-                  position={[latitudeP, longitudeP]}
-                >
-                  <Popup>
-                    {message}
-                  </Popup>
-                </Marker>
+            <Marker
+              position={[latitudeP, longitudeP]}
+            >
+              <Popup>
+                {message}
+              </Popup>
+            </Marker>
           </Map>
           {/* <div class="container">
             <div class="vertical-center">

@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
-import 'antd/dist/antd.css';
-import '../../index.css';
 import { Layout, Menu, Checkbox, Avatar, Space } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 

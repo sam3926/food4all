@@ -1,5 +1,4 @@
 import React from 'react';
-import 'antd/dist/antd.css';
 import moment from 'moment';
 import { Modal, Button } from 'antd';
 import { Comment, Avatar, Form, List, Input } from 'antd';
@@ -72,8 +71,8 @@ class Comments extends React.Component {
   };
 
   render() {
-    
-    if(this.props.id){
+
+    if (this.props.id) {
       const { submitting, value } = this.state;
       const { comments } = this.props.postComments[0];
       return (
@@ -114,7 +113,7 @@ class Comments extends React.Component {
       );
     }
     else
-        return null;
+      return null;
   }
 }
 const mapStateToProps = (state, ownProps) => {

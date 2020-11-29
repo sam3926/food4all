@@ -5,12 +5,10 @@ import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import sortBy from 'lodash/sortBy';
 
-import 'antd/dist/antd.css';
-import '../../index.css';
 import MapDiscover from "../MapDiscover";
 
-import { Menu, Checkbox, Layout, Modal , Button , Card, Space, Image} from 'antd';
-import { InboxOutlined , CompassOutlined , EnvironmentOutlined } from '@ant-design/icons';
+import { Menu, Checkbox, Layout, Modal, Button, Card, Space, Image } from 'antd';
+import { InboxOutlined, CompassOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { changeFilters, getEvent } from './actions';
 import LoadingScreen from '../LoadingScreen';
 import { setCurrentRoute } from '../Navbar/actions';
@@ -19,7 +17,7 @@ const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 class Community extends Component {
-  
+
   state = {
     selectedMenuItem: '1',
     mapOpen: false,
@@ -29,7 +27,7 @@ class Community extends Component {
   }
 
   async componentDidMount() {
-    
+
     this.setState({
       profilePageLoading: true
     })
@@ -42,7 +40,7 @@ class Community extends Component {
   }
 
   render() {
-    const { selectedMenuItem , latp , lngp } = this.state;
+    const { selectedMenuItem, latp, lngp } = this.state;
     const { Events } = this.props;
     const plainOptions = [
       { label: 'Location', value: 'Location' },
@@ -88,13 +86,13 @@ class Community extends Component {
       return Events
     }
 
-    const filterEvents = filteredEvent(Events.filter( (event) => { return moment(event.expiryTime).isAfter(moment.now())} ));
-    const action = (Event) =>{
-      console.log("this is the action center",this.props.user.userId, 'the event donor id is',Event.donorId);
-      if(Event.donorId === this.props.user?.userId)
+    const filterEvents = filteredEvent(Events.filter((event) => { return moment(event.expiryTime).isAfter(moment.now()) }));
+    const action = (Event) => {
+      console.log("this is the action center", this.props.user.userId, 'the event donor id is', Event.donorId);
+      if (Event.donorId === this.props.user?.userId)
         return []
-      
-      return([
+
+      return ([
         <Link to={{
           pathname: "/messages",
           state: {
@@ -109,17 +107,17 @@ class Community extends Component {
     const EventList = Events.length ? (
       filterEvents.map(Event => {
         return (
-        <Card 
-        title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Event.donorId}`}>{Event.title}</Link>}
-        extra={<div><p>Event Date : {moment(Event.expiryTime).format(" HH:mm ll")}</p></div>} 
-        style={{ width: 700, margin: '8px' }}
-        actions={action(Event)}>
-            <a onClick={() => this.setState({ mapOpen: true,currentEvent:Event })} ><EnvironmentOutlined /> Event Location </a>
+          <Card
+            title={<Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${Event.donorId}`}>{Event.title}</Link>}
+            extra={<div><p>Event Date : {moment(Event.expiryTime).format(" HH:mm ll")}</p></div>}
+            style={{ width: 700, margin: '8px' }}
+            actions={action(Event)}>
+            <a onClick={() => this.setState({ mapOpen: true, currentEvent: Event })} ><EnvironmentOutlined /> Event Location </a>
             <p> Event Details : {Event.description}</p>
             <Space>
               {imagelist(Event.images)}
             </Space>
-            
+
           </Card>
         )
       })
@@ -151,7 +149,7 @@ class Community extends Component {
 
           <Layout style={{ marginLeft: '280px', marginTop: '64px' }}>
             <Content className="site-layout-background"
-              style={{  paddingLeft: 125, minHeight: 280 }}>
+              style={{ paddingLeft: 125, minHeight: 280 }}>
               {EventList}
             </Content>
             <Sider width={300} style={{ padding: "25px" }}> </Sider>
@@ -161,10 +159,10 @@ class Community extends Component {
             <Button onClick={() => this.setState({ mapOpen: false })}>
               Return
             </Button>
-            ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
-            <MapDiscover latitudeP={this.state.currentEvent?.location.coordinates[1]} longitudeP={this.state.currentEvent?.location.coordinates[0]} message = 'Event Location'/>
-            </Modal>
-          
+          ]} centered closable={false} width={"90vw"} visible={this.state.mapOpen}>
+            <MapDiscover latitudeP={this.state.currentEvent?.location.coordinates[1]} longitudeP={this.state.currentEvent?.location.coordinates[0]} message='Event Location' />
+          </Modal>
+
 
         </Layout >
     )
@@ -180,7 +178,7 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch, getState) => ({
-  getEvent: bindActionCreators(getEvent,dispatch),
+  getEvent: bindActionCreators(getEvent, dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),
   setCurrentRoute: bindActionCreators(setCurrentRoute, dispatch)
 })

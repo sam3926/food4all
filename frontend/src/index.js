@@ -13,7 +13,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeSwitcherProvider } from "react-css-theme-switcher";
 
 const themes = {
-  dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
+  // dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
   light: `${process.env.PUBLIC_URL}/light-theme.css`,
 };
 
@@ -23,9 +23,9 @@ ReactDOM.render(
     <BrowserRouter>
       <PersistGate persistor={persistor}>
         {/* <React.StrictMode> */}
-        <ThemeSwitcherProvider themeMap={themes} defaultTheme="light">
-          <App />
-        </ThemeSwitcherProvider>
+        {/* <ThemeSwitcherProvider themeMap={themes} defaultTheme="light"> */}
+        <App />
+        {/* </ThemeSwitcherProvider> */}
         {/* </React.StrictMode> */}
       </PersistGate>
     </BrowserRouter>

@@ -4,13 +4,12 @@ import { bindActionCreators } from "redux";
 import moment from 'moment';
 import axios from "axios"
 
-import "antd/dist/antd.css";
 import { Form, Upload, Input, Modal, Button } from "antd";
 import { InboxOutlined, } from "@ant-design/icons";
 import "./styles.css";
 
 import { addPost } from './action';
-import {addHistory} from '../Profile/action';
+import { addHistory } from '../Profile/action';
 
 const normFile = e => {
   console.log("Upload event:", e);
@@ -34,7 +33,7 @@ class PostModal extends Component {
     const imageUrl = dragger?.map(image => image.response.location);
 
     const post = {
-      author:this.state.user,
+      author: this.state.user,
       description: e.description,
       likes: [],
       liked: false,
@@ -114,12 +113,12 @@ class PostModal extends Component {
 }
 const mapStatetoProps = state => {
   return {
-      name: state.LeftSidePanelReducer.profileDetails.name,
+    name: state.LeftSidePanelReducer.profileDetails.name,
   };
-  
+
 };
 const mapDispatchToProps = dispatch => ({
-  addHistory: bindActionCreators(addHistory,dispatch),
+  addHistory: bindActionCreators(addHistory, dispatch),
   addPost: bindActionCreators(addPost, dispatch)
 })
 export default connect(mapStatetoProps, mapDispatchToProps)(PostModal);

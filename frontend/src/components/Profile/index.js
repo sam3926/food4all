@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
-import 'antd/dist/antd.css';
 import { HomeOutlined, EditOutlined, ClockCircleOutlined, PhoneOutlined, TeamOutlined, SendOutlined, CheckOutlined, CloseOutlined, CheckCircleTwoTone } from '@ant-design/icons';
 import { Layout, Form, Modal, Image, Input, Card, Tabs, Timeline, List, Avatar, Button, Divider, Space, Badge, message, InputNumber } from 'antd';
 import "./styles.css"

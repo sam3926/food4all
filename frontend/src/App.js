@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Switch as RouterSwitch } from "react-router-dom";
-import 'antd/dist/antd.css';
-
+import "./App.less"
 //IMPORT COMPONENTS
 import Home from "./components/Home";
 import Navbar from './components/Navbar';
@@ -11,7 +10,7 @@ import Community from './components/Community';
 import Leaderboard from './components/Leaderboard';
 
 import { Layout, Button, notification } from 'antd';
-import { useThemeSwitcher } from 'react-css-theme-switcher';
+// import { useThemeSwitcher } from 'react-css-theme-switcher';
 
 import { FireFilled } from "@ant-design/icons"
 
@@ -65,13 +64,13 @@ if (localStorage.jwtToken) {
 
 const App = (props) => {
 
-  const [isDarkMode, setIsDarkMode] = React.useState();
-  const { switcher, status, themes } = useThemeSwitcher();
+  // const [isDarkMode, setIsDarkMode] = React.useState();
+  // const { switcher, status, themes } = useThemeSwitcher();
 
-  const toggleTheme = (isChecked) => {
-    setIsDarkMode(isChecked);
-    switcher({ theme: isChecked ? themes.dark : themes.light });
-  };
+  // const toggleTheme = (isChecked) => {
+  //   setIsDarkMode(isChecked);
+  //   switcher({ theme: isChecked ? themes.dark : themes.light });
+  // };
 
   const openNotificationWithIcon = (type, message) => {
     notification[type]({
@@ -88,9 +87,9 @@ const App = (props) => {
 
 
   // Avoid theme change flicker
-  if (status === "loading") {
-    return null;
-  }
+  // if (status === "loading") {
+  //   return null;
+  // }
 
 
   return (
@@ -116,9 +115,9 @@ const App = (props) => {
         {/*Put remaining routes here*/}
       </RouterSwitch>
 
-      <Button shape="circle" size="large" icon={
+      {/* <Button shape="circle" size="large" icon={
         // <FireTwoTone twoToneColor={isDarkMode?"yellow":"black"} 
-        <FireFilled style={isDarkMode ? { "color": "#F0C315" } : { "color": "#444" }} />} style={{ "position": "fixed", "right": "16px", "bottom": "16px" }} onClick={() => toggleTheme(!isDarkMode)}></Button>
+        <FireFilled style={isDarkMode ? { "color": "#F0C315" } : { "color": "#444" }} />} style={{ "position": "fixed", "right": "16px", "bottom": "16px" }} onClick={() => toggleTheme(!isDarkMode)}></Button> */}
 
     </Layout>
   )

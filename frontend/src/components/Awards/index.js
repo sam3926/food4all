@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import moment from 'moment';
 import axios from "axios"
 
-import "antd/dist/antd.css";
 import { Form, Upload, Input, Radio, Modal, Button, Result, Avatar } from "antd";
 import { InboxOutlined, } from "@ant-design/icons";
 
@@ -21,6 +20,7 @@ import { InboxOutlined, } from "@ant-design/icons";
 class Awards extends Component {
   state = {
     value: "diamond",
+    loading: false
   }
 
   //   showModalP = () => {
@@ -64,17 +64,42 @@ class Awards extends Component {
         <Modal
           title={<b>Awards</b>}
           visible={this.props.visible}
-          onOk={async () => {
-            console.log("post", this.props.currentPostid, "value", this.state.value)
-            await axios.post('/api/users/giveAward', {
-              postId: this.props.currentPostid,
-              awardType: this.state.value
-            })
-            this.props.hideModalS()
-          }}
+          // onOk={async () => {
+          //   console.log("post", this.props.currentPostid, "value", this.state.value)
+          //   await axios.post('/api/users/giveAward', {
+          //     postId: this.props.currentPostid,
+          //     awardType: this.state.value
+          //   })
+          //   this.props.hideModalS()
+          // }}
           onCancel={this.props.hideModal}
           okText="Payment"
-          cancelText="cancel"
+          cancelText="Cancel"
+          footer={[
+            <Button key="back" onClick={this.props.hideModal}>
+              Cancel
+            </Button>,
+            <Button loading={this.state.loading} key="submit" type="primary" onClick={
+              async () => {
+                console.log("post", this.props.currentPostid, "value", this.state.value)
+                this.setState({
+                  loading: true
+                })
+                console.log("Start loading")
+                await axios.post('/api/users/giveAward', {
+                  postId: this.props.currentPostid,
+                  awardType: this.state.value
+                })
+                console.log("end loading")
+                this.setState({
+                  loading: false
+                })
+                this.props.hideModalS()
+              }
+            }>
+              Pay Now
+            </Button>,
+          ]}
         >
           <div>
             <b> Please select the award you want to Buy ?</b>

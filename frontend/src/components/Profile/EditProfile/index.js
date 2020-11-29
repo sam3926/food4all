@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
-import 'antd/dist/antd.css';
 import { Button, Modal, Form, Input } from 'antd';
 import { UserOutlined, PhoneOutlined } from '@ant-design/icons';
 

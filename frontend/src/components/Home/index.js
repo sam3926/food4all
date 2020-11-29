@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 
-import 'antd/dist/antd.css';
-import '../../index.css';
 import { BulbOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Layout, List, Avatar, Card,Space, Typography, Divider, Button , Modal} from 'antd';
+import { Layout, List, Avatar, Card, Space, Typography, Divider, Button, Modal } from 'antd';
 import "./styles.css";
 
 import { getSomeData } from './action';
@@ -15,140 +13,140 @@ import HomeCenter from '../HomeCenter';
 const { Sider } = Layout;
 
 function info() {
-    Modal.info({
-      title: 'Awards',
-      content: (
-        <div>
-          <p>nofoodWasted awards are an innovative way to show support for your favourite users while also supporting the fight for food security! 
-            These awards are highlighted on users profile, giving their cause legitimacy while at the same time money spent on these goes to feed someone. 
+  Modal.info({
+    title: 'Awards',
+    content: (
+      <div>
+        <p>nofoodWasted awards are an innovative way to show support for your favourite users while also supporting the fight for food security!
+        These awards are highlighted on users profile, giving their cause legitimacy while at the same time money spent on these goes to feed someone.
             </p> Join our cause, buy nofoodWasted awards now!
-        </div>
-      ),
-      onOk() {},
-    });
-  }
+      </div>
+    ),
+    onOk() { },
+  });
+}
 
-  function about() {
-    Modal.info({
-      title: 'Food4all',
-      content: (
-        <div>
-          <p>A new community-led platform to highlight local food security programs and connect donors 
-              to them, making the process convenient.
+function about() {
+  Modal.info({
+    title: 'Food4all',
+    content: (
+      <div>
+        <p>A new community-led platform to highlight local food security programs and connect donors
+        to them, making the process convenient.
           </p>
-        </div>
-      ),
-      onOk() {},
-    });
-  }
+      </div>
+    ),
+    onOk() { },
+  });
+}
 
 
-  function help() {
-    Modal.info({
-      title: 'Please refer to Documentation',
-      onOk() {},
-    });
-  }
+function help() {
+  Modal.info({
+    title: 'Please refer to Documentation',
+    onOk() { },
+  });
+}
 
-  function contact() {
-    Modal.info({
-      title: 'Reach out to us at any of the below email address :',
-      content: (
-        <div>
-          <p>Dinkar     - cs18b010@iittp.ac.in</p>
-          <p>Arpit      - cs18b003@iittp.ac.in</p>
-          <p>Sudheesh    - cs18b020@iittp.ac.in</p>
-          <p>Shreyansh  - cs18b042@iittp.ac.in</p>
-        </div>
-      ),
-      onOk() {},
-    });
-  }
+function contact() {
+  Modal.info({
+    title: 'Reach out to us at any of the below email address :',
+    content: (
+      <div>
+        <p>Dinkar     - cs18b010@iittp.ac.in</p>
+        <p>Arpit      - cs18b003@iittp.ac.in</p>
+        <p>Sudheesh    - cs18b020@iittp.ac.in</p>
+        <p>Shreyansh  - cs18b042@iittp.ac.in</p>
+      </div>
+    ),
+    onOk() { },
+  });
+}
 
 class Home extends Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            someStateVariable: "hi"
+  constructor(props) {
+    super(props)
+    this.state = {
+      someStateVariable: "hi"
+    }
+  }
+
+  render() {
+    return (
+      <Layout>
+        <LeftSidePanel />
+        <Layout style={{ marginTop: '64px' }}>
+          <HomeCenter />
+        </Layout>
+        {
+          //right hand side pane, needs to be made a seperate component
         }
-    }
-     
-    render() {
-        return (
-                <Layout>
-                    <LeftSidePanel/>
-                    <Layout style={{ marginTop: '64px' }}>   
-                        <HomeCenter/>
-                    </Layout>  
-                    {
-                        //right hand side pane, needs to be made a seperate component
-                    } 
-                    <Sider width={300} style={{ padding: "25px", marginTop: '48px', right : 0, position: 'fixed', height: '100vh' }}>
-                    <List
-                        itemLayout="horizontal"
-                        header={
-                            <div style={{ fontWeight: "bolder", padding: "5px", fontSize: "medium" }}>
-                            Saved events
+        <Sider width={300} style={{ padding: "25px", marginTop: '48px', right: 0, position: 'fixed', height: '100vh' }}>
+          <List
+            itemLayout="horizontal"
+            header={
+              <div style={{ fontWeight: "bolder", padding: "5px", fontSize: "medium" }}>
+                Saved events
                             </div>
-                        }
-                        renderItem={item => (
-                            <List.Item>
-                            <List.Item.Meta
-                            /*
-                                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                title={<a href="<add event url here">{item.title}</a>}
-                                description="brief description"
-                            */
-                            />
-                            </List.Item>
-                        )}
-                     />
+            }
+            renderItem={item => (
+              <List.Item>
+                <List.Item.Meta
+                /*
+                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                    title={<a href="<add event url here">{item.title}</a>}
+                    description="brief description"
+                */
+                />
+              </List.Item>
+            )}
+          />
 
 
-                     <div style={{marginTop:'20px'}}>
+          <div style={{ marginTop: '20px' }}>
 
-                        <Card size="small" style={{ width: 200 , marginLeft: 25}} bodyStyle={{color: '#97033e', fontWeight:'bold'}} bordered={false}
-                            actions={[
-                                <p onClick={info}><BulbOutlined hoverable={true} key="learnMoreAwards" /> Learn more </p>,
-                            ]}
-                            >
-                     
-                            <p>
-                                <Avatar.Group>
-                                <Avatar size="small" src="/images/awards/silver.jpg" />
-                                <Avatar size="large" src="/images/awards/gold.jpg" />
-                                <Avatar size={64} src="/images/awards/diamond.jpg" />
-                                <Avatar size="large" src="/images/awards/gold.jpg" />
-                                <Avatar size="small" src="/images/awards/silver.jpg" />
-                                </Avatar.Group>
+            <Card size="small" style={{ width: 200, marginLeft: 25 }} bodyStyle={{ color: '#97033e', fontWeight: 'bold' }} bordered={false}
+              actions={[
+                <p onClick={info}><BulbOutlined hoverable={true} key="learnMoreAwards" /> Learn more </p>,
+              ]}
+            >
+
+              <p>
+                <Avatar.Group>
+                  <Avatar size="small" src="/images/awards/silver.jpg" />
+                  <Avatar size="large" src="/images/awards/gold.jpg" />
+                  <Avatar size={64} src="/images/awards/diamond.jpg" />
+                  <Avatar size="large" src="/images/awards/gold.jpg" />
+                  <Avatar size="small" src="/images/awards/silver.jpg" />
+                </Avatar.Group>
                                 NofoodWasted awards are the best way to show your appreciation for work of other users!</p>
-                        </Card>
-                     </div>
+            </Card>
+          </div>
 
-                     <div style={{marginTop:'64px', marginLeft:0}}>
-                     <Space split={<Divider type="vertical" style={{color: 'black', paddingLeft: '5px'}} />}>
-                        <Button onClick={about} type="link">About</Button>
-                        <Button onClick={help} type="link">Help</Button>
-                        <Button onClick={contact} type="link">Contact us</Button>
+          <div style={{ marginTop: '64px', marginLeft: 0 }}>
+            <Space split={<Divider type="vertical" style={{ color: 'black', paddingLeft: '5px' }} />}>
+              <Button onClick={about} type="link">About</Button>
+              <Button onClick={help} type="link">Help</Button>
+              <Button onClick={contact} type="link">Contact us</Button>
 
-                    </Space>
-                    {
-                        //can add logo here
-                    }
-                    </div>
-                    </Sider>	                    
-                </Layout>
-        )
-    }
+            </Space>
+            {
+              //can add logo here
+            }
+          </div>
+        </Sider>
+      </Layout>
+    )
+  }
 }
 
 const mapStateToProps = state => ({
-    someData: state.homeReducer.someData
+  someData: state.homeReducer.someData
 })
 
 const mapDispatchToProps = dispatch => ({
-    getSomeData: bindActionCreators(getSomeData, dispatch)
+  getSomeData: bindActionCreators(getSomeData, dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

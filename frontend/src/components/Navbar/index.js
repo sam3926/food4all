@@ -52,7 +52,7 @@ class Navbar extends Component {
     const { visible, loading } = this.state;
     let { currentRoute, setCurrentRoute, logoutUser, auth, notifications, unreadNotifications, unreadMessages } = this.props;
     const content = (
-      notifications.length ? notifications.map(({ user, notificationType, createdAt }) => (
+      notifications?.length ? notifications.map(({ user, notificationType, createdAt }) => (
         <Card style={{ width: 320, margin: '10px 5px' }}>
           <p><Link to={`/profile/${user._id}`}><Avatar src={user.avatar}></Avatar> {user.name}</Link>
             {notificationType == 'follow' ?

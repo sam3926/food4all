@@ -2,3 +2,8 @@
     margin:16px;
     margin-left: 0px;
 }
+
+.ant-popover-inner-content{
+    height:70vh !important;
+    overflow-y: scroll !important;
+}

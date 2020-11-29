@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import 'antd/dist/antd.css';
 import './styles.css';
 import { Layout, Card, Space, Image, Avatar } from 'antd';
 import { CommentOutlined, LikeFilled, LikeOutlined, GiftOutlined, ShareAltOutlined, EditOutlined } from '@ant-design/icons';

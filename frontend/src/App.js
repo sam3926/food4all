@@ -11,7 +11,7 @@ import Community from './components/Community';
 import Leaderboard from './components/Leaderboard';
 
 import { Layout, Button, notification } from 'antd';
-import { useThemeSwitcher } from 'react-css-theme-switcher';
+// import { useThemeSwitcher } from 'react-css-theme-switcher';
 
 import { FireFilled } from "@ant-design/icons"
 
@@ -65,13 +65,13 @@ if (localStorage.jwtToken) {
 
 const App = (props) => {
 
-  const [isDarkMode, setIsDarkMode] = React.useState();
-  const { switcher, status, themes } = useThemeSwitcher();
+  // const [isDarkMode, setIsDarkMode] = React.useState();
+  // const { switcher, status, themes } = useThemeSwitcher();
 
-  const toggleTheme = (isChecked) => {
-    setIsDarkMode(isChecked);
-    switcher({ theme: isChecked ? themes.dark : themes.light });
-  };
+  // const toggleTheme = (isChecked) => {
+  //   setIsDarkMode(isChecked);
+  //   switcher({ theme: isChecked ? themes.dark : themes.light });
+  // };
 
   const openNotificationWithIcon = (type, message) => {
     notification[type]({
@@ -88,9 +88,9 @@ const App = (props) => {
 
 
   // Avoid theme change flicker
-  if (status === "loading") {
-    return null;
-  }
+  // if (status === "loading") {
+  //   return null;
+  // }
 
 
   return (

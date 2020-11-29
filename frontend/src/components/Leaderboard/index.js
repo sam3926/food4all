@@ -182,7 +182,7 @@ class Leaderboard extends Component {
                       src={leaders[1]?.profilePic}
                     />
                   </span>
-                  <p style={{ paddingTop: "30px", fontSize: "30px" }}>2. {leaders[1]?.name}</p> <p> fed {leaders[1]?.noFed}people</p></div>
+                  <p style={{ paddingTop: "30px", fontSize: "30px" }}>2. {leaders[1]?.name}</p> <p> fed {leaders[1]?.noFed} people</p></div>
                 </div>
 
                 <div> <div style={contentStyle}>

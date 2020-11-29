@@ -15,7 +15,11 @@ const initialState = {
         history: [],
         posts: [],
         noFed: 0,
-        noDonations: 0
+        noDonations: 0,
+        silverAwards: 0,
+        goldAwards: 0,
+        diamondAwards: 0,
+        leaderboardTop: false
     },
 
     Pending: [],
@@ -80,17 +84,17 @@ const profileReducer = (state = initialState, action) => {
         case 'REJECT_DONATION': {
             return { ...state, Pending: state.Pending.filter(pending => pending._id !== action.id) }
         }
-        case 'ACCEPT_DONATION':{
-            return {...state,Pending: state.Pending.filter(pending => pending._id !==action.payload._id)}
+        case 'ACCEPT_DONATION': {
+            return { ...state, Pending: state.Pending.filter(pending => pending._id !== action.payload._id) }
         }
-        case 'ADD_HISTORY':{
-            return {...state,profileDetails:action.payload}
+        case 'ADD_HISTORY': {
+            return { ...state, profileDetails: action.payload }
         }
-        case 'ADD_FED':{
-            return {...state,profileDetails:action.payload}
+        case 'ADD_FED': {
+            return { ...state, profileDetails: action.payload }
         }
-        case 'REVIEW':{
-            return {...state,profileDetails:action.payload}
+        case 'REVIEW': {
+            return { ...state, profileDetails: action.payload }
         }
     }
     return state;

@@ -11,6 +11,7 @@ const isAuth = require("../middlewares/isAuth");
 const isOrg = require("../middlewares/isOrg");
 const { getOnlineUsers } = require("./utils");
 const Donation = require("../models/Donation");
+const Post = require("../models/Post");
 
 router.post("/register", async (req, res, next) => {
   const { email, name, password, contact, description, address, userType, location } = req.body;
@@ -107,8 +108,18 @@ router.get('/organisations', isAuth, async (req, res, next) => {
 })
 router.get('/profile/:id', isAuth, async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic avatar location history posts donations').populate('posts donations')
+    const user = await User.findById(req.params.id).select('name description contact address userType followers following noFed noDonations profilePic avatar location history posts donations goldAwards diamondAwards silverAwards').populate('posts donations')
+
+
+
+
     if (user) {
+
+      const ranked_users = await User.find({}).sort({ noFed: -1 }).select('_id').limit(3);
+      if (ranked_users.find(x => x._id == req.params.id))
+        user.leaderboardTop = true
+      else
+        user.leaderboardTop = false
       console.log(user)
       res.status(200).json(user)
     }
@@ -521,5 +532,80 @@ router.post('/review', isAuth, async (req, res, next) => {
     next(err)
   }
 })
+
+// router.get('/top3', isAuth, async (req, res, next) => {
+//   try {
+//     const ranked_users = await User.find({}).sort({ noFed: -1 }).select('name userType noFed profilePic rating').limit(3);
+//     console.log(ranked_users);
+//     res.status(200).json({ list: ranked_users })
+//   }
+//   catch (err) {
+//     if (!err.statusCode) {
+//       err.statusCode = 500
+//     }
+//     next(err)
+//   }
+// })
+
+// router.get('/top3-check', isAuth, async (req, res, next) => {
+//   try {
+//     const ranked_users = await User.find({}).sort({ noFed: -1 }).select('_id').limit(3);
+//     if (ranked_users.find(req.userId))
+//       res.status(200).json({ "present": true })
+//     else
+//       res.status(200).json({ "present": false })
+//   }
+//   catch (err) {
+//     if (!err.statusCode) {
+//       err.statusCode = 500
+//     }
+//     next(err)
+//   }
+// })
+
+
+router.post('/giveAward', isAuth, async (req, res, next) => {
+  try {
+    const { postId, awardType } = req.body;
+
+    const { authorId } = await Post.findById(postId).select('authorId')
+    if (awardType == "silver")
+      await User.findByIdAndUpdate(authorId, { $inc: { silverAwards: 1 } })
+    else if (awardType == "gold")
+      await User.findByIdAndUpdate(authorId, { $inc: { goldAwards: 1 } })
+    else if (awardType == "diamond")
+      await User.findByIdAndUpdate(authorId, { $inc: { diamondAwards: 1 } })
+
+    const notification = new Notification({
+      notificationType: awardType,
+      user: req.userId,
+    })
+    const t = await notification.save()
+    const not = await t.populate({
+      path: 'user',
+      select: 'avatar name'
+    }).execPopulate()
+    let onlineUsers = getOnlineUsers();
+    if (onlineUsers[authorId]) {
+      await User.findByIdAndUpdate(authorId, { $push: { notifications: t } })
+      let receiverSocket = onlineUsers[authorId];
+      receiverSocket.emit('notification', not);
+    } else {
+      await User.findByIdAndUpdate(authorId, { $push: { notifications: t }, $set: { unreadNotifications: true } })
+    }
+
+
+    res.status(200).json({
+      "award": "given"
+    })
+
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500
+    }
+    next(err)
+  }
+})
+
 
 module.exports = router;

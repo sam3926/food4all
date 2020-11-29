@@ -84,55 +84,58 @@ class HomeCenter extends Component {
         this.setState({ visibleComments: false });
     };
 
-    showModalawards = () => {
-        this.setState({
-          visibleawards: true
+    showModalawards = async (postId) => {
+        await this.setState({
+            currentPostid: postId,
         });
-      };
-    
+        this.setState({
+            visibleawards: true,
+        })
+    };
+
     hideModalawards = () => {
         this.setState({
-          visibleawards: false
+            visibleawards: false
         });
-      };
+    };
 
     hideModalSawards = () => {
         this.setState({
-          visibleawards: false,
-          visiblepayment: true
+            visibleawards: false,
+            visiblepayment: true
         });
-      };
+    };
 
     hideModalP = () => {
         this.setState({
             visiblepayment: false
         });
-      };
-    
+    };
+
     hideModalB = () => {
         this.setState({
             visiblepayment: false,
             visibleawards: true
         });
-      };
-    Liked = (ids) =>{
-        const alreadyLiked = ids.find((likeuser) => {return likeuser==this.props.user.userId});
-        console.log(ids);
-        console.log(alreadyLiked);
+    };
+    Liked = (ids) => {
+        const alreadyLiked = ids.find((likeuser) => { return likeuser == this.props.user.userId });
+        // console.log(ids);
+        // console.log(alreadyLiked);
 
-        if(alreadyLiked == undefined)
+        if (alreadyLiked == undefined)
             return false;
         else
             return true;
     }
-    incrementLike = (id,value,ids) =>{
+    incrementLike = (id, value, ids) => {
         console.log(this.props.user.userId);
         const liked = this.Liked(ids);
-        this.props.changelike(id,liked);
-        }
-    render (){
-        
-        const { visible, visibleawards , loading , visiblepayment , visibleComments, loadingComments} = this.state;
+        this.props.changelike(id, liked);
+    }
+    render() {
+
+        const { visible, visibleawards, loading, visiblepayment, visibleComments, loadingComments } = this.state;
         const { posts } = this.props;
         const imageList = (imagelist) => {
             if (imagelist == undefined)
@@ -164,12 +167,12 @@ class HomeCenter extends Component {
                             alt="Han Solo"
                             style={{ margin: '8px' }}
                         />
-                       {post.author}</Link>} extra={post.DateTime} style={{ width: 700 , margin:"8px"}} 
-                      actions= {[
-                        <div onClick={(id) =>this.incrementLike(post._id,post.liked,post.likes)} >{type(this.Liked(post.likes))}{post.noOfLikes}</div>,
-                        //<div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
-                        <div><CommentOutlined hoverable={true} onClick={() =>this.startModalComments(post._id)} key="Comment" style={{margin:"8px"}}/> </div>,
-                        <div><GiftOutlined key="Award" onClick={this.showModalawards} style={{margin:"8px"}}/> </div>,
+                        {post.author}</Link>} extra={post.DateTime} style={{ width: 700, margin: "8px" }}
+                        actions={[
+                            <div onClick={(id) => this.incrementLike(post._id, post.liked, post.likes)} >{type(this.Liked(post.likes))}{post.noOfLikes}</div>,
+                            //<div><ShareAltOutlined key="share" style={{margin:"8px"}}/> </div>,
+                            <div><CommentOutlined hoverable={true} onClick={() => this.startModalComments(post._id)} key="Comment" style={{ margin: "8px" }} /> </div>,
+                            <div><GiftOutlined key="Award" onClick={() => this.showModalawards(post._id)} style={{ margin: "8px" }} /> </div>,
                         ]} >
                         <p>{post.description}</p>
                         <Space>
@@ -186,15 +189,15 @@ class HomeCenter extends Component {
 
         return (
             this.state.profilePageLoading ? <LoadingScreen /> :
-            <Content style={{ "margin": "auto" }}>
-                <Card style={{ width: 700, margin: "8px" }} hoverable={true} onClick={this.showModal} >
-                    <p className="cardtext"> <EditOutlined /> Share something with the community</p>
-                </Card>
-                <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading}/>    
-                <Comments id={this.state.currentPostid} handleCancel={this.handleCancelComments} handleOk={this.handleOkComments} showModal={this.showModalComments} visible={visibleComments} loading={loadingComments}/>
-                <Awards hideModal={this.hideModalawards} hideModalB={this.hideModalB} hideModalP={this.hideModalP} hideModalS={this.hideModalSawards} showModal={this.showModalawards} visible={visibleawards} visiblepay={visiblepayment} />
-                {postList}   
-            </Content>
+                <Content style={{ "margin": "auto" }}>
+                    <Card style={{ width: 700, margin: "8px" }} hoverable={true} onClick={this.showModal} >
+                        <p className="cardtext"> <EditOutlined /> Share something with the community</p>
+                    </Card>
+                    <PostModal handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} visible={visible} loading={loading} />
+                    <Comments id={this.state.currentPostid} handleCancel={this.handleCancelComments} handleOk={this.handleOkComments} showModal={this.showModalComments} visible={visibleComments} loading={loadingComments} />
+                    <Awards currentPostid={this.state.currentPostid} hideModal={this.hideModalawards} hideModalB={this.hideModalB} hideModalP={this.hideModalP} hideModalS={this.hideModalSawards} visible={visibleawards} visiblepay={visiblepayment} />
+                    {postList}
+                </Content>
         )
     }
 }

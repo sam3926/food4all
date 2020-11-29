@@ -7,6 +7,8 @@ import '../../index.css';
 import { Menu, Checkbox, Layout,  Carousel , Table, Tag, Image , Radio} from 'antd';
 
 import { changeFilters, getList } from './actions';
+import { setCurrentRoute } from '../Navbar/actions';
+import { Link } from 'react-router-dom';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -20,77 +22,8 @@ const contentStyle = {
   fontSize: '20px'
 };
 
-const columns = [
-  {
-    title: "Rank",
-    dataIndex: "rank",
-    key: "rank",
-    render: text => <p>{text}</p>
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: text => <a>{text}</a>
-  },
-  {
-    title: 'Type',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
-      <>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "People Fed",
-    dataIndex: "peoplefed",
-    key: "peoplefed"
-  },
-  {
-    title: "Rating",
-    dataIndex: "rating",
-    key: "rating"
-  }
-];
 
-const data = [
-  {
-    key: "1",
-    rank: "1",
-    name: "John Brown",
-    rating: 32,
-    peoplefed: 500,
-    tags: ["nice", "developer"]
-  },
-  {
-    key: "2",
-    rank: "2",
-    name: "Jim Green",
-    rating: 42,
-    peoplefed: 300,
-    tags: ["loser"]
-  },
-  {
-    key: "3",
-    rank: "3",
-    name: "Joe Black",
-    rating: 32,
-    peoplefed: 100,
-    tags: ["cool", "teacher"]
-  }
-];
+
 
 class Leaderboard extends Component {
   state = {
@@ -98,7 +31,50 @@ class Leaderboard extends Component {
     valueF: '1',
     filters: []
   }
-
+  columns = [
+    {
+      title: "Rank",
+      dataIndex: "rank",
+      key: "rank",
+      render: text => <p>{text}</p>
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text,user) => <Link onClick={() => this.props.setCurrentRoute('profile')} to={`/profile/${user.id}`}>{text}</Link>
+    },
+    {
+      title: 'Type',
+      key: 'tags',
+      dataIndex: 'tags',
+      render: tags => (
+        <>
+          {tags.map(tag => {
+            let color = tag.length > 5 ? 'geekblue' : 'green';
+            if (tag === 'loser') {
+              color = 'volcano';
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: "People Fed",
+      dataIndex: "peoplefed",
+      key: "peoplefed"
+    },
+    {
+      title: "Rating",
+      dataIndex: "rating",
+      key: "rating"
+    }
+  ];
 
   onChangeF = e => {
     console.log('radio checked', e.target.value);
@@ -121,17 +97,20 @@ class Leaderboard extends Component {
         rating: element.rating,
         peoplefed: element.noFed,
         type: element.userType,
-        tags:[element.userType]
+        tags:[element.userType],
+        id: element._id
       })
     });
   }
   render() {
     
     let { data } = this.props;
+    const leaders = data;
     console.log(data);
     data = this.modified(data);
     const { selectedMenuItem , valueF } = this.state;
     
+    console.log(leaders[0]);
 
     const radioStyle = {
       display: 'block',
@@ -183,47 +162,47 @@ class Leaderboard extends Component {
               <div> <div style={contentStyle}>
                 <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
                 <Image
-                  width={200}
+                  width={170}
                   src="images\leaderboard\leaderboard.png"
                 />
                 </span>
-                <p style={{paddingTop: "40px", fontSize:"60px"}}>Leaderboard</p> <p> a look at our top contributors!</p></div>
+                <p style={{paddingTop: "30px", fontSize:"60px"}}>Leaderboard</p> <p> a look at our top contributors!</p></div>
               </div>
               
               <div> <div style={contentStyle}>
                 <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
                 <Image
-                  width={200}
-                  src="images\leaderboard\leaderboard.png"
+                  width={170}
+                  src={leaders[0].profilePic}
                 />
                 </span>
-                <p style={{paddingTop: "40px", fontSize:"60px"}}>1. Y </p> <p> X has fed xx people</p></div>
+                <p style={{paddingTop: "30px", fontSize:"30px"}}>1. {leaders[0].name} </p> <p> fed {leaders[0].noFed} people</p></div>
               </div>
               <div> <div style={contentStyle}>
                 <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
                 <Image
-                  width={200}
-                  src="images\leaderboard\leaderboard.png"
+                  width={170}
+                  src={leaders[1].profilePic}
                 />
                 </span>
-                <p style={{paddingTop: "40px", fontSize:"60px"}}>2. Y</p> <p> X has fed xx people</p></div>
+                <p style={{paddingTop: "30px", fontSize:"30px"}}>2. {leaders[1].name}</p> <p> fed {leaders[1].noFed}people</p></div>
               </div>
               
               <div> <div style={contentStyle}>
                 <span style={{float: "right", marginTop: "25px", marginRight: "15px"}}>
                 <Image
-                  width={200}
-                  src="images\leaderboard\leaderboard.png"
+                  width={170}
+                  src={leaders[2].profilePic}
                 />
                 </span>
-                <p style={{paddingTop: "40px", fontSize:"60px"}}>3. Y</p> <p> X has fed xx people</p></div>
+                <p style={{paddingTop: "30px", fontSize:"30px"}}>3. {leaders[2].name}</p> <p> fed {leaders[2].noFed} people</p></div>
               </div>
 
               </Carousel>
               </div>
 
               <div style={{ width: 700}}>
-              <Table columns={columns} dataSource={data} />
+              <Table columns={this.columns} dataSource={data} />
               </div>
 
             </Content>
@@ -244,6 +223,7 @@ const mapStatetoProps = state => {
 
 };
 const mapDispatchToProps = (dispatch) => ({
+  setCurrentRoute: bindActionCreators(setCurrentRoute,dispatch),
   getList: bindActionCreators(getList,dispatch),
   changeFilters: bindActionCreators(changeFilters, dispatch),
 })

@@ -130,18 +130,7 @@ class Leaderboard extends Component {
             mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['1']}
             style={{ height: '100%', borderRight: 0 }} activeKey={selectedMenuItem}
             style={{ position: "relative" }} >
-            <SubMenu key="2" title="Filter" style={{ fontSize: '16px', height: "100% " }}>
-              <div style={{ "padding": "auto" }}>
-                <Radio.Group onChange={this.onChangeF} value={valueF}>
-                  <Radio style={radioStyle} value={1}>
-                    People Fed
-                  </Radio>
-                  <Radio style={radioStyle} value={2}>
-                    Rating
-                  </Radio>
-                </Radio.Group>
-              </div>
-            </SubMenu>
+            
           </Menu>
         </Sider>
 

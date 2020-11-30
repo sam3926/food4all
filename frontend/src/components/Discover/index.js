@@ -66,6 +66,10 @@ class Discover extends Component {
     })
 
   }
+  disabledDate = (current) => {
+    return current && current < moment().endOf('day');
+  }
+
   showModal = (data) => {
     this.props.acceptdonation(data)
     this.props.addHistory({
@@ -395,6 +399,7 @@ class Discover extends Component {
             <DatePicker
                     format="YYYY-MM-DD HH:mm:ss"
                     showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+                    disabledDate={this.disabledDate} 
                     onChange={value => { console.log(value); this.setState({ pickupDate: value }) }}
                   />
                 </Space>

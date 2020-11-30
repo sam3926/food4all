@@ -358,12 +358,15 @@ class Profile extends Component {
                     width={240}
                     src={profileDetails?.profilePic}
                   />
-                  <Button
-                    shape="circle"
-                    style={{ marginLeft: "-15px", zIndex: "10" }}
-                    onClick={() => this.setState({ visibleProfilePic: true })}>
-                    <EditOutlined />
-                  </Button>
+                  {user.userId === this.props.match.params.id ? (
+                    <Button
+                      shape="circle"
+                      style={{ marginLeft: "-15px", zIndex: "10" }}
+                      onClick={() => this.setState({ visibleProfilePic: true })}>
+                      <EditOutlined />
+                    </Button>
+                  ) : null}
+
                   <div style={{ marginLeft: "8px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
                     <p style={{ "fontSize": "24px", marginBottom: "0px", fontWeight: 500 }}>{profileDetails.name}
                       {profileDetails.userType === "organisation" ?
